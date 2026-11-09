@@ -18,6 +18,15 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Avviksrapport (versjon 0.9.0, K-54) er bygget.** Den ligger under **Mer → Rapporter → Avviksrapport**.
+
+- Bare det som skal følges opp: avvik ved telling (med hvilke barn som manglet), ikke møtt, aldri registrert, ikke sjekket ut, dager uten telling og dager uten registreringer.
+- «Ikke møtt» (en ansatt har registrert at barnet ikke kom, og at det er fulgt opp) er skilt fra «Aldri registrert» (forventet, men ingenting registrert).
+- Barn med flere avvik i perioden står i en egen tabell.
+- Nederst er det linjer for «Gjennomgått av», «Dato» og «Oppfølging og tiltak», til signatur på utskriften.
+- Meldt fravær, rettelser og angre er ikke med.
+- Samme periodevalg, logo, forkortede navn og bunntekst som de andre rapportene. Tallene regnes ut i `avviksrapport` i `src/model/rapport.js`.
+
 **Initialer på alt (versjon 0.8.0, endret i 0.8.1, K-18) er bygget.**
 
 - Initialene følger telefonen. Låseskjermen viser «Låses opp som KT · Bytt», og koden låser opp med de samme initialene. En annen ansatt trykker **Bytt** før koden, og skriver initialene sine etterpå (uten forslag). Det går ikke an å fortsette uten initialer.
@@ -108,7 +117,7 @@ src/db.js             – database, tabeller og migrering
 src/backup.js         – sikkerhetskopi: bygge, kontrollere, oppgradere
 src/model/elev.js     – regler for elever: trinn, skolegrupper, ukedager, klokkeslett
 src/model/status.js   – dagens status regnet ut fra hendelsene
-src/model/rapport.js  – grupperapporten og elevrapporten
+src/model/rapport.js  – grupperapporten, elevrapporten og avviksrapporten
 src/import/xlsx.js    – leser og skriver Excel-filer (.xlsx)
 src/import/elevliste.js – import av elevlista: kontroll, kobling og endringsliste
 src/filer.js          – lagre og åpne filer (delingsark eller nedlasting), utskrift
@@ -194,6 +203,12 @@ Det som gjelder spesielt for iPhone, testes på SFO-telefonen før fase 3 (kravs
 3. Kjør `npm test`, commit og push. Telefonen viser «Ny versjon av appen er klar» neste gang appen åpnes.
 
 Endres datamodellen: øk `DATAVERSJON` og `DB_VERSJON` i `src/db.js`, legg til et oppgraderingssteg der, og en migrering for sikkerhetskopier i `src/backup.js`. Et oppgraderingssteg skal aldri slette data.
+
+## Teste avviksrapporten på telefonen
+
+1. Last inn fiktive testdata.
+2. **Mer → Rapporter → Avviksrapport → Denne måneden.** Sjekk at avvik ved telling viser barnet som manglet og kommentaren, og at «Ikke møtt» og «Ikke sjekket ut» har rader.
+3. Lagre som PDF og sjekk at linjene for gjennomgang og signatur kommer med på A4.
 
 ## Teste initialer på telefonen
 

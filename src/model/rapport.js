@@ -228,3 +228,84 @@ export function elevrapport({ elev, elever, hendelser, unntak = [], tellinger, t
     },
   };
 }
+
+// ---------- Avviksrapport (K-54) ----------
+
+/**
+ * Avviksrapport: bare det som skal følges opp. Avvik ved telling, ikke møtt, aldri registrert,
+ * ikke sjekket ut, dager uten telling og uten registreringer, og barn med flere avvik i perioden.
+ * Meldt fravær er ikke et avvik og er ikke med. Rettelser og angre er heller ikke med (DPIA R9).
+ */
+export function avviksrapport({ elever, hendelser, unntak = [], tellinger, tellingslinjer, fra, til, idag = lokalDato() }) {
+  const g = grupperapport({ elever, hendelser, unntak, tellinger, tellingslinjer, fra, til, idag });
+  const kort = kortNavnFor(elever);
+  const elevFor = new Map(elever.map((e) => [e.id, e]));
+  const sorter = (a, b) => a.dato.localeCompare(b.dato) || a.navn.localeCompare(b.navn, 'nb');
+  const ikkeMott = [];
+  const aldriRegistrert = [];
+  const ikkeUtsjekket = [];
+  const dagerUtenRegistreringer = [];
+  const perElev = new Map();
+  const tell = (id, felt) => {
+    if (!perElev.has(id)) perElev.set(id, { navn: kort.get(id), ikkeMott: 0, aldriRegistrert: 0, ikkeUtsjekket: 0, manglet: 0 });
+    perElev.get(id)[felt] += 1;
+  };
+
+  for (const dag of g.dager) {
+    const { dato } = dag;
+    if (dag.ingenRegistreringer) {
+      if (dato !== idag) dagerUtenRegistreringer.push({ dato, forventet: dag.forventet });
+      continue;
+    }
+    const iDag = hendelser.filter((h) => h.dato === dato);
+    const unntakIDag = unntak.filter((u) => u.dato === dato);
+    const medHendelser = new Set(iDag.map((h) => h.elevId));
+    for (const e of elever.filter((x) => medHendelser.has(x.id) || erForventet(x, dato, unntakIDag))) {
+      const s = elevStatus(e, dato, iDag, unntakIDag);
+      const navn = kort.get(e.id);
+      if (s.status === STATUS.IKKE_MOTT) {
+        ikkeMott.push({ dato, navn, tid: s.siste?.tid ?? null, initialer: s.siste?.initialer ?? null });
+        tell(e.id, 'ikkeMott');
+      } else if (s.status === STATUS.FORVENTET && dato !== idag) {
+        aldriRegistrert.push({ dato, navn });
+        tell(e.id, 'aldriRegistrert');
+      } else if (s.status === STATUS.INNE && dato !== idag) {
+        ikkeUtsjekket.push({ dato, navn, inn: s.innSiden ?? null });
+        tell(e.id, 'ikkeUtsjekket');
+      }
+    }
+  }
+  for (const t of tellinger.filter((x) => x.dato >= g.fra && x.dato <= g.til)) {
+    for (const l of tellingslinjer.filter((x) => x.tellingId === t.id && !x.talt && elevFor.has(x.elevId))) tell(l.elevId, 'manglet');
+  }
+
+  const flereAvvik = [...perElev.values()]
+    .map((x) => ({ ...x, totalt: x.ikkeMott + x.aldriRegistrert + x.ikkeUtsjekket + x.manglet }))
+    .filter((x) => x.totalt >= 2)
+    .sort((a, b) => b.totalt - a.totalt || a.navn.localeCompare(b.navn, 'nb'));
+  const dagerUtenTelling = g.dager.filter((d) => !d.ingenRegistreringer && d.tellinger === 0 && d.dato !== idag).map((d) => d.dato);
+
+  const sammendrag = {
+    tellingerMedAvvik: g.sammendrag.tellingerMedAvvik,
+    barnSomManglet: g.sammendrag.barnSomManglet,
+    ikkeMott: ikkeMott.length,
+    aldriRegistrert: aldriRegistrert.length,
+    ikkeUtsjekket: ikkeUtsjekket.length,
+    dagerUtenTelling: dagerUtenTelling.length,
+    dagerUtenRegistreringer: dagerUtenRegistreringer.length,
+  };
+  return {
+    fra: g.fra,
+    til: g.til,
+    sfoDager: g.sammendrag.sfoDager,
+    tellingAvvik: g.avvik,
+    ikkeMott: ikkeMott.sort(sorter),
+    aldriRegistrert: aldriRegistrert.sort(sorter),
+    ikkeUtsjekket: ikkeUtsjekket.sort(sorter),
+    dagerUtenTelling,
+    dagerUtenRegistreringer,
+    flereAvvik,
+    sammendrag,
+    ingenAvvik: Object.values(sammendrag).every((v) => v === 0),
+  };
+}

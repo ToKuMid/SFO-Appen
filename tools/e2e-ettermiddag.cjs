@@ -189,6 +189,18 @@ const tall = (s) => Number(String(s).trim());
   await page.waitForSelector('#rapport-elevliste');
   ok(true, '«Bytt elev» går tilbake til elevvalget');
 
+  // Avviksrapport for i dag (K-54)
+  await page.click('[data-fane=mer]');
+  await page.click('#apne-avviksrapport');
+  await page.click('button[data-periode=dag]');
+  await page.waitForSelector('#avvik-telling');
+  const avvikR = (await page.textContent('#rapport')).replace(/\s+/g, ' ');
+  ok(/Avvik ved telling \(1\)/.test(avvikR) && /EliD 1\.trinn/.test(avvikR) && /Var på do/.test(avvikR) && !/Elias|Demoberg/.test(avvikR), 'avviksrapporten viser tellingsavviket med forkortet navn');
+  ok(/Gjennomgått av/.test(avvikR) && !/Meldt fravær/.test(avvikR), 'avviksrapporten har signaturlinje og ikke meldt fravær');
+  await page.screenshot({ path: `${SP}/10-avviksrapport.png`, fullPage: true });
+  await page.emulateMedia({ media: 'print' });
+  await page.screenshot({ path: `${SP}/10-avviksrapport-utskrift.png`, fullPage: true });
+  await page.emulateMedia({ media: 'screen' });
   ok(feil.length === 0, `ingen JavaScript-feil${feil.length ? `: ${feil.join(' | ')}` : ''}`);
   console.log(`Skjermbilder: ${SP}`);
   await browser.close();

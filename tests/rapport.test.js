@@ -158,10 +158,38 @@ test('elevrapport: ekstra SFO-dag og deaktivert elev', async () => {
 
 test('bunnteksten i rapportene har bare utskriftstid, app og versjon', async () => {
   const { readFile } = await import('node:fs/promises');
-  for (const fil of ['../src/ui/rapport.js', '../src/ui/elevrapport.js']) {
+  for (const fil of ['../src/ui/rapport.js', '../src/ui/elevrapport.js', '../src/ui/avviksrapport.js']) {
     const kilde = await readFile(new URL(fil, import.meta.url), 'utf8');
     const bunn = kilde.slice(kilde.indexOf("'rapport-bunn'"));
     assert.match(bunn, /`Skrevet ut \$\{utskrevet\} · SFO-appen \$\{APP_VERSJON\}`/);
     assert.doesNotMatch(bunn, /personopplysninger|OneDrive|lagringstid/);
   }
+});
+
+test('avviksrapport: bare avvik, ikke møtt skilt fra aldri registrert, barn med flere avvik (K-54)', async () => {
+  const { avviksrapport } = await import('../src/model/rapport.js');
+  const hendelser = [
+    hend('emma', 'inn', 9, 14, 46), hend('emma', 'ut', 9, 16, 0),
+    hend('noah', 'meldt-fravaer', 9, 12, 0, { initialer: 'KT' }),
+    hend('emma', 'inn', 10, 14, 48),
+    hend('emma', 'ikke-mott', 11, 15, 10, { initialer: 'MH' }),
+  ];
+  const tellinger = [{ id: 't1', dato: '2026-11-09', tid: kl(9, 15, 30).toISOString(), antallForventet: 2, antallTalt: 1, initialer: 'MH', kommentar: 'Var på do' }];
+  const tellingslinjer = [{ id: 'l1', tellingId: 't1', elevId: 'emma', talt: false }, { id: 'l2', tellingId: 't1', elevId: 'noah', talt: true }];
+  const r = avviksrapport({ elever: [emma, noah, sara], hendelser, tellinger, tellingslinjer, fra: '2026-11-09', til: '2026-11-13', idag: '2026-11-13' });
+
+  assert.equal(r.tellingAvvik.length, 1);
+  assert.deepEqual(r.tellingAvvik[0].mangler, ['EmmT 2.trinn']);
+  assert.deepEqual(r.ikkeMott.map((x) => [x.dato, x.navn, x.initialer]), [['2026-11-11', 'EmmT 2.trinn', 'MH']]);
+  assert.deepEqual(r.aldriRegistrert.map((x) => [x.dato, x.navn]), [['2026-11-11', 'NoaP 4.trinn']], 'meldt fravær er ikke avvik');
+  assert.deepEqual(r.ikkeUtsjekket.map((x) => x.dato), ['2026-11-10']);
+  assert.deepEqual(r.dagerUtenTelling, ['2026-11-10', '2026-11-11']);
+  assert.deepEqual(r.dagerUtenRegistreringer.map((d) => d.dato), ['2026-11-12'], 'torsdag uten registreringer, men ikke i dag');
+  assert.deepEqual(r.flereAvvik.map((x) => [x.navn, x.totalt]), [['EmmT 2.trinn', 3]], 'Emma: manglet, ikke sjekket ut og ikke møtt');
+  assert.equal(r.ingenAvvik, false);
+
+  const tom = avviksrapport({ elever: [emma], hendelser: [hend('emma', 'inn', 9, 14, 46), hend('emma', 'ut', 9, 16, 0)],
+    tellinger: [{ id: 't9', dato: '2026-11-09', tid: kl(9, 15, 0).toISOString(), antallForventet: 1, antallTalt: 1 }], tellingslinjer: [],
+    fra: '2026-11-09', til: '2026-11-09', idag: '2026-11-10' });
+  assert.equal(tom.ingenAvvik, true);
 });

@@ -9,12 +9,14 @@ import { visElevSkjema, visEleverListe } from './ui/elever.js';
 import { visElevkort } from './ui/elevkort.js';
 import { visGrupperapport } from './ui/rapport.js';
 import { visElevrapport } from './ui/elevrapport.js';
+import { visAvviksrapport } from './ui/avviksrapport.js';
 import { startTilgang } from './ui/las.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
 // Adresser: #idag, #andre, #telling, #elever, #elever/<id> (rediger), #elever/ny, #elev/<id> (elevkort), #mer,
-// #rapport/gruppe (grupperapport), #rapport/elev (velg elev), #rapport/elev/<id> (elevrapport)
+// #rapport/gruppe (grupperapport), #rapport/elev (velg elev), #rapport/elev/<id> (elevrapport),
+// #rapport/avvik (avviksrapport)
 const SKJERMER = {
   idag: visIdag,
   andre: visAndre,
@@ -22,9 +24,11 @@ const SKJERMER = {
   elever: (param) => (param ? visElevSkjema(param, naviger) : visEleverListe()),
   elev: (param) => visElevkort(param, { tilbake: forrigeFane }),
   mer: () => visMer(oppfrisk),
-  rapport: (param) => (param?.startsWith('elev')
-    ? visElevrapport(param.split('/')[1] ?? null, oppfrisk)
-    : visGrupperapport(oppfrisk)),
+  rapport: (param) => {
+    if (param?.startsWith('elev')) return visElevrapport(param.split('/')[1] ?? null, oppfrisk);
+    if (param === 'avvik') return visAvviksrapport(oppfrisk);
+    return visGrupperapport(oppfrisk);
+  },
 };
 const FANER = ['idag', 'andre', 'telling', 'elever', 'mer'];
 let aktivFane = 'idag';

@@ -687,6 +687,14 @@ input[type="date"] {
 .valgt-elev .navn { margin: 0; font-weight: 600; }
 .valgt-elev .knapp { flex: none; width: auto; }
 .gruppetittel { margin: 0.5rem 0 0; font-size: 0.875rem; font-weight: 600; color: var(--dempet, #5b6660); }
+.rapport-ok { margin: 0 0 0.5rem !important; font-weight: 600; color: #2f5d50; }
+.rapport-forklaring { margin: 0 0 0.375rem !important; font-size: 0.75rem; color: #5b6660; }
+.signatur-rad { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
+.signatur-felt span { font-size: 0.75rem; color: #5b6660; }
+.signatur-felt::after { content: ''; display: block; height: 2.25rem; border-bottom: 1px solid #1f2a26; }
+.signatur-bred { margin-top: 1rem; }
+.signatur-bred::after { height: 4.5rem; }
+.rapport-signatur { break-inside: avoid; padding-bottom: 1.25rem; }
 .rapport-bunn { border-top: 1px solid #e4ded3; padding-top: 0.5rem; font-size: 0.6875rem; color: #5b6660; }
 
 /* ---------- Låseskjerm og koder (K-71–K-73) ---------- */
