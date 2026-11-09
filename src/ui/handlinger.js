@@ -22,7 +22,7 @@ export async function sjekkUt(rad) {
   meldMedAngre(`${navn(rad.elev)} sjekket ut ${klokkeFra(hd.tid)}`, hd);
 }
 
-/** Fravær: meldt fravær eller ikke møtt, med initialer (K-11, K-18). */
+/** Fravær: meldt fravær eller ikke møtt, med initialer (K-11, K-18). Returnerer true hvis fraværet ble lagret. */
 export async function registrerFravaer(rad) {
   const initialer = h('input', { id: 'fravaer-initialer', type: 'text', value: await hentInitialer(), maxlength: 4, autocapitalize: 'characters', autocomplete: 'off', placeholder: 'F.eks. KT' });
   const valg = (verdi, tittel, tekst, valgt) => h('label', { class: 'radiovalg' },
@@ -38,11 +38,12 @@ export async function registrerFravaer(rad) {
     ],
     knapper: [{ tekst: 'Avbryt', verdi: 'avbryt' }, { tekst: 'Lagre fravær', verdi: 'lagre', type: 'primar' }],
   });
-  if (svar !== 'lagre') return;
+  if (svar !== 'lagre') return false;
   const type = document.querySelector('input[name="fravaertype"]:checked')?.value ?? 'meldt-fravaer';
   if (initialer.value.trim()) await lagreInitialer(initialer.value);
   const hd = await registrer(rad.elev.id, type, { initialer: initialer.value });
   meldMedAngre(`${navn(rad.elev)}: ${type === 'ikke-mott' ? 'ikke møtt' : 'meldt fravær'}`, hd);
+  return true;
 }
 
 export async function angreSiste(rad) {

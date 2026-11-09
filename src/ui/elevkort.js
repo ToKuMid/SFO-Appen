@@ -42,9 +42,25 @@ export async function visElevkort(id, { tilbake = 'idag' } = {}) {
   else if (elev.aktiv !== false) hoved = h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'kort-inn', onclick: () => sjekkInn(rad) }, status === STATUS.IKKE_SFO ? 'Sjekk inn (ekstra dag)' : 'Sjekk inn');
 
   const ekstra = [];
-  if (status === STATUS.FORVENTET) ekstra.push(h('button', { type: 'button', class: 'knapp', id: 'kort-fravaer', onclick: () => registrerFravaer(rad) }, 'Fravær'));
+  // Etter fravær eller «ikke SFO i dag» går appen rett tilbake til I dag. Meldingen nederst har «Angre».
+  const tilIdag = () => { location.hash = 'idag'; };
+  if (status === STATUS.FORVENTET) {
+    ekstra.push(h('button', {
+      type: 'button', class: 'knapp', id: 'kort-fravaer',
+      onclick: async () => { if (await registrerFravaer(rad)) tilIdag(); },
+    }, 'Fravær'));
+  }
   if (status === STATUS.FORVENTET && !unntak) {
-    ekstra.push(h('button', { type: 'button', class: 'knapp', id: 'kort-ikke-sfo', onclick: async () => { await settUnntakIDag(elev.id, 'ikke-sfo'); visMelding(`${elev.fornavn} har ikke SFO i dag.`, 'ok'); } }, 'Ikke SFO i dag'));
+    ekstra.push(h('button', {
+      type: 'button', class: 'knapp', id: 'kort-ikke-sfo',
+      onclick: async () => {
+        await settUnntakIDag(elev.id, 'ikke-sfo');
+        visMelding(`${elev.fornavn} ${elev.etternavn} har ikke SFO i dag.`, 'ok', {
+          handling: { tekst: 'Angre', onclick: () => settUnntakIDag(elev.id, null) },
+        });
+        tilIdag();
+      },
+    }, 'Ikke SFO i dag'));
   }
   if (unntak && rad.hendelser.length === 0) {
     ekstra.push(h('button', { type: 'button', class: 'knapp', id: 'kort-fjern-unntak', onclick: async () => { await settUnntakIDag(elev.id, null); visMelding('Unntaket for i dag er fjernet.', 'ok'); } },

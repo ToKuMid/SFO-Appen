@@ -25,6 +25,7 @@ let aktivParam = null;
 let forrigeFane = 'idag'; // fanen elevkortet ble åpnet fra, til «tilbake»-lenken
 let visningsdato = lokalDato();
 let visningsminutt = new Date().getMinutes();
+let tegning = 0;
 
 /** Går til en adresse. Gir tilbake-knappen på Android noe å gå tilbake til. */
 export function naviger(adresse) {
@@ -50,12 +51,15 @@ async function visFane(fane, param = null, { behold = false } = {}) {
   }
   const innhold = document.getElementById('innhold');
   const rullet = window.scrollY;
+  // Hvis en nyere tegning er startet mens denne ventet på data, vinner den nyeste.
+  const nr = ++tegning;
   let side;
   try {
     side = await SKJERMER[aktivFane](aktivParam);
   } catch (e) {
     side = document.createTextNode(`Noe gikk galt: ${e.message}`);
   }
+  if (nr !== tegning) return;
   innhold.replaceChildren(side);
   // Ved bytte av fane: til toppen. Ved oppfrisking av samme skjerm: bli stående.
   window.scrollTo(0, behold ? rullet : 0);

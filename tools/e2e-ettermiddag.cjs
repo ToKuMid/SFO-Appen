@@ -130,6 +130,23 @@ const tall = (s) => Number(String(s).trim());
   ok(/Ingen barn står som inne/.test(avslutt) && /1 forventet ble aldri registrert/.test(avslutt) && /sikkerhetskopi/i.test(avslutt), 'dagsavslutning: ingen inne, 1 uregistrert, påminnelse om sikkerhetskopi (K-20)');
   await page.screenshot({ path: `${SP}/7-avslutt.png` });
 
+  // Fra elevkortet: «Ikke SFO i dag» og fravær sender tilbake til I dag
+  await knapp('Lukk');
+  await page.click('[data-fane=andre]');
+  await page.click('#forventet li:first-child a.rad-lenke');
+  await page.click('#kort-ikke-sfo');
+  await page.waitForFunction(() => location.hash === '#idag' && !!document.querySelector('#antall-inne'));
+  ok(true, '«Ikke SFO i dag» på elevkortet sender tilbake til I dag');
+  await page.click('#melding .melding-knapp');
+  await page.click('[data-fane=andre]');
+  await page.waitForSelector('#forventet li');
+  ok(true, '«Angre» i meldingen fjerner unntaket igjen');
+  await page.click('#forventet li:first-child a.rad-lenke');
+  await page.click('#kort-fravaer');
+  await knapp('Lagre fravær');
+  await page.waitForFunction(() => location.hash === '#idag' && !!document.querySelector('#antall-inne'));
+  ok(/meldt fravær/.test(await page.textContent('#melding')), 'fravær på elevkortet sender tilbake til I dag, med melding');
+
   ok(feil.length === 0, `ingen JavaScript-feil${feil.length ? `: ${feil.join(' | ')}` : ''}`);
   console.log(`Skjermbilder: ${SP}`);
   await browser.close();
