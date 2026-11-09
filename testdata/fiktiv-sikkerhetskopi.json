@@ -1,0 +1,6748 @@
+{
+  "format": "sfo-appen-sikkerhetskopi",
+  "dataversjon": 1,
+  "appversjon": "0.1.0",
+  "eksportert": "2026-11-09T10:33:02.797Z",
+  "data": {
+    "elever": [
+      {
+        "id": "elev-0001",
+        "fornavn": "Emma",
+        "etternavn": "Testesen",
+        "trinn": 4,
+        "skolegruppe": "Gruppe 2 nede",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0002",
+        "fornavn": "Jakob",
+        "etternavn": "Prøvestad",
+        "trinn": 4,
+        "skolegruppe": "Gruppe 2 oppe",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0003",
+        "fornavn": "Olivia",
+        "etternavn": "Lekeland",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0004",
+        "fornavn": "Theo",
+        "etternavn": "Skissebakken",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          2,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0005",
+        "fornavn": "Emil",
+        "etternavn": "Testesen",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0006",
+        "fornavn": "Aksel",
+        "etternavn": "Øvingsrud",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0007",
+        "fornavn": "Theo",
+        "etternavn": "Plassholdersen",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          2,
+          3,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0008",
+        "fornavn": "Johannes",
+        "etternavn": "Dummyhaug",
+        "trinn": 4,
+        "skolegruppe": "Gruppe 2 nede",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0009",
+        "fornavn": "Mathias",
+        "etternavn": "Dummyhaug",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0010",
+        "fornavn": "Alma",
+        "etternavn": "Testesen",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0011",
+        "fornavn": "Alma",
+        "etternavn": "Plassholdersen",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0012",
+        "fornavn": "Sander",
+        "etternavn": "Malmo",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          2,
+          3,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0013",
+        "fornavn": "Selma",
+        "etternavn": "Lekeland",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0014",
+        "fornavn": "Sofie",
+        "etternavn": "Testesen",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0015",
+        "fornavn": "Henrik",
+        "etternavn": "Malmo",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0016",
+        "fornavn": "Hedda",
+        "etternavn": "Fiktivdal",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0017",
+        "fornavn": "Maja",
+        "etternavn": "Dummyhaug",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0018",
+        "fornavn": "Maja",
+        "etternavn": "Utkastvik",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          2,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0019",
+        "fornavn": "Tobias",
+        "etternavn": "Utkastvik",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0020",
+        "fornavn": "Aksel",
+        "etternavn": "Fiktivdal",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          3,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0021",
+        "fornavn": "Ingrid",
+        "etternavn": "Utkastvik",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0022",
+        "fornavn": "Lukas",
+        "etternavn": "Malmo",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0023",
+        "fornavn": "Iben",
+        "etternavn": "Utkastvik",
+        "trinn": 4,
+        "skolegruppe": "Gruppe 2 oppe",
+        "ukedager": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0024",
+        "fornavn": "Ylva",
+        "etternavn": "Lekeland",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0025",
+        "fornavn": "Jakob",
+        "etternavn": "Plassholdersen",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0026",
+        "fornavn": "Tiril",
+        "etternavn": "Fiktivdal",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0027",
+        "fornavn": "Tiril",
+        "etternavn": "Plassholdersen",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0028",
+        "fornavn": "Oskar",
+        "etternavn": "Prøvestad",
+        "trinn": 4,
+        "skolegruppe": "Gruppe 2 oppe",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0029",
+        "fornavn": "Sofie",
+        "etternavn": "Eksempelsen",
+        "trinn": 1,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          2,
+          3
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0030",
+        "fornavn": "Elias",
+        "etternavn": "Eksempelsen",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0031",
+        "fornavn": "Nora",
+        "etternavn": "Dummyhaug",
+        "trinn": 2,
+        "skolegruppe": "Gruppe 1 grønn",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      },
+      {
+        "id": "elev-0032",
+        "fornavn": "Elias",
+        "etternavn": "Lekeland",
+        "trinn": 3,
+        "skolegruppe": "Gruppe 1 blå",
+        "ukedager": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "aktiv": true
+      }
+    ],
+    "avtaler": [
+      {
+        "elevId": "elev-0006",
+        "gaarHjemAleneFra": null,
+        "fastHentetid": null,
+        "fritekst": ""
+      },
+      {
+        "elevId": "elev-0009",
+        "gaarHjemAleneFra": "15:00",
+        "fastHentetid": null,
+        "fritekst": ""
+      },
+      {
+        "elevId": "elev-0019",
+        "gaarHjemAleneFra": "16:00",
+        "fastHentetid": null,
+        "fritekst": ""
+      },
+      {
+        "elevId": "elev-0021",
+        "gaarHjemAleneFra": null,
+        "fastHentetid": null,
+        "fritekst": ""
+      },
+      {
+        "elevId": "elev-0022",
+        "gaarHjemAleneFra": null,
+        "fastHentetid": null,
+        "fritekst": "Går til fotball kl. 16 på tirsdager"
+      },
+      {
+        "elevId": "elev-0032",
+        "gaarHjemAleneFra": "15:30",
+        "fastHentetid": null,
+        "fritekst": ""
+      }
+    ],
+    "unntak": [],
+    "hendelser": [
+      {
+        "id": "hend-0001",
+        "elevId": "elev-0001",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0002",
+        "elevId": "elev-0002",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0003",
+        "elevId": "elev-0003",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0004",
+        "elevId": "elev-0005",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0005",
+        "elevId": "elev-0006",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0006",
+        "elevId": "elev-0008",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0007",
+        "elevId": "elev-0009",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0008",
+        "elevId": "elev-0010",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0009",
+        "elevId": "elev-0013",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0010",
+        "elevId": "elev-0014",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0011",
+        "elevId": "elev-0015",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0012",
+        "elevId": "elev-0016",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0013",
+        "elevId": "elev-0017",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0014",
+        "elevId": "elev-0019",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0015",
+        "elevId": "elev-0020",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0016",
+        "elevId": "elev-0021",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0017",
+        "elevId": "elev-0022",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0018",
+        "elevId": "elev-0023",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0019",
+        "elevId": "elev-0024",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0020",
+        "elevId": "elev-0025",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0021",
+        "elevId": "elev-0026",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0022",
+        "elevId": "elev-0027",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0023",
+        "elevId": "elev-0028",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0024",
+        "elevId": "elev-0030",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0025",
+        "elevId": "elev-0031",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0026",
+        "elevId": "elev-0032",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0027",
+        "elevId": "elev-0001",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:44:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0028",
+        "elevId": "elev-0002",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:45:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0029",
+        "elevId": "elev-0003",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:40:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0030",
+        "elevId": "elev-0005",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:52:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0031",
+        "elevId": "elev-0006",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:37:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0032",
+        "elevId": "elev-0008",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:12:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0033",
+        "elevId": "elev-0009",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:44:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0034",
+        "elevId": "elev-0010",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:10:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0035",
+        "elevId": "elev-0013",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:19:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0036",
+        "elevId": "elev-0014",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:05:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0037",
+        "elevId": "elev-0015",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:00:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0038",
+        "elevId": "elev-0016",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:58:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0039",
+        "elevId": "elev-0017",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:23:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0040",
+        "elevId": "elev-0019",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:22:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0041",
+        "elevId": "elev-0020",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:44:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0042",
+        "elevId": "elev-0021",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:03:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0043",
+        "elevId": "elev-0022",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0044",
+        "elevId": "elev-0023",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:56:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0045",
+        "elevId": "elev-0024",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:43:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0046",
+        "elevId": "elev-0025",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:11:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0047",
+        "elevId": "elev-0026",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:09:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0048",
+        "elevId": "elev-0027",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:00:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0049",
+        "elevId": "elev-0028",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:02:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0050",
+        "elevId": "elev-0030",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:32:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0051",
+        "elevId": "elev-0031",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:57:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0052",
+        "elevId": "elev-0032",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T15:47:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0053",
+        "elevId": "elev-0001",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0054",
+        "elevId": "elev-0002",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0055",
+        "elevId": "elev-0003",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0056",
+        "elevId": "elev-0004",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0057",
+        "elevId": "elev-0005",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0058",
+        "elevId": "elev-0007",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0059",
+        "elevId": "elev-0008",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0060",
+        "elevId": "elev-0009",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0061",
+        "elevId": "elev-0010",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0062",
+        "elevId": "elev-0011",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0063",
+        "elevId": "elev-0012",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0064",
+        "elevId": "elev-0013",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0065",
+        "elevId": "elev-0014",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0066",
+        "elevId": "elev-0015",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0067",
+        "elevId": "elev-0016",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0068",
+        "elevId": "elev-0017",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0069",
+        "elevId": "elev-0018",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0070",
+        "elevId": "elev-0019",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0071",
+        "elevId": "elev-0021",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0072",
+        "elevId": "elev-0022",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0073",
+        "elevId": "elev-0023",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0074",
+        "elevId": "elev-0024",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0075",
+        "elevId": "elev-0025",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0076",
+        "elevId": "elev-0026",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0077",
+        "elevId": "elev-0027",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0078",
+        "elevId": "elev-0028",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0079",
+        "elevId": "elev-0029",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0080",
+        "elevId": "elev-0030",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0081",
+        "elevId": "elev-0031",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0082",
+        "elevId": "elev-0032",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0083",
+        "elevId": "elev-0001",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0084",
+        "elevId": "elev-0002",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:28:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0085",
+        "elevId": "elev-0003",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:36:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0086",
+        "elevId": "elev-0004",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:11:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0087",
+        "elevId": "elev-0005",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:48:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0088",
+        "elevId": "elev-0007",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:48:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0089",
+        "elevId": "elev-0008",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:36:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0090",
+        "elevId": "elev-0009",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:37:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0091",
+        "elevId": "elev-0010",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:55:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0092",
+        "elevId": "elev-0013",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:35:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0093",
+        "elevId": "elev-0014",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:10:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0094",
+        "elevId": "elev-0015",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:56:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0095",
+        "elevId": "elev-0016",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:21:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0096",
+        "elevId": "elev-0017",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:37:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0097",
+        "elevId": "elev-0018",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:15:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0098",
+        "elevId": "elev-0019",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:56:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0099",
+        "elevId": "elev-0021",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:26:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0100",
+        "elevId": "elev-0022",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:27:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0101",
+        "elevId": "elev-0023",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:08:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0102",
+        "elevId": "elev-0024",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:24:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0103",
+        "elevId": "elev-0025",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:39:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0104",
+        "elevId": "elev-0026",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:49:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0105",
+        "elevId": "elev-0027",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:50:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0106",
+        "elevId": "elev-0028",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:53:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0107",
+        "elevId": "elev-0029",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:47:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0108",
+        "elevId": "elev-0030",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:05:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0109",
+        "elevId": "elev-0031",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:20:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0110",
+        "elevId": "elev-0032",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T15:56:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0111",
+        "elevId": "elev-0001",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0112",
+        "elevId": "elev-0002",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0113",
+        "elevId": "elev-0003",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0114",
+        "elevId": "elev-0005",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0115",
+        "elevId": "elev-0006",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0116",
+        "elevId": "elev-0007",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0117",
+        "elevId": "elev-0008",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0118",
+        "elevId": "elev-0009",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0119",
+        "elevId": "elev-0011",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0120",
+        "elevId": "elev-0012",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0121",
+        "elevId": "elev-0013",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0122",
+        "elevId": "elev-0015",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0123",
+        "elevId": "elev-0016",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0124",
+        "elevId": "elev-0017",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0125",
+        "elevId": "elev-0019",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0126",
+        "elevId": "elev-0020",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0127",
+        "elevId": "elev-0021",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0128",
+        "elevId": "elev-0024",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0129",
+        "elevId": "elev-0026",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0130",
+        "elevId": "elev-0028",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0131",
+        "elevId": "elev-0029",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0132",
+        "elevId": "elev-0030",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0133",
+        "elevId": "elev-0031",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0134",
+        "elevId": "elev-0032",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0135",
+        "elevId": "elev-0001",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:00:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0136",
+        "elevId": "elev-0002",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:51:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0137",
+        "elevId": "elev-0003",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:46:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0138",
+        "elevId": "elev-0005",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0139",
+        "elevId": "elev-0006",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:00:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0140",
+        "elevId": "elev-0007",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:47:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0141",
+        "elevId": "elev-0011",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:25:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0142",
+        "elevId": "elev-0012",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:46:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0143",
+        "elevId": "elev-0013",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:08:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0144",
+        "elevId": "elev-0015",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:48:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0145",
+        "elevId": "elev-0016",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:33:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0146",
+        "elevId": "elev-0017",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:44:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0147",
+        "elevId": "elev-0019",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:34:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0148",
+        "elevId": "elev-0020",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:10:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0149",
+        "elevId": "elev-0021",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:46:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0150",
+        "elevId": "elev-0024",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:52:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0151",
+        "elevId": "elev-0026",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:39:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0152",
+        "elevId": "elev-0028",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:37:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0153",
+        "elevId": "elev-0029",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:53:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0154",
+        "elevId": "elev-0030",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:35:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0155",
+        "elevId": "elev-0031",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:24:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0156",
+        "elevId": "elev-0032",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T15:32:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0157",
+        "elevId": "elev-0001",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0158",
+        "elevId": "elev-0002",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0159",
+        "elevId": "elev-0003",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0160",
+        "elevId": "elev-0004",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0161",
+        "elevId": "elev-0005",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0162",
+        "elevId": "elev-0006",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0163",
+        "elevId": "elev-0007",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0164",
+        "elevId": "elev-0008",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0165",
+        "elevId": "elev-0009",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0166",
+        "elevId": "elev-0010",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0167",
+        "elevId": "elev-0011",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0168",
+        "elevId": "elev-0013",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0169",
+        "elevId": "elev-0015",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0170",
+        "elevId": "elev-0016",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0171",
+        "elevId": "elev-0017",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0172",
+        "elevId": "elev-0018",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0173",
+        "elevId": "elev-0019",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0174",
+        "elevId": "elev-0020",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0175",
+        "elevId": "elev-0021",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0176",
+        "elevId": "elev-0023",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0177",
+        "elevId": "elev-0024",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0178",
+        "elevId": "elev-0025",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0179",
+        "elevId": "elev-0026",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0180",
+        "elevId": "elev-0027",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0181",
+        "elevId": "elev-0028",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0182",
+        "elevId": "elev-0030",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0183",
+        "elevId": "elev-0031",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0184",
+        "elevId": "elev-0032",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0185",
+        "elevId": "elev-0001",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:03:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0186",
+        "elevId": "elev-0002",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:44:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0187",
+        "elevId": "elev-0003",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:45:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0188",
+        "elevId": "elev-0004",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:25:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0189",
+        "elevId": "elev-0005",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:25:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0190",
+        "elevId": "elev-0007",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:06:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0191",
+        "elevId": "elev-0008",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:54:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0192",
+        "elevId": "elev-0009",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:26:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0193",
+        "elevId": "elev-0010",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:36:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0194",
+        "elevId": "elev-0011",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0195",
+        "elevId": "elev-0013",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:32:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0196",
+        "elevId": "elev-0015",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:46:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0197",
+        "elevId": "elev-0016",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:53:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0198",
+        "elevId": "elev-0017",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:52:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0199",
+        "elevId": "elev-0018",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:28:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0200",
+        "elevId": "elev-0019",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:00:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0201",
+        "elevId": "elev-0020",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:17:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0202",
+        "elevId": "elev-0021",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:32:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0203",
+        "elevId": "elev-0023",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:44:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0204",
+        "elevId": "elev-0024",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:05:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0205",
+        "elevId": "elev-0025",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:53:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0206",
+        "elevId": "elev-0026",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:32:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0207",
+        "elevId": "elev-0027",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:57:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0208",
+        "elevId": "elev-0028",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:53:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0209",
+        "elevId": "elev-0030",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:45:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0210",
+        "elevId": "elev-0032",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T15:47:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0211",
+        "elevId": "elev-0001",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0212",
+        "elevId": "elev-0002",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0213",
+        "elevId": "elev-0003",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0214",
+        "elevId": "elev-0004",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0215",
+        "elevId": "elev-0006",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0216",
+        "elevId": "elev-0008",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0217",
+        "elevId": "elev-0009",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0218",
+        "elevId": "elev-0011",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0219",
+        "elevId": "elev-0012",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0220",
+        "elevId": "elev-0013",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0221",
+        "elevId": "elev-0014",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0222",
+        "elevId": "elev-0015",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0223",
+        "elevId": "elev-0016",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0224",
+        "elevId": "elev-0018",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0225",
+        "elevId": "elev-0021",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0226",
+        "elevId": "elev-0022",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0227",
+        "elevId": "elev-0023",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0228",
+        "elevId": "elev-0025",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0229",
+        "elevId": "elev-0026",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0230",
+        "elevId": "elev-0027",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0231",
+        "elevId": "elev-0028",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0232",
+        "elevId": "elev-0030",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0233",
+        "elevId": "elev-0031",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0234",
+        "elevId": "elev-0032",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0235",
+        "elevId": "elev-0001",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:06:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0236",
+        "elevId": "elev-0002",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:17:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0237",
+        "elevId": "elev-0003",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:57:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0238",
+        "elevId": "elev-0004",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:08:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0239",
+        "elevId": "elev-0006",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:31:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0240",
+        "elevId": "elev-0008",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:38:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0241",
+        "elevId": "elev-0009",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:44:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0242",
+        "elevId": "elev-0011",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:58:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0243",
+        "elevId": "elev-0012",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:58:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0244",
+        "elevId": "elev-0014",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:30:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0245",
+        "elevId": "elev-0015",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:24:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0246",
+        "elevId": "elev-0016",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:40:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0247",
+        "elevId": "elev-0018",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:30:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0248",
+        "elevId": "elev-0021",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:04:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0249",
+        "elevId": "elev-0022",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:37:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0250",
+        "elevId": "elev-0023",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:12:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0251",
+        "elevId": "elev-0025",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:11:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0252",
+        "elevId": "elev-0026",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:51:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0253",
+        "elevId": "elev-0027",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T15:43:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0254",
+        "elevId": "elev-0028",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:05:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0255",
+        "elevId": "elev-0030",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:17:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0256",
+        "elevId": "elev-0031",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:45:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0257",
+        "elevId": "elev-0032",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:43:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0258",
+        "elevId": "elev-0001",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0259",
+        "elevId": "elev-0002",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0260",
+        "elevId": "elev-0003",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0261",
+        "elevId": "elev-0005",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0262",
+        "elevId": "elev-0006",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0263",
+        "elevId": "elev-0008",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0264",
+        "elevId": "elev-0009",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0265",
+        "elevId": "elev-0010",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0266",
+        "elevId": "elev-0013",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0267",
+        "elevId": "elev-0014",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0268",
+        "elevId": "elev-0015",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0269",
+        "elevId": "elev-0016",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0270",
+        "elevId": "elev-0017",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0271",
+        "elevId": "elev-0019",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0272",
+        "elevId": "elev-0020",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0273",
+        "elevId": "elev-0021",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0274",
+        "elevId": "elev-0022",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0275",
+        "elevId": "elev-0023",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0276",
+        "elevId": "elev-0024",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0277",
+        "elevId": "elev-0025",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0278",
+        "elevId": "elev-0026",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0279",
+        "elevId": "elev-0027",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0280",
+        "elevId": "elev-0028",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0281",
+        "elevId": "elev-0030",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0282",
+        "elevId": "elev-0031",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0283",
+        "elevId": "elev-0032",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0284",
+        "elevId": "elev-0001",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:27:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0285",
+        "elevId": "elev-0002",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:00:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0286",
+        "elevId": "elev-0003",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:06:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0287",
+        "elevId": "elev-0005",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:15:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0288",
+        "elevId": "elev-0008",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:19:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0289",
+        "elevId": "elev-0009",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:25:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0290",
+        "elevId": "elev-0010",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:55:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0291",
+        "elevId": "elev-0013",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:47:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0292",
+        "elevId": "elev-0014",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:03:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0293",
+        "elevId": "elev-0015",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:37:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0294",
+        "elevId": "elev-0016",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:28:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0295",
+        "elevId": "elev-0017",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:16:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0296",
+        "elevId": "elev-0019",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:07:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0297",
+        "elevId": "elev-0020",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:54:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0298",
+        "elevId": "elev-0021",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:02:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0299",
+        "elevId": "elev-0022",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:26:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0300",
+        "elevId": "elev-0023",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:23:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0301",
+        "elevId": "elev-0024",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:25:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0302",
+        "elevId": "elev-0025",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:26:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0303",
+        "elevId": "elev-0026",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:29:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0304",
+        "elevId": "elev-0027",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0305",
+        "elevId": "elev-0028",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:40:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0306",
+        "elevId": "elev-0030",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:43:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0307",
+        "elevId": "elev-0031",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:43:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0308",
+        "elevId": "elev-0032",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T15:04:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0309",
+        "elevId": "elev-0001",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0310",
+        "elevId": "elev-0002",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0311",
+        "elevId": "elev-0003",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0312",
+        "elevId": "elev-0004",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0313",
+        "elevId": "elev-0005",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0314",
+        "elevId": "elev-0007",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0315",
+        "elevId": "elev-0008",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0316",
+        "elevId": "elev-0009",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0317",
+        "elevId": "elev-0010",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0318",
+        "elevId": "elev-0011",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0319",
+        "elevId": "elev-0012",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0320",
+        "elevId": "elev-0013",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0321",
+        "elevId": "elev-0014",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0322",
+        "elevId": "elev-0015",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0323",
+        "elevId": "elev-0016",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0324",
+        "elevId": "elev-0017",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0325",
+        "elevId": "elev-0018",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0326",
+        "elevId": "elev-0019",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0327",
+        "elevId": "elev-0021",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0328",
+        "elevId": "elev-0022",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0329",
+        "elevId": "elev-0023",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0330",
+        "elevId": "elev-0024",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0331",
+        "elevId": "elev-0025",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0332",
+        "elevId": "elev-0026",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0333",
+        "elevId": "elev-0027",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0334",
+        "elevId": "elev-0028",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0335",
+        "elevId": "elev-0029",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0336",
+        "elevId": "elev-0030",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0337",
+        "elevId": "elev-0031",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0338",
+        "elevId": "elev-0032",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0339",
+        "elevId": "elev-0001",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:27:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0340",
+        "elevId": "elev-0002",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:17:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0341",
+        "elevId": "elev-0003",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:42:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0342",
+        "elevId": "elev-0004",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:03:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0343",
+        "elevId": "elev-0005",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:59:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0344",
+        "elevId": "elev-0007",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:09:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0345",
+        "elevId": "elev-0008",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:35:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0346",
+        "elevId": "elev-0009",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:06:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0347",
+        "elevId": "elev-0010",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:37:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0348",
+        "elevId": "elev-0011",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:05:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0349",
+        "elevId": "elev-0012",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:00:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0350",
+        "elevId": "elev-0013",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:26:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0351",
+        "elevId": "elev-0014",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:13:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0352",
+        "elevId": "elev-0015",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:35:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0353",
+        "elevId": "elev-0016",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:53:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0354",
+        "elevId": "elev-0017",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0355",
+        "elevId": "elev-0018",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:22:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0356",
+        "elevId": "elev-0019",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:36:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0357",
+        "elevId": "elev-0021",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:08:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0358",
+        "elevId": "elev-0022",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:24:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0359",
+        "elevId": "elev-0023",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:09:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0360",
+        "elevId": "elev-0024",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:32:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0361",
+        "elevId": "elev-0025",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:53:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0362",
+        "elevId": "elev-0026",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:02:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0363",
+        "elevId": "elev-0027",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:05:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0364",
+        "elevId": "elev-0028",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:19:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0365",
+        "elevId": "elev-0029",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:57:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0366",
+        "elevId": "elev-0030",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:29:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0367",
+        "elevId": "elev-0031",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:07:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0368",
+        "elevId": "elev-0032",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T15:32:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0369",
+        "elevId": "elev-0001",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0370",
+        "elevId": "elev-0002",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0371",
+        "elevId": "elev-0003",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0372",
+        "elevId": "elev-0005",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0373",
+        "elevId": "elev-0006",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0374",
+        "elevId": "elev-0007",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0375",
+        "elevId": "elev-0008",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0376",
+        "elevId": "elev-0009",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0377",
+        "elevId": "elev-0011",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0378",
+        "elevId": "elev-0012",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0379",
+        "elevId": "elev-0013",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0380",
+        "elevId": "elev-0015",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0381",
+        "elevId": "elev-0016",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0382",
+        "elevId": "elev-0017",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0383",
+        "elevId": "elev-0019",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0384",
+        "elevId": "elev-0020",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0385",
+        "elevId": "elev-0021",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0386",
+        "elevId": "elev-0024",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0387",
+        "elevId": "elev-0026",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0388",
+        "elevId": "elev-0028",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0389",
+        "elevId": "elev-0029",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0390",
+        "elevId": "elev-0030",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0391",
+        "elevId": "elev-0031",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0392",
+        "elevId": "elev-0032",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0393",
+        "elevId": "elev-0001",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:23:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0394",
+        "elevId": "elev-0002",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:08:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0395",
+        "elevId": "elev-0003",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:38:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0396",
+        "elevId": "elev-0005",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:50:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0397",
+        "elevId": "elev-0006",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:18:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0398",
+        "elevId": "elev-0007",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:52:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0399",
+        "elevId": "elev-0008",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:43:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0400",
+        "elevId": "elev-0009",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:23:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0401",
+        "elevId": "elev-0011",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:19:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0402",
+        "elevId": "elev-0012",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:14:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0403",
+        "elevId": "elev-0013",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:16:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0404",
+        "elevId": "elev-0016",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:30:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0405",
+        "elevId": "elev-0017",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:29:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0406",
+        "elevId": "elev-0019",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:38:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0407",
+        "elevId": "elev-0020",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:50:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0408",
+        "elevId": "elev-0021",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:09:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0409",
+        "elevId": "elev-0024",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:52:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0410",
+        "elevId": "elev-0026",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:59:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0411",
+        "elevId": "elev-0028",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:18:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0412",
+        "elevId": "elev-0029",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T15:36:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0413",
+        "elevId": "elev-0030",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:23:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0414",
+        "elevId": "elev-0031",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:47:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0415",
+        "elevId": "elev-0032",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:14:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0416",
+        "elevId": "elev-0001",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0417",
+        "elevId": "elev-0002",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0418",
+        "elevId": "elev-0003",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0419",
+        "elevId": "elev-0004",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0420",
+        "elevId": "elev-0005",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0421",
+        "elevId": "elev-0006",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0422",
+        "elevId": "elev-0007",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0423",
+        "elevId": "elev-0008",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0424",
+        "elevId": "elev-0009",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0425",
+        "elevId": "elev-0010",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0426",
+        "elevId": "elev-0011",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0427",
+        "elevId": "elev-0013",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0428",
+        "elevId": "elev-0015",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0429",
+        "elevId": "elev-0016",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0430",
+        "elevId": "elev-0017",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0431",
+        "elevId": "elev-0018",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0432",
+        "elevId": "elev-0019",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0433",
+        "elevId": "elev-0020",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0434",
+        "elevId": "elev-0021",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0435",
+        "elevId": "elev-0023",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0436",
+        "elevId": "elev-0024",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0437",
+        "elevId": "elev-0025",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0438",
+        "elevId": "elev-0026",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0439",
+        "elevId": "elev-0027",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0440",
+        "elevId": "elev-0028",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0441",
+        "elevId": "elev-0030",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0442",
+        "elevId": "elev-0031",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0443",
+        "elevId": "elev-0032",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0444",
+        "elevId": "elev-0002",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:51:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0445",
+        "elevId": "elev-0003",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:02:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0446",
+        "elevId": "elev-0004",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:20:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0447",
+        "elevId": "elev-0005",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:34:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0448",
+        "elevId": "elev-0006",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:41:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0449",
+        "elevId": "elev-0007",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:03:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0450",
+        "elevId": "elev-0008",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:39:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0451",
+        "elevId": "elev-0009",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:30:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0452",
+        "elevId": "elev-0010",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:02:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0453",
+        "elevId": "elev-0011",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:33:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0454",
+        "elevId": "elev-0013",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:13:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0455",
+        "elevId": "elev-0015",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:41:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0456",
+        "elevId": "elev-0016",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:33:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0457",
+        "elevId": "elev-0017",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:43:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0458",
+        "elevId": "elev-0018",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:02:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0459",
+        "elevId": "elev-0019",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:37:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0460",
+        "elevId": "elev-0020",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:01:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0461",
+        "elevId": "elev-0021",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:17:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0462",
+        "elevId": "elev-0023",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:32:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0463",
+        "elevId": "elev-0024",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:23:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0464",
+        "elevId": "elev-0025",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:14:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0465",
+        "elevId": "elev-0026",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:04:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0466",
+        "elevId": "elev-0027",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:33:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0467",
+        "elevId": "elev-0028",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:45:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0468",
+        "elevId": "elev-0030",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:28:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0469",
+        "elevId": "elev-0031",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T15:25:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0470",
+        "elevId": "elev-0032",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:01:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0471",
+        "elevId": "elev-0001",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0472",
+        "elevId": "elev-0002",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0473",
+        "elevId": "elev-0003",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0474",
+        "elevId": "elev-0004",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:46:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0475",
+        "elevId": "elev-0006",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0476",
+        "elevId": "elev-0008",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0477",
+        "elevId": "elev-0009",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0478",
+        "elevId": "elev-0011",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0479",
+        "elevId": "elev-0012",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0480",
+        "elevId": "elev-0013",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:45:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0481",
+        "elevId": "elev-0014",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0482",
+        "elevId": "elev-0015",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0483",
+        "elevId": "elev-0016",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:48:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0484",
+        "elevId": "elev-0018",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:51:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0485",
+        "elevId": "elev-0021",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:52:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0486",
+        "elevId": "elev-0022",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0487",
+        "elevId": "elev-0023",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0488",
+        "elevId": "elev-0025",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0489",
+        "elevId": "elev-0026",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:47:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0490",
+        "elevId": "elev-0027",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0491",
+        "elevId": "elev-0028",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:49:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0492",
+        "elevId": "elev-0030",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0493",
+        "elevId": "elev-0031",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:40:00.000Z",
+        "type": "meldt-fravaer",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0494",
+        "elevId": "elev-0032",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T13:50:00.000Z",
+        "type": "inn",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0495",
+        "elevId": "elev-0001",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:12:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0496",
+        "elevId": "elev-0002",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:55:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0497",
+        "elevId": "elev-0003",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:27:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0498",
+        "elevId": "elev-0004",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:37:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0499",
+        "elevId": "elev-0006",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:38:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0500",
+        "elevId": "elev-0008",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:45:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0501",
+        "elevId": "elev-0009",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:19:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0502",
+        "elevId": "elev-0011",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:07:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0503",
+        "elevId": "elev-0012",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:19:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0504",
+        "elevId": "elev-0013",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:25:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0505",
+        "elevId": "elev-0014",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:05:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0506",
+        "elevId": "elev-0016",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:14:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0507",
+        "elevId": "elev-0018",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:25:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0508",
+        "elevId": "elev-0021",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:31:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0509",
+        "elevId": "elev-0022",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:03:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0510",
+        "elevId": "elev-0023",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:14:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0511",
+        "elevId": "elev-0025",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:04:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0512",
+        "elevId": "elev-0026",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:39:00.000Z",
+        "type": "ut",
+        "initialer": "CD",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0513",
+        "elevId": "elev-0027",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:17:00.000Z",
+        "type": "ut",
+        "initialer": null,
+        "erstatter": null
+      },
+      {
+        "id": "hend-0514",
+        "elevId": "elev-0028",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T15:44:00.000Z",
+        "type": "ut",
+        "initialer": "EF",
+        "erstatter": null
+      },
+      {
+        "id": "hend-0515",
+        "elevId": "elev-0032",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:38:00.000Z",
+        "type": "ut",
+        "initialer": "AB",
+        "erstatter": null
+      }
+    ],
+    "tellinger": [
+      {
+        "id": "tell-0001",
+        "dato": "2026-10-26",
+        "tid": "2026-10-26T14:30:00.000Z",
+        "antallForventet": 26,
+        "antallTalt": 26,
+        "initialer": "EF",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0002",
+        "dato": "2026-10-27",
+        "tid": "2026-10-27T14:30:00.000Z",
+        "antallForventet": 28,
+        "antallTalt": 28,
+        "initialer": "EF",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0003",
+        "dato": "2026-10-28",
+        "tid": "2026-10-28T14:30:00.000Z",
+        "antallForventet": 22,
+        "antallTalt": 22,
+        "initialer": "EF",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0004",
+        "dato": "2026-10-29",
+        "tid": "2026-10-29T14:30:00.000Z",
+        "antallForventet": 26,
+        "antallTalt": 26,
+        "initialer": "CD",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0005",
+        "dato": "2026-10-30",
+        "tid": "2026-10-30T14:30:00.000Z",
+        "antallForventet": 23,
+        "antallTalt": 23,
+        "initialer": "EF",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0006",
+        "dato": "2026-11-02",
+        "tid": "2026-11-02T14:30:00.000Z",
+        "antallForventet": 25,
+        "antallTalt": 25,
+        "initialer": "EF",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0007",
+        "dato": "2026-11-03",
+        "tid": "2026-11-03T14:30:00.000Z",
+        "antallForventet": 30,
+        "antallTalt": 30,
+        "initialer": "AB",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0008",
+        "dato": "2026-11-04",
+        "tid": "2026-11-04T14:30:00.000Z",
+        "antallForventet": 23,
+        "antallTalt": 23,
+        "initialer": "AB",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0009",
+        "dato": "2026-11-05",
+        "tid": "2026-11-05T14:30:00.000Z",
+        "antallForventet": 27,
+        "antallTalt": 27,
+        "initialer": "AB",
+        "kommentar": ""
+      },
+      {
+        "id": "tell-0010",
+        "dato": "2026-11-06",
+        "tid": "2026-11-06T14:30:00.000Z",
+        "antallForventet": 21,
+        "antallTalt": 21,
+        "initialer": "CD",
+        "kommentar": ""
+      }
+    ],
+    "tellingslinjer": [
+      {
+        "id": "tlin-0001",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0002",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0003",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0004",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0005",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0006",
+        "talt": true
+      },
+      {
+        "id": "tlin-0006",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0007",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0008",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0010",
+        "talt": true
+      },
+      {
+        "id": "tlin-0009",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0010",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0014",
+        "talt": true
+      },
+      {
+        "id": "tlin-0011",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0012",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0013",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0014",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0015",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0020",
+        "talt": true
+      },
+      {
+        "id": "tlin-0016",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0017",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0022",
+        "talt": true
+      },
+      {
+        "id": "tlin-0018",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0019",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0020",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0021",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0022",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0023",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0024",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0025",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0026",
+        "tellingId": "tell-0001",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0027",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0028",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0029",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0030",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0004",
+        "talt": true
+      },
+      {
+        "id": "tlin-0031",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0032",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0007",
+        "talt": true
+      },
+      {
+        "id": "tlin-0033",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0034",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0035",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0010",
+        "talt": true
+      },
+      {
+        "id": "tlin-0036",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0037",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0014",
+        "talt": true
+      },
+      {
+        "id": "tlin-0038",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0039",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0040",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0041",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0018",
+        "talt": true
+      },
+      {
+        "id": "tlin-0042",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0043",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0044",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0022",
+        "talt": true
+      },
+      {
+        "id": "tlin-0045",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0046",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0047",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0048",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0049",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0050",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0051",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0029",
+        "talt": true
+      },
+      {
+        "id": "tlin-0052",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0053",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0054",
+        "tellingId": "tell-0002",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0055",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0056",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0057",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0058",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0059",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0006",
+        "talt": true
+      },
+      {
+        "id": "tlin-0060",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0007",
+        "talt": true
+      },
+      {
+        "id": "tlin-0061",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0062",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0012",
+        "talt": true
+      },
+      {
+        "id": "tlin-0063",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0064",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0065",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0066",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0067",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0068",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0020",
+        "talt": true
+      },
+      {
+        "id": "tlin-0069",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0070",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0071",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0072",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0073",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0029",
+        "talt": true
+      },
+      {
+        "id": "tlin-0074",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0075",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0076",
+        "tellingId": "tell-0003",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0077",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0078",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0079",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0080",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0004",
+        "talt": true
+      },
+      {
+        "id": "tlin-0081",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0082",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0007",
+        "talt": true
+      },
+      {
+        "id": "tlin-0083",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0084",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0085",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0010",
+        "talt": true
+      },
+      {
+        "id": "tlin-0086",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0087",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0088",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0089",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0090",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0091",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0018",
+        "talt": true
+      },
+      {
+        "id": "tlin-0092",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0093",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0020",
+        "talt": true
+      },
+      {
+        "id": "tlin-0094",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0095",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0096",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0097",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0098",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0099",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0100",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0101",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0102",
+        "tellingId": "tell-0004",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0103",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0104",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0105",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0106",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0004",
+        "talt": true
+      },
+      {
+        "id": "tlin-0107",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0006",
+        "talt": true
+      },
+      {
+        "id": "tlin-0108",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0109",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0110",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0111",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0012",
+        "talt": true
+      },
+      {
+        "id": "tlin-0112",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0014",
+        "talt": true
+      },
+      {
+        "id": "tlin-0113",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0114",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0115",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0018",
+        "talt": true
+      },
+      {
+        "id": "tlin-0116",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0117",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0022",
+        "talt": true
+      },
+      {
+        "id": "tlin-0118",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0119",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0120",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0121",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0122",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0123",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0124",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0125",
+        "tellingId": "tell-0005",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0126",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0127",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0128",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0129",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0130",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0131",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0132",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0010",
+        "talt": true
+      },
+      {
+        "id": "tlin-0133",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0134",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0014",
+        "talt": true
+      },
+      {
+        "id": "tlin-0135",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0136",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0137",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0138",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0139",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0020",
+        "talt": true
+      },
+      {
+        "id": "tlin-0140",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0141",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0022",
+        "talt": true
+      },
+      {
+        "id": "tlin-0142",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0143",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0144",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0145",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0146",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0147",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0148",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0149",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0150",
+        "tellingId": "tell-0006",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0151",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0152",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0153",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0154",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0004",
+        "talt": true
+      },
+      {
+        "id": "tlin-0155",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0156",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0007",
+        "talt": true
+      },
+      {
+        "id": "tlin-0157",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0158",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0159",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0010",
+        "talt": true
+      },
+      {
+        "id": "tlin-0160",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0161",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0012",
+        "talt": true
+      },
+      {
+        "id": "tlin-0162",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0163",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0014",
+        "talt": true
+      },
+      {
+        "id": "tlin-0164",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0165",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0166",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0167",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0018",
+        "talt": true
+      },
+      {
+        "id": "tlin-0168",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0169",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0170",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0022",
+        "talt": true
+      },
+      {
+        "id": "tlin-0171",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0172",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0173",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0174",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0175",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0176",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0177",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0029",
+        "talt": true
+      },
+      {
+        "id": "tlin-0178",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0179",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0180",
+        "tellingId": "tell-0007",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0181",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0182",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0183",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0184",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0185",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0006",
+        "talt": true
+      },
+      {
+        "id": "tlin-0186",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0007",
+        "talt": true
+      },
+      {
+        "id": "tlin-0187",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0188",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0189",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0190",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0012",
+        "talt": true
+      },
+      {
+        "id": "tlin-0191",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0192",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0193",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0194",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0195",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0020",
+        "talt": true
+      },
+      {
+        "id": "tlin-0196",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0197",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0198",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0199",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0200",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0029",
+        "talt": true
+      },
+      {
+        "id": "tlin-0201",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0202",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0203",
+        "tellingId": "tell-0008",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0204",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0205",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0206",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0004",
+        "talt": true
+      },
+      {
+        "id": "tlin-0207",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0005",
+        "talt": true
+      },
+      {
+        "id": "tlin-0208",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0006",
+        "talt": true
+      },
+      {
+        "id": "tlin-0209",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0007",
+        "talt": true
+      },
+      {
+        "id": "tlin-0210",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0211",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0212",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0010",
+        "talt": true
+      },
+      {
+        "id": "tlin-0213",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0214",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0215",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0015",
+        "talt": true
+      },
+      {
+        "id": "tlin-0216",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0217",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0017",
+        "talt": true
+      },
+      {
+        "id": "tlin-0218",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0018",
+        "talt": true
+      },
+      {
+        "id": "tlin-0219",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0019",
+        "talt": true
+      },
+      {
+        "id": "tlin-0220",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0020",
+        "talt": true
+      },
+      {
+        "id": "tlin-0221",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0222",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0223",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0024",
+        "talt": true
+      },
+      {
+        "id": "tlin-0224",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0225",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0226",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0227",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0228",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0030",
+        "talt": true
+      },
+      {
+        "id": "tlin-0229",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0031",
+        "talt": true
+      },
+      {
+        "id": "tlin-0230",
+        "tellingId": "tell-0009",
+        "elevId": "elev-0032",
+        "talt": true
+      },
+      {
+        "id": "tlin-0231",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0001",
+        "talt": true
+      },
+      {
+        "id": "tlin-0232",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0002",
+        "talt": true
+      },
+      {
+        "id": "tlin-0233",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0003",
+        "talt": true
+      },
+      {
+        "id": "tlin-0234",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0004",
+        "talt": true
+      },
+      {
+        "id": "tlin-0235",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0006",
+        "talt": true
+      },
+      {
+        "id": "tlin-0236",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0008",
+        "talt": true
+      },
+      {
+        "id": "tlin-0237",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0009",
+        "talt": true
+      },
+      {
+        "id": "tlin-0238",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0011",
+        "talt": true
+      },
+      {
+        "id": "tlin-0239",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0012",
+        "talt": true
+      },
+      {
+        "id": "tlin-0240",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0013",
+        "talt": true
+      },
+      {
+        "id": "tlin-0241",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0014",
+        "talt": true
+      },
+      {
+        "id": "tlin-0242",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0016",
+        "talt": true
+      },
+      {
+        "id": "tlin-0243",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0018",
+        "talt": true
+      },
+      {
+        "id": "tlin-0244",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0021",
+        "talt": true
+      },
+      {
+        "id": "tlin-0245",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0022",
+        "talt": true
+      },
+      {
+        "id": "tlin-0246",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0023",
+        "talt": true
+      },
+      {
+        "id": "tlin-0247",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0025",
+        "talt": true
+      },
+      {
+        "id": "tlin-0248",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0026",
+        "talt": true
+      },
+      {
+        "id": "tlin-0249",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0027",
+        "talt": true
+      },
+      {
+        "id": "tlin-0250",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0028",
+        "talt": true
+      },
+      {
+        "id": "tlin-0251",
+        "tellingId": "tell-0010",
+        "elevId": "elev-0032",
+        "talt": true
+      }
+    ],
+    "innstillinger": [
+      {
+        "nokkel": "dataversjon",
+        "verdi": 1
+      },
+      {
+        "nokkel": "testdata",
+        "verdi": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+#!/bin/sh
+# Stopper commit av filer som kan inneholde ekte elevdata (DPIA T6, IF-04).
+# Aktiveres én gang med:  git config core.hooksPath tools/hooks
+
+blokkert=$(git diff --cached --name-only --diff-filter=ACMR | grep -v '^testdata/' | grep -Ei '\.(xlsx|xls|xlsm|csv|ods|pdf)$|SFO-backup-.*\.json$')
+
+if [ -n "$blokkert" ]; then
+  echo ""
+  echo "STOPP: Disse filene kan inneholde elevdata og skal ikke i repoet:"
+  echo "$blokkert" | sed 's/^/  - /'
+  echo ""
+  echo "Fjern dem fra commit med:  git restore --staged <fil>"
+  echo "Fiktive testdata hører hjemme i testdata/."
+  exit 1
+fi
+
+exit 0

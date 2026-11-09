@@ -1,0 +1,230 @@
+/* SFO-appen. Farger er plassholdere til Erdvias fargekoder er avklart (kravspesifikasjonen kap. 12). */
+
+:root {
+  --bakgrunn: #f5f6f8;
+  --flate: #ffffff;
+  --tekst: #1b1f24;
+  --dempet: #5b6470;
+  --linje: #d9dde3;
+  --primar: #1f5f8b;
+  --primar-tekst: #ffffff;
+  --ok: #1e7a45;
+  --ok-bakgrunn: #e5f4ea;
+  --advarsel: #8a5300;
+  --advarsel-bakgrunn: #fff4dc;
+  --fare: #b3261e;
+  --fare-bakgrunn: #fdecea;
+  --radius: 12px;
+  --trykk: 44px; /* IF-06: minste trykkflate */
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bakgrunn: #111418;
+    --flate: #1b2027;
+    --tekst: #eef1f4;
+    --dempet: #a3acb7;
+    --linje: #303844;
+    --primar: #5aa6d8;
+    --primar-tekst: #0b1a26;
+    --ok: #6fd39a;
+    --ok-bakgrunn: #15301f;
+    --advarsel: #f2c46b;
+    --advarsel-bakgrunn: #3a2c10;
+    --fare: #ff8a80;
+    --fare-bakgrunn: #3b1614;
+  }
+}
+
+/* IF-06: teksten følger iOS-innstillingen for tekststørrelse. */
+html { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 100%; }
+@supports (font: -apple-system-body) {
+  html { font: -apple-system-body; }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bakgrunn);
+  color: var(--tekst);
+  line-height: 1.4;
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  -webkit-text-size-adjust: 100%;
+}
+
+.topp {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 1rem 0.75rem;
+  background: var(--flate);
+  border-bottom: 1px solid var(--linje);
+}
+.topp h1 { margin: 0; font-size: 1.25rem; }
+.dato { margin: 0; color: var(--dempet); }
+
+main { padding: 1rem; max-width: 40rem; margin: 0 auto; outline: none; }
+
+.stabel { display: grid; gap: 1rem; }
+
+.kort {
+  background: var(--flate);
+  border: 1px solid var(--linje);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.kort h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.kort p { margin: 0.5rem 0; }
+
+.dempet { color: var(--dempet); }
+.merknad { color: var(--advarsel); }
+.advarsel {
+  color: var(--advarsel);
+  background: var(--advarsel-bakgrunn);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+
+.knapperad { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+
+.knapp {
+  min-height: var(--trykk);
+  min-width: var(--trykk);
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--linje);
+  border-radius: 10px;
+  background: var(--flate);
+  color: var(--tekst);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.knapp:active { transform: scale(0.98); }
+.knapp-primar { background: var(--primar); border-color: var(--primar); color: var(--primar-tekst); }
+.knapp-fare { background: var(--fare-bakgrunn); border-color: var(--fare); color: var(--fare); }
+.knapp-liten { min-height: 36px; padding: 0.3rem 0.8rem; }
+.knapp:focus-visible, .fane:focus-visible { outline: 3px solid var(--primar); outline-offset: 2px; }
+
+/* Faner nederst */
+.faner {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: var(--flate);
+  border-top: 1px solid var(--linje);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.fane {
+  min-height: 3.5rem;
+  border: 0;
+  background: none;
+  color: var(--dempet);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fane.valgt { color: var(--primar); box-shadow: inset 0 3px 0 var(--primar); }
+
+/* Oppdateringsbanner */
+.oppdatering {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--advarsel-bakgrunn);
+  color: var(--advarsel);
+}
+.oppdatering[hidden] { display: none; }
+
+/* Lister */
+.liste { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.liste-rad {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: var(--trykk);
+  align-items: center;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--linje);
+}
+.navn { font-weight: 600; }
+.merke { color: var(--dempet); font-size: 0.9em; text-align: right; }
+
+/* Tall */
+.tall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.5rem 0 0; }
+.tall div { text-align: center; }
+.tall dt { color: var(--dempet); font-size: 0.85em; }
+.tall dd { margin: 0; font-size: 1.5rem; font-weight: 700; }
+
+/* Teknisk test */
+.sjekkliste { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.sjekk {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+  padding: 0.5rem 0 0.5rem 1.75rem;
+  border-top: 1px solid var(--linje);
+  position: relative;
+}
+.sjekk::before { position: absolute; left: 0.25rem; top: 0.5rem; font-weight: 700; }
+.sjekk-ok::before { content: "✓"; color: var(--ok); }
+.sjekk-feil::before { content: "!"; color: var(--fare); }
+.sjekk-info::before { content: "i"; color: var(--dempet); }
+.sjekk-verdi { color: var(--dempet); text-align: right; overflow-wrap: anywhere; }
+
+.utvikler summary { font-weight: 600; min-height: var(--trykk); display: flex; align-items: center; cursor: pointer; }
+
+/* Dialog */
+.dialog {
+  width: min(32rem, calc(100vw - 2rem));
+  border: 1px solid var(--linje);
+  border-radius: var(--radius);
+  background: var(--flate);
+  color: var(--tekst);
+  padding: 1rem;
+}
+.dialog::backdrop { background: rgb(0 0 0 / 0.45); }
+.dialog-tittel { margin: 0 0 0.5rem; font-size: 1.15rem; }
+.dialog-knapper { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
+
+.sammenligning { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
+.sammenligning th, .sammenligning td { padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--linje); text-align: left; }
+.sammenligning td { font-variant-numeric: tabular-nums; }
+
+/* Meldinger */
+.melding {
+  position: fixed;
+  left: 1rem; right: 1rem;
+  bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  z-index: 4;
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: var(--tekst);
+  color: var(--bakgrunn);
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.melding.synlig { opacity: 1; transform: none; }
+.melding-ok { background: #1e7a45; color: #fff; }
+.melding-feil { background: #b3261e; color: #fff; }
+.melding-advarsel { background: #8a5300; color: #fff; }
+
+@media print {
+  .faner, .oppdatering, .knapperad, .utvikler { display: none !important; }
+  body { padding: 0; background: #fff; color: #000; }
+}

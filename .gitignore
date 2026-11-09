@@ -1,0 +1,23 @@
+# Ekte elevdata skal ALDRI ligge i repoet (IF-04, DPIA T6).
+# Ekte elevlister og sikkerhetskopier ligger bare på SFO-telefonen og i skolens OneDrive.
+
+# Elevlister og regneark
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.ods
+
+# Sikkerhetskopier og rapporter
+SFO-backup-*.json
+*.pdf
+
+# Unntak: fiktive testdata i testdata/
+!testdata/
+!testdata/**
+
+# Verktøy og system
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini

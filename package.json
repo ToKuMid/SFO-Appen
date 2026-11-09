@@ -1,0 +1,17 @@
+{
+  "name": "sfo-appen",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lokal webapp (PWA) for inn- og utsjekk, fravær og telling på SFO. Ingen data sendes over nett.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\"",
+    "serve": "node tools/serve.js",
+    "testdata": "node tools/lag-testdata.js",
+    "hooks": "git config core.hooksPath tools/hooks",
+    "e2e": "node tools/e2e-test.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
