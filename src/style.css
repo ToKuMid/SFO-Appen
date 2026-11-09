@@ -689,9 +689,46 @@ input[type="date"] {
 .gruppetittel { margin: 0.5rem 0 0; font-size: 0.875rem; font-weight: 600; color: var(--dempet, #5b6660); }
 .rapport-bunn { border-top: 1px solid #e4ded3; padding-top: 0.5rem; font-size: 0.6875rem; color: #5b6660; }
 
+/* ---------- Låseskjerm og koder (K-71–K-73) ---------- */
+.las {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: env(safe-area-inset-top) 1rem env(safe-area-inset-bottom); border: 0;
+  background: var(--bakgrunn); color: var(--tekst);
+}
+.las::backdrop { background: var(--bakgrunn); }
+.las-innhold {
+  min-height: 100%; max-width: 22rem; margin: 0 auto; padding: 2rem 0 1.5rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; text-align: center;
+}
+.las-logo { width: 72px; height: 72px; border-radius: 18px; }
+.las-tittel { margin: 0; font-family: var(--skrift-tittel); font-weight: 600; font-size: 1.75rem; line-height: 1.2; }
+.las-info { margin: 0; color: var(--dempet); line-height: 1.45; }
+.las-prikker { display: flex; gap: 0.875rem; margin: 0.75rem 0 0.25rem; }
+.las-prikk { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--primar); }
+.las-prikk.fylt { background: var(--primar); }
+.las-prikker.rist { animation: rist 0.35s; }
+@keyframes rist { 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-4px); } }
+@media (prefers-reduced-motion: reduce) { .las-prikker.rist { animation: none; } }
+.las-feil { margin: 0; min-height: 1.4em; color: var(--fare); font-weight: 500; }
+.las-tastatur { display: grid; grid-template-columns: repeat(3, 4.5rem); gap: 0.875rem 1.25rem; justify-content: center; margin-top: 0.25rem; }
+.las-tast {
+  width: 4.5rem; height: 4.5rem; border-radius: 50%; border: 1px solid var(--linje);
+  background: var(--flate); color: var(--tekst); font: 500 1.625rem/1 var(--skrift);
+  font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation;
+}
+.las-tast:active { background: var(--primar-svak); }
+.las-tast:disabled { opacity: 0.4; }
+.las-tast:focus-visible { outline: 3px solid var(--primar); outline-offset: 2px; }
+.las-tast-ikon, .las-tast-tekst { border-color: transparent; background: transparent; }
+.las-tast-tekst { font-size: 1rem; }
+.las-ekstra { margin-top: 0.5rem; }
+.skjult-tekst { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.admin-merknad { display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px solid var(--skille); padding-top: 0.75rem; }
+input:disabled, select:disabled { opacity: 0.65; }
+
 @media print {
   @page { size: A4; margin: 14mm 12mm 16mm; }
-  .faner, .oppdatering, .knapperad, .knappestabel, .teknisk, .ikke-utskrift, .melding, dialog { display: none !important; }
+  .faner, .oppdatering, .knapperad, .knappestabel, .teknisk, .ikke-utskrift, .melding, dialog, .las { display: none !important; }
   html, body { background: #fff !important; color: #000; font-size: 10pt; }
   body { padding: 0; }
   main { max-width: none; padding: 0; }

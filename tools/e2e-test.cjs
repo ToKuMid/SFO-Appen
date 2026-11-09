@@ -8,6 +8,7 @@ const path = require('path');
 const TESTDATA = path.join(__dirname, '..', 'testdata');
 const SP = require('fs').mkdtempSync(require('path').join(require('os').tmpdir(), 'sfo-e2e-'));
 const URL_APP = process.env.SFO_URL || 'http://localhost:8080/';
+const kode = require('./e2e-kode.cjs');
 const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; } else console.log('ok  ', m); };
 (async () => {
   const browser = await chromium.launch();
@@ -17,10 +18,28 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   page.on('console', m => logs.push(`${m.type()}: ${m.text()}`));
   page.on('pageerror', e => logs.push('pageerror: ' + e.message));
   await page.goto(URL_APP);
+  await kode.velgKoder(page);
+  ok(true, 'første start: ansattkode og administratorkode valgt (K-71)');
   await page.waitForFunction(() => navigator.serviceWorker.ready.then(() => true));
   await page.reload();
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
   ok(true, 'service worker aktiv');
+  ok(await page.isVisible('#las[open]'), 'appen er låst etter omlasting');
+  await kode.skriv(page, '1111');
+  await page.waitForFunction(() => /Feil kode/.test(document.querySelector('.las-feil')?.textContent));
+  ok(await page.isVisible('#las[open]'), 'feil kode låser ikke opp');
+  await kode.lasOpp(page);
+  ok(true, 'riktig kode låser opp');
+  // Skjult og synlig igjen (bytte av app, skjerm av) låser appen (K-71)
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+    Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  ok(await page.isVisible('#las[open]'), 'appen låses når den skjules');
+  await page.screenshot({ path: `${SP}/las.png` });
+  await kode.lasOpp(page);
 
   const apneTeknisk = async () => { await page.waitForSelector('#teknisk'); if (!(await page.$eval('#teknisk', (d) => d.open))) await page.click('#teknisk summary'); };
   await page.click('[data-fane=mer]');
@@ -35,7 +54,9 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   // testdata
   await apneTeknisk();
   await page.click('#last-testdata');
-  await page.click('dialog button:text-is("Last inn testdata")');
+  await kode.admin(page);
+  ok(true, 'utviklerverktøy krever administratorkode (K-72)');
+  await page.click('#dialog button:text-is("Last inn testdata")');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
   ok(true, '32 fiktive elever lastet');
   const hendFoer = await page.$$eval('.tall dd', d => d.map(x => x.textContent));
@@ -47,13 +68,14 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   ok(/^SFO-backup-\d{4}-\d{2}-\d{2}\.json$/.test(dl.suggestedFilename()), 'filnavn ' + dl.suggestedFilename());
   const kopi = JSON.parse(fs.readFileSync(sti, 'utf8'));
   ok(kopi.data.elever.length === 32 && kopi.format === 'sfo-appen-sikkerhetskopi', 'eksportfil inneholder 32 elever');
+  ok(!JSON.stringify(kopi).includes('kode-ansatt') && !JSON.stringify(kopi).includes('kode-admin'), 'kodene er ikke med i sikkerhetskopien');
   await page.waitForFunction(() => document.querySelector('#siste-sikkerhetskopi')?.textContent.includes('i dag'));
   ok(true, 'K-62 viser i dag etter eksport');
 
   // slett alt
   await apneTeknisk();
   await page.click('#slett-alt');
-  await page.click('dialog button:text-is("Slett alt")');
+  await page.click('#dialog button:text-is("Slett alt")');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '0');
   ok(true, 'alle data slettet');
 
@@ -61,16 +83,16 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   fs.writeFileSync(`${SP}/feil.json`, '{"format":"noe","data":{}}');
   let [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('#gjenopprett')]);
   await fc.setFiles(`${SP}/feil.json`);
-  await page.waitForSelector('dialog[open] >> text=Kan ikke gjenopprette');
+  await page.waitForSelector('#dialog[open] >> text=Kan ikke gjenopprette');
   ok(true, 'ugyldig fil avvist');
-  await page.click('dialog button:text-is("Lukk")');
+  await page.click('#dialog button:text-is("Lukk")');
 
   // gjenopprett
   [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('#gjenopprett')]);
   await fc.setFiles(sti);
-  await page.waitForSelector('dialog[open] >> text=Gjenopprette fra sikkerhetskopi?');
+  await page.waitForSelector('#dialog[open] >> text=Gjenopprette fra sikkerhetskopi?');
   await page.screenshot({ path: `${SP}/forhandsvisning.png` });
-  await page.click('dialog button:text-is("Erstatt alle data")');
+  await page.click('#dialog button:text-is("Erstatt alle data")');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
   const hendEtter = await page.$$eval('.tall dd', d => d.map(x => x.textContent));
   ok(JSON.stringify(hendFoer) === JSON.stringify(hendEtter), `gjenopprettet likt: ${hendEtter}`);
@@ -79,7 +101,7 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.click('[data-fane=mer]');
   await apneTeknisk();
   await page.click('#slett-alt');
-  await page.click('dialog button:text-is("Slett alt")');
+  await page.click('#dialog button:text-is("Slett alt")');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '0');
 
   const [mal] = await Promise.all([page.waitForEvent('download'), page.click('#hent-mal')]);
@@ -93,31 +115,31 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   const importer = async (fil) => {
     const [v] = await Promise.all([page.waitForEvent('filechooser'), page.click('#importer')]);
     await v.setFiles(fil);
-    await page.waitForSelector('dialog[open]');
-    return page.textContent('dialog[open]');
+    await page.waitForSelector('#dialog[open]');
+    return page.textContent('#dialog[open]');
   };
   let tekst = await importer(path.join(TESTDATA, 'fiktive-elever.xlsx'));
   if (process.env.DEBUG) console.log('DIALOG:', tekst);
   ok(/Importere elevlista\?/.test(tekst) && /Nyeelever32/.test(tekst.replace(/\s/g, '')), 'forhåndsvisning: 32 nye elever (K-01)');
   await page.screenshot({ path: `${SP}/import.png` });
-  await page.click('dialog button:text-is("Importer")');
+  await page.click('#dialog button:text-is("Importer")');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
   ok(true, 'import lagret 32 elever');
 
   tekst = await importer(path.join(TESTDATA, 'fiktive-elever.xlsx'));
   ok(/Ingen endringer/.test(tekst), 'samme fil igjen: ingen endringer, ingen duplikater (fase 2a-kriteriet)');
-  await page.click('dialog button:text-is("OK")');
+  await page.click('#dialog button:text-is("OK")');
   ok((await page.textContent('.tall dd')) === '32', 'fortsatt 32 elever');
 
   tekst = (await importer(path.join(TESTDATA, 'fiktive-elever-endret.xlsx'))).replace(/\s/g, '');
   ok(/Nyeelever1/.test(tekst) && /Oppdatert1/.test(tekst) && /Gåttoppettrinn1/.test(tekst) && /Deaktiveres1/.test(tekst), 'endret fil: 1 ny, 1 oppdatert, 1 opp et trinn, 1 deaktiveres (K-02)');
-  await page.click('dialog button:text-is("Importer")');
+  await page.click('#dialog button:text-is("Importer")');
   await page.waitForTimeout(500);
 
   fs.writeFileSync(`${SP}/elever.csv`, 'Fornavn;Etternavn\nA;B');
   tekst = await importer(`${SP}/elever.csv`);
   ok(/Kan ikke importere/.test(tekst) && /ikke en Excel-fil/.test(tekst), 'fil som ikke er Excel avvises');
-  await page.click('dialog button:text-is("Lukk")');
+  await page.click('#dialog button:text-is("Lukk")');
 
   // ---------- Fase 2a: elevregister ----------
   await page.click('[data-fane=elever]');
@@ -149,12 +171,19 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   const rad = await page.$('#elevliste a:has-text("Prøve Personsen")');
   ok(rad && /Går alene 15\.30/.test(await rad.textContent()), 'ny elev viser fast avtale som brikke (K-41)');
 
+  // Lås og lås opp: administratormodus er av. Ansatte kan endre avtaler, ikke navn (K-72)
+  await page.click('[data-fane=mer]');
+  await page.click('#las-naa');
+  await kode.lasOpp(page);
+  await page.click('[data-fane=elever]');
+  await page.waitForSelector('#elevliste');
   await page.fill('#sok', 'nyhilde');
   await page.click('#elevliste a:has-text("Nyhilde")');
   await page.waitForSelector('#rediger');
   await page.click('#rediger');
   await page.waitForSelector('#merknad');
   ok((await page.inputValue('#fornavn')) === 'Nyhilde', 'redigering viser lagrede verdier');
+  ok(await page.isDisabled('#fornavn') && !(await page.isDisabled('#merknad')) && !(await page.$('#deaktiver')), 'uten administratorkode: navn låst, merknad åpen, ingen deaktivering');
   await page.fill('#merknad', 'Hentes av tante på torsdager');
   await page.click('#lagre-elev');
   await page.waitForSelector('#kort-status');
@@ -165,9 +194,12 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.click('#elevliste a:has-text("Prøve Personsen")');
   await page.waitForSelector('#rediger');
   await page.click('#rediger');
+  await page.click('#admin-las-opp');
+  await kode.admin(page);
   await page.waitForSelector('#deaktiver');
+  ok(!(await page.isDisabled('#fornavn')), 'med administratorkode kan navn endres');
   await page.click('#deaktiver');
-  await page.click('dialog button:text-is("Deaktiver")');
+  await page.click('#dialog button:text-is("Deaktiver")');
   await page.waitForSelector('#elevliste');
   ok((await page.$$('#elevliste > li')).length === 32 && (await page.textContent('details.teknisk summary')).includes('(2)'), 'elev deaktivert, historikk beholdt (K-03)');
 
@@ -180,6 +212,7 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   // flymodus
   await ctx.setOffline(true);
   await page.reload();
+  await kode.lasOpp(page);
   await page.waitForSelector('#elevliste');
   ok((await page.$$('#elevliste > li')).length === 32, 'virker i flymodus etter omlasting, data består');
   await page.click('[data-fane=mer]');

@@ -6,6 +6,8 @@ import {
   ALLE_SKOLEGRUPPER, MAKS_MERKNAD, SKOLEGRUPPER, UKEDAGER, avtaleFra, kontrollerElev, navnNokkel,
 } from '../model/elev.js';
 import { elevRad, pilVenstre, skjermTopp, sorterElever } from './felles.js';
+import { krevAdmin } from './las.js';
+import { erAdmin } from '../tilgang.js';
 
 // ---------- Liste ----------
 
@@ -53,6 +55,20 @@ export async function visEleverListe() {
 /** Viser skjemaet for en elev. id = 'ny' for ny elev. */
 export async function visElevSkjema(id, naviger) {
   const ny = id === 'ny';
+  // Navn, trinn, gruppe, SFO-dager og deaktivering krever administratorkode (K-72).
+  // Faste avtaler og merknad kan alle ansatte endre.
+  const admin = erAdmin();
+  if (ny && !admin) {
+    return h('div', { class: 'skjerm' },
+      tilbakeLenke(),
+      skjermTopp({ tittel: 'Ny elev', visDato: false }),
+      h('section', { class: 'kort' },
+        h('p', {}, 'Å legge til elever krever administratorkode. Vanligvis legges elever inn ved å importere elevlista under Mer.'),
+        h('button', {
+          type: 'button', class: 'knapp knapp-primar', id: 'admin-las-opp',
+          onclick: async () => { if (await krevAdmin('Å legge til elever krever administratorkode.')) naviger('elever/ny'); },
+        }, 'Skriv administratorkode')));
+  }
   const elev = ny ? null : await hent('elever', id);
   if (!ny && !elev) {
     return h('div', { class: 'skjerm' },
@@ -73,13 +89,13 @@ export async function visElevSkjema(id, naviger) {
 
   const feilboks = h('div', { class: 'feilboks', role: 'alert', hidden: true });
 
-  const fornavn = tekstfelt('fornavn', 'Fornavn', v.fornavn, { autocomplete: 'off', autocapitalize: 'words' });
-  const etternavn = tekstfelt('etternavn', 'Etternavn', v.etternavn, { autocomplete: 'off', autocapitalize: 'words' });
+  const fornavn = tekstfelt('fornavn', 'Fornavn', v.fornavn, { autocomplete: 'off', autocapitalize: 'words', disabled: !admin });
+  const etternavn = tekstfelt('etternavn', 'Etternavn', v.etternavn, { autocomplete: 'off', autocapitalize: 'words', disabled: !admin });
 
-  const trinn = h('select', { id: 'trinn', required: true },
+  const trinn = h('select', { id: 'trinn', required: true, disabled: !admin },
     h('option', { value: '' }, 'Velg'),
     [1, 2, 3, 4].map((t) => h('option', { value: t, selected: t === v.trinn }, `${t}. trinn`)));
-  const gruppe = h('select', { id: 'skolegruppe', required: true });
+  const gruppe = h('select', { id: 'skolegruppe', required: true, disabled: !admin });
   const fyllGrupper = () => {
     const t = Number(trinn.value);
     const valgt = gruppe.value || v.skolegruppe;
@@ -92,7 +108,7 @@ export async function visElevSkjema(id, naviger) {
   trinn.addEventListener('change', fyllGrupper);
 
   const dager = UKEDAGER.map((d) => {
-    const boks = h('input', { type: 'checkbox', value: d.nr, checked: v.ukedager.includes(d.nr), 'aria-label': d.navn });
+    const boks = h('input', { type: 'checkbox', value: d.nr, checked: v.ukedager.includes(d.nr), 'aria-label': d.navn, disabled: !admin });
     return { boks, el: h('label', { class: 'dagvalg' }, boks, h('span', {}, d.kort)) };
   });
 
@@ -185,7 +201,13 @@ export async function visElevSkjema(id, naviger) {
           h('div', { class: 'felt' }, h('label', { for: 'skolegruppe', class: 'feltnavn' }, 'Skolegruppe'), gruppe)),
         h('fieldset', { class: 'felt' },
           h('legend', { class: 'feltnavn' }, 'SFO-dager'),
-          h('div', { class: 'dagrad' }, dager.map((d) => d.el)))),
+          h('div', { class: 'dagrad' }, dager.map((d) => d.el))),
+        admin ? null : h('div', { class: 'admin-merknad', id: 'krever-admin' },
+          h('p', { class: 'dempet liten' }, 'Navn, trinn, gruppe og SFO-dager kan bare endres med administratorkode.'),
+          h('button', {
+            type: 'button', class: 'knapp knapp-omriss', id: 'admin-las-opp',
+            onclick: async () => { if (await krevAdmin('Endring av elevopplysninger krever administratorkode.')) naviger(`elever/${id}`); },
+          }, 'Endre elevopplysninger'))),
       h('section', { class: 'kort' },
         h('h2', {}, 'Faste avtaler'),
         h('div', { class: 'to-kolonner' },
@@ -199,10 +221,10 @@ export async function visElevSkjema(id, naviger) {
       h('div', { class: 'knappestabel' },
         h('button', { type: 'submit', class: 'knapp knapp-primar knapp-stor', id: 'lagre-elev' }, 'Lagre'),
         h('a', { class: 'knapp knapp-lenkeknapp', href: tilbake }, 'Avbryt'),
-        !ny && elev.aktiv !== false
+        admin && !ny && elev.aktiv !== false
           ? h('button', { type: 'button', class: 'knapp knapp-fare', id: 'deaktiver', onclick: () => settAktiv(false) }, 'Deaktiver elev')
           : null,
-        !ny && elev.aktiv === false
+        admin && !ny && elev.aktiv === false
           ? h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'aktiver', onclick: () => settAktiv(true) }, 'Aktiver igjen')
           : null)));
 }

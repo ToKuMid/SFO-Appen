@@ -18,6 +18,17 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Kode for å åpne appen (versjon 0.7.0, K-71 til K-73) er bygget.**
+
+- Første gang appen åpnes, velges en **kode for ansatte (4 siffer)** og en **administratorkode (6 siffer)**. Like siffer (0000) og rekker (1234) godtas ikke.
+- Appen låses **hver gang** den blir skjult: bytte til en annen app, hjem-knappen eller skjermen av. Det er ingen tidsfrist. Unntaket er når appen selv åpner filvelger, delingsark eller utskrift: da låses den ikke, med mindre brukeren er borte i mer enn to minutter.
+- Administratorkoden kreves for import av elevliste, ny elev, endring av navn, trinn, gruppe og SFO-dager, deaktivering, gjenoppretting fra sikkerhetskopi, utviklerverktøy og bytte av koder. Administratormodus varer til appen låses, eller til man trykker **Avslutt administratormodus** under **Mer → Tilgang**. Faste avtaler og merknader kan alle ansatte endre.
+- **Glemt koden?** på låseskjermen: med administratorkoden kan man velge ny kode for ansatte.
+- Etter fem feil forsøk må man vente 30 sekunder, og ventetiden dobles for hver ny feil (høyst 15 minutter).
+- Kodene lagres bare som hash (PBKDF2 med salt), aldri i klartekst. De tas ikke med i sikkerhetskopien, og de beholdes ved gjenoppretting, testdata og «Slett alle data».
+- Koden hindrer at noen åpner appen på en ulåst telefon. Den krypterer ikke dataene. Telefonens egen kodelås trengs fortsatt.
+- **Glemt administratorkode** kan ikke gjenopprettes. Da må appen fjernes fra hjemskjermen (det sletter alle data), installeres på nytt og fylles fra siste sikkerhetskopi.
+
 **Grupperapport (versjon 0.5.4, K-50 og K-52) er bygget**, før test med SFO-ansatte. Den ligger under **Mer → Rapporter → Grupperapport**.
 
 - Periode: i dag, denne uka, denne måneden eller egen periode (høyst ett år).
@@ -91,10 +102,12 @@ src/model/status.js   – dagens status regnet ut fra hendelsene
 src/model/rapport.js  – grupperapporten og elevrapporten
 src/import/xlsx.js    – leser og skriver Excel-filer (.xlsx)
 src/import/elevliste.js – import av elevlista: kontroll, kobling og endringsliste
-src/filer.js          – lagre og åpne filer (delingsark eller nedlasting)
+src/filer.js          – lagre og åpne filer (delingsark eller nedlasting), utskrift
+src/kode.js           – koder: hash, kontroll av nye koder, ventetid etter feil
+src/tilgang.js        – låst/opplåst og administratormodus
 src/plattform.js      – teknisk test av telefonen
 src/dato.js, dom.js   – hjelpere
-src/ui/               – skjermbildene (felles.js, skjermer.js, elever.js, import.js, mer.js)
+src/ui/               – skjermbildene (felles.js, skjermer.js, elever.js, import.js, mer.js, las.js = låseskjerm)
 src/dev/testdata.js   – fiktive testdata
 icons/                – app-ikon (blomsten fra skolelogoen) og skolelogo til rapporten
 fonts/                – skrifttypene Fraunces og Work Sans (SIL Open Font License, se OFL-filene)
@@ -147,9 +160,9 @@ Service worker krever https, så telefonen må hente appen fra GitHub Pages (ikk
 
 1. Åpne adressen fra steg 4 i Chrome.
 2. Meny (⋮) → **Installer app** eller **Legg til på startsiden**.
-3. Åpne appen fra ikonet på hjemskjermen.
+3. Åpne appen fra ikonet på hjemskjermen. Velg kode for ansatte og administratorkode (bruk testkoder på testtelefonen).
 4. Gå til **Mer → Teknisk test** og noter resultatet.
-5. **Mer → Utviklerverktøy → Last inn fiktive testdata**.
+5. **Mer → Utviklerverktøy → Last inn fiktive testdata** (krever administratorkode).
 6. Test fase 1-kriteriet (under). Bruk bare fiktive data på testtelefonen (IF-10).
 
 ## Ferdig-kriterium for fase 1
@@ -172,6 +185,16 @@ Det som gjelder spesielt for iPhone, testes på SFO-telefonen før fase 3 (kravs
 3. Kjør `npm test`, commit og push. Telefonen viser «Ny versjon av appen er klar» neste gang appen åpnes.
 
 Endres datamodellen: øk `DATAVERSJON` og `DB_VERSJON` i `src/db.js`, legg til et oppgraderingssteg der, og en migrering for sikkerhetskopier i `src/backup.js`. Et oppgraderingssteg skal aldri slette data.
+
+## Teste koden på telefonen
+
+1. Installer versjon 0.7.0 og åpne appen. Velg kode for ansatte og administratorkode. Prøv først 1234: appen skal avvise den.
+2. Trykk hjem-knappen og åpne appen igjen: låseskjermen skal vises. Gjør det samme med skjermen av og på, og ved bytte til en annen app.
+3. Skriv feil kode fem ganger: appen skal vente 30 sekunder.
+4. **Glemt koden?** → administratorkode → velg ny kode for ansatte. Lås opp med den nye koden.
+5. **Mer → Importer fra Excel**: appen spør etter administratorkoden, og filvelgeren åpnes etterpå. Sjekk at appen ikke låses mens du velger fil. På iPhone må det sjekkes at filvelgeren åpnes direkte etter at koden er skrevet.
+6. **Mer → Lås appen nå**, lås opp, og åpne et elevkort → **Rediger avtaler**: navn og trinn skal være låst, merknad skal kunne endres.
+7. Ta sikkerhetskopi og skriv ut en rapport: appen skal ikke låses mens delingsarket eller utskriften er åpen.
 
 ## Teste fase 2a på telefonen
 

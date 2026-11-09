@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const URL_APP = process.env.SFO_URL || 'http://localhost:8080/';
 const SP = fs.mkdtempSync(path.join(require('os').tmpdir(), 'sfo-ettermiddag-'));
+const kode = require('./e2e-kode.cjs');
 const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; } else console.log('ok  ', m); };
 const tall = (s) => Number(String(s).trim());
 
@@ -18,12 +19,14 @@ const tall = (s) => Number(String(s).trim());
   // Mandag 9. november 2026 kl. 14.40
   await page.clock.install({ time: new Date(2026, 10, 9, 14, 40) });
   await page.goto(`${URL_APP}#mer`);
-  const knapp = (tekst) => page.click(`dialog button:text-is("${tekst}")`);
+  const knapp = (tekst) => page.click(`#dialog button:text-is("${tekst}")`);
 
   // Fiktive testdata
+  await kode.velgKoder(page);
   await page.waitForSelector('#teknisk');
   await page.click('#teknisk summary');
   await page.click('#last-testdata');
+  await kode.admin(page);
   await knapp('Last inn testdata');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
 
@@ -47,7 +50,7 @@ const tall = (s) => Number(String(s).trim());
   }
   ok((await page.$$('#forventet li')).length === 3, 'Andre: tre forventede igjen etter innsjekk (K-14)');
   await page.click('#forventet li:first-child button[data-handling=fravaer]');
-  await page.waitForSelector('dialog[open] input[name=fravaertype]');
+  await page.waitForSelector('#dialog[open] input[name=fravaertype]');
   await page.fill('#fravaer-initialer', 'kt');
   await knapp('Lagre fravær');
   await page.waitForSelector('#fravaer li');
@@ -126,7 +129,7 @@ const tall = (s) => Number(String(s).trim());
   }
   ok(tall(await page.textContent('#antall-inne')) === 0, 'alle sjekket ut ved stengetid');
   await page.click('#avslutt-dagen');
-  const avslutt = await page.textContent('dialog[open]');
+  const avslutt = await page.textContent('#dialog[open]');
   ok(/Ingen barn står som inne/.test(avslutt) && /1 forventet ble aldri registrert/.test(avslutt) && /sikkerhetskopi/i.test(avslutt), 'dagsavslutning: ingen inne, 1 uregistrert, påminnelse om sikkerhetskopi (K-20)');
   await page.screenshot({ path: `${SP}/7-avslutt.png` });
 

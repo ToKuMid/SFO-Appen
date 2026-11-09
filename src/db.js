@@ -8,6 +8,8 @@
 //   2. legg til et steg i OPPGRADERINGER under (endrer aldri eller sletter eksisterende data, IF-09)
 //   3. legg til tilsvarende migrering for sikkerhetskopier i backup.js
 
+import { erKodeNokkel } from './kode.js';
+
 export const DB_NAVN = 'sfo-appen';
 export const DB_VERSJON = 1;
 export const DATAVERSJON = 1;
@@ -150,6 +152,15 @@ export async function erstattAltInnhold(data) {
   const tx = db.transaction(TABELLNAVN, 'readwrite');
   for (const navn of TABELLNAVN) {
     const store = tx.objectStore(navn);
+    if (navn === 'innstillinger') {
+      // Kodene for å åpne appen beholdes alltid, og kan ikke settes fra en fil.
+      const nokler = store.getAllKeys();
+      nokler.onsuccess = () => {
+        for (const k of nokler.result) if (!erKodeNokkel(k)) store.delete(k);
+        for (const rad of data[navn] || []) if (!erKodeNokkel(rad?.nokkel)) store.put(rad);
+      };
+      continue;
+    }
     store.clear();
     for (const rad of data[navn] || []) store.put(rad);
   }

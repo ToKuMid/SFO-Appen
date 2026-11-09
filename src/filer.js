@@ -1,7 +1,15 @@
 // Lagre og åpne filer. Appen sender aldri filer over nett; brukeren velger selv
 // hvor filen skal (for eksempel OneDrive via delingsarket eller Filer-appen).
 
+import { aapnerSystemvindu } from './tilgang.js';
+
 const MAKS_FIL = 10 * 1024 * 1024;
+
+/** Åpner utskrift (eller «Lagre som PDF») uten at appen låses mens vinduet er åpent. */
+export function skrivUt() {
+  aapnerSystemvindu();
+  window.print();
+}
 
 /**
  * Lagrer en fil.
@@ -11,6 +19,7 @@ const MAKS_FIL = 10 * 1024 * 1024;
  */
 export async function lagreFil(innhold, navn, type = 'application/json') {
   const fil = new File([innhold], navn, { type });
+  aapnerSystemvindu();
   if (navigator.canShare?.({ files: [fil] })) {
     try {
       await navigator.share({ files: [fil], title: navn });
@@ -47,6 +56,7 @@ export function velgFil({ accept = '.json,application/json', binar = false } = {
       resolve(binar ? { navn: fil.name, data: await fil.arrayBuffer() } : { navn: fil.name, tekst: await fil.text() });
     });
     input.addEventListener('cancel', () => resolve(null));
+    aapnerSystemvindu();
     input.click();
   });
 }

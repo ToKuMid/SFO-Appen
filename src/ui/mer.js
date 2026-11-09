@@ -11,6 +11,9 @@ import { lagTestdata } from '../dev/testdata.js';
 import { APP_VERSJON } from '../versjon.js';
 import { skjermTopp } from './felles.js';
 import { hentMal, importerElevliste } from './import.js';
+import { avsluttAdmin, byttKode, krevAdmin, laas } from './las.js';
+import { erAdmin } from '../tilgang.js';
+import { skrivUt } from '../filer.js';
 
 // Husker om «Teknisk test og utviklerverktøy» er åpen når skjermen tegnes på nytt.
 let tekniskApen = false;
@@ -32,7 +35,7 @@ export async function visMer(oppfrisk) {
       h('h2', {}, 'Elevliste'),
       h('p', {}, [`${aktive} aktive elever`, testdata ? 'fiktive testdata' : null, sisteImport ? `sist importert ${kortDato(sisteImport)}` : null].filter(Boolean).join(' · ')),
       h('div', { class: 'knappestabel' },
-        h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'importer', onclick: () => importerElevliste(oppfrisk) }, 'Importer fra Excel'),
+        h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'importer', onclick: async () => { if (await krevAdmin('Import av elevliste krever administratorkode.')) importerElevliste(oppfrisk); } }, 'Importer fra Excel'),
         h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'hent-mal', onclick: () => hentMal() }, 'Hent tom Excel-mal')),
       h('p', { class: 'dempet liten' }, 'Elever som ikke står i fila, blir deaktivert. Historikken deres beholdes.')),
     h('section', { class: 'kort' },
@@ -47,6 +50,7 @@ export async function visMer(oppfrisk) {
           },
         }, VARSELTIDER.map((t) => h('option', { value: t, selected: t === varsel }, klokkeslett(t))))),
     ),
+    seksjonTilgang(oppfrisk),
     h('section', { class: 'kort' },
       h('h2', {}, 'Rapporter'),
       h('a', { class: 'knapp knapp-omriss knapp-lenkeknapp', href: '#rapport/gruppe', id: 'apne-grupperapport' }, 'Grupperapport'),
@@ -56,6 +60,23 @@ export async function visMer(oppfrisk) {
     h('p', { class: 'fotnote' }, 'Alle data lagres bare på denne telefonen.'),
     h('p', { class: 'fotnote' }, `Versjon ${APP_VERSJON} · dataversjon ${DATAVERSJON}`),
   );
+}
+
+// ---------- Tilgang (K-71–K-73) ----------
+
+function seksjonTilgang(oppfrisk) {
+  const admin = erAdmin();
+  return h('section', { class: 'kort', id: 'tilgang' },
+    h('h2', {}, 'Tilgang'),
+    h('p', { class: `statuslinje ${admin ? 'varsel' : ''}`, id: 'admin-status' }, admin
+      ? 'Administratormodus er på til appen låses.'
+      : 'Appen låses hver gang den lukkes, byttes bort fra eller skjermen slås av.'),
+    h('div', { class: 'knappestabel' },
+      h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'las-naa', onclick: () => laas() }, 'Lås appen nå'),
+      admin ? h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'avslutt-admin', onclick: () => { avsluttAdmin(); oppfrisk(); } }, 'Avslutt administratormodus') : null,
+      h('button', { type: 'button', class: 'knapp', id: 'bytt-ansattkode', onclick: async () => { await byttKode('ansatt'); oppfrisk(); } }, 'Bytt kode for ansatte'),
+      h('button', { type: 'button', class: 'knapp', id: 'bytt-adminkode', onclick: async () => { await byttKode('admin'); oppfrisk(); } }, 'Bytt administratorkode')),
+    h('p', { class: 'dempet liten' }, 'Import av elevliste, endring av elever og gjenoppretting krever administratorkode. Faste avtaler og merknader kan alle ansatte endre.'));
 }
 
 // ---------- Sikkerhetskopi ----------
@@ -75,7 +96,7 @@ function seksjonSikkerhetskopi(siste, oppfrisk) {
     h('p', { class: `statuslinje ${s.varsel ? 'varsel' : ''}`, id: 'siste-sikkerhetskopi' }, s.tekst),
     h('div', { class: 'knappestabel' },
       h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'eksporter', onclick: () => eksporter(oppfrisk) }, 'Ta sikkerhetskopi nå'),
-      h('button', { type: 'button', class: 'knapp', id: 'gjenopprett', onclick: () => gjenopprett(oppfrisk) }, 'Gjenopprett fra fil')),
+      h('button', { type: 'button', class: 'knapp', id: 'gjenopprett', onclick: async () => { if (await krevAdmin('Gjenoppretting fra sikkerhetskopi krever administratorkode.')) gjenopprett(oppfrisk); } }, 'Gjenopprett fra fil')),
     h('p', { class: 'dempet liten' }, 'Lagres via delingsarket i SFO-mappen på OneDrive. Ta kopi ved dagsavslutning, eller minst én gang i uka.'));
 }
 
@@ -184,12 +205,12 @@ function seksjonTeknisk(oppfrisk) {
       liste,
       h('div', { class: 'knapperad' },
         h('button', { type: 'button', class: 'knapp', onclick: async () => visMelding(await testSkjermlas(30)) }, 'Test skjermlås'),
-        h('button', { type: 'button', class: 'knapp', onclick: () => window.print() }, 'Test utskrift/PDF')),
+        h('button', { type: 'button', class: 'knapp', onclick: () => skrivUt() }, 'Test utskrift/PDF')),
       h('p', { class: 'underoverskrift' }, 'Utviklerverktøy'),
       h('p', { class: 'advarsel' }, 'Brukes bare på testtelefonen. Begge knappene erstatter alle data på telefonen.'),
       h('div', { class: 'knapperad' },
-        h('button', { type: 'button', class: 'knapp', id: 'last-testdata', onclick: () => lastTestdata(oppfrisk) }, 'Last inn fiktive testdata'),
-        h('button', { type: 'button', class: 'knapp knapp-fare', id: 'slett-alt', onclick: () => slettAlt(oppfrisk) }, 'Slett alle data'))));
+        h('button', { type: 'button', class: 'knapp', id: 'last-testdata', onclick: async () => { if (await krevAdmin('Utviklerverktøy krever administratorkode.')) lastTestdata(oppfrisk); } }, 'Last inn fiktive testdata'),
+        h('button', { type: 'button', class: 'knapp knapp-fare', id: 'slett-alt', onclick: async () => { if (await krevAdmin('Utviklerverktøy krever administratorkode.')) slettAlt(oppfrisk); } }, 'Slett alle data'))));
   detaljer.addEventListener('toggle', () => { tekniskApen = detaljer.open; });
   return detaljer;
 }

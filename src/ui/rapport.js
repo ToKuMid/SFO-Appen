@@ -6,6 +6,7 @@ import { hentAlle, hentIntervall } from '../db.js';
 import { kortDatoMedDag, klokkeFra, langDato, lokalDato, tidspunktTekst } from '../dato.js';
 import { grupperapport, kontrollerPeriode, periode } from '../model/rapport.js';
 import { APP_VERSJON } from '../versjon.js';
+import { skrivUt } from '../filer.js';
 import { pilVenstre } from './felles.js';
 
 const VALG = [
@@ -42,7 +43,7 @@ export function periodeKontroller({ fra, til, feil }, idag, oppfrisk) {
       }, v.tekst))),
     valgt.type === 'egen' ? egenPeriode(fra, til, idag, oppfrisk) : null,
     feil ? h('p', { class: 'feilboks', role: 'alert' }, feil) : null,
-    h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'skriv-ut', disabled: !!feil, onclick: () => window.print() }, 'Skriv ut eller lagre som PDF'),
+    h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'skriv-ut', disabled: !!feil, onclick: () => skrivUt() }, 'Skriv ut eller lagre som PDF'),
     h('p', { class: 'dempet liten' }, 'Velg «Lagre som PDF» i utskriftsvinduet, og lagre fila i SFO-mappen i skolens OneDrive. Rapporten inneholder personopplysninger om barn.'));
 }
 

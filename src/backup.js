@@ -12,6 +12,7 @@
 
 import { DATAVERSJON, TABELLER, TABELLNAVN } from './db.js';
 import { lokalDato } from './dato.js';
+import { erKodeNokkel } from './kode.js';
 
 export const FORMAT = 'sfo-appen-sikkerhetskopi';
 
@@ -23,6 +24,8 @@ export function filnavn(d = new Date()) {
 export function byggSikkerhetskopi(data, { appversjon, naa = new Date() } = {}) {
   const kopi = {};
   for (const navn of TABELLNAVN) kopi[navn] = Array.isArray(data[navn]) ? data[navn] : [];
+  // Kodene for å åpne appen tas aldri med i sikkerhetskopien.
+  kopi.innstillinger = kopi.innstillinger.filter((r) => !erKodeNokkel(r?.nokkel));
   return {
     format: FORMAT,
     dataversjon: DATAVERSJON,

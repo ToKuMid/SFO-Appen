@@ -5,6 +5,8 @@
  * h('button', { class: 'knapp', onclick: fn }, 'Tekst')
  * Attributter som starter med «on» blir hendelser. Barn kan være tekst, noder, lister eller null.
  */
+import { naarOpplast } from './tilgang.js';
+
 export function h(tag, attrs = {}, ...barn) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs ?? {})) {
@@ -31,7 +33,9 @@ function leggTil(el, barn) {
  * knapper: [{ tekst, verdi, type: 'primar' | 'fare' | undefined }]
  * Returnerer verdien til knappen som ble trykket, eller null ved Esc.
  */
-export function visDialog({ tittel, innhold = [], knapper = [{ tekst: 'OK', verdi: true, type: 'primar' }] }) {
+export async function visDialog({ tittel, innhold = [], knapper = [{ tekst: 'OK', verdi: true, type: 'primar' }] }) {
+  // Mens appen er låst, venter dialogen til koden er skrevet.
+  await naarOpplast();
   const dialog = document.getElementById('dialog');
   dialog.replaceChildren(
     h('h2', { class: 'dialog-tittel' }, tittel),

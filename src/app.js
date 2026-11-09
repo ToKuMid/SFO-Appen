@@ -9,6 +9,7 @@ import { visElevSkjema, visEleverListe } from './ui/elever.js';
 import { visElevkort } from './ui/elevkort.js';
 import { visGrupperapport } from './ui/rapport.js';
 import { visElevrapport } from './ui/elevrapport.js';
+import { startTilgang } from './ui/las.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
@@ -152,6 +153,8 @@ async function start() {
     visMelding(`Databasen kunne ikke åpnes: ${e.message}`, 'feil');
   }
 
+  // Låseskjermen kommer før noe annet vises (K-71). Første gang velges kodene.
+  await startTilgang();
   registrerServiceWorker();
   window.addEventListener('hashchange', visAdresse);
   await visAdresse();
