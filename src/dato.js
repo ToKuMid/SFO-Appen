@@ -26,6 +26,12 @@ export function datoTekst(d = new Date()) {
   return `${dag[0].toUpperCase()}${dag.slice(1)} ${d.getDate()}. ${MANEDER[d.getMonth()]}`;
 }
 
+/** «12. august» */
+export function kortDato(iso) {
+  const d = new Date(iso);
+  return `${d.getDate()}. ${MANEDER[d.getMonth()]}`;
+}
+
 /** «Kl. 15.12» */
 export function klokkeTekst(d = new Date()) {
   return `Kl. ${to(d.getHours())}.${to(d.getMinutes())}`;

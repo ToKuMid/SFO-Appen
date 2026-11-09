@@ -3,20 +3,35 @@ import { apneDb, beOmVedvarendeLagring, DATAVERSJON, hentInnstilling, lagreInnst
 import { klokkeTekst, lokalDato } from './dato.js';
 import { visMelding } from './dom.js';
 import { visMer } from './ui/mer.js';
-import { visAndre, visEleverListe, visIdag, visTelling } from './ui/skjermer.js';
+import { visAndre, visIdag, visTelling } from './ui/skjermer.js';
+import { visElevSkjema, visEleverListe } from './ui/elever.js';
 
+// Adresser: #idag, #andre, #telling, #elever, #elever/<id>, #elever/ny, #mer
 const SKJERMER = {
   idag: visIdag,
   andre: visAndre,
   telling: visTelling,
-  elever: visEleverListe,
-  mer: () => visMer(() => visFane('mer', { behold: true })),
+  elever: (param) => (param ? visElevSkjema(param, naviger) : visEleverListe()),
+  mer: () => visMer(() => visFane('mer', null, { behold: true })),
 };
 let aktivFane = 'idag';
+let aktivParam = null;
 let visningsdato = lokalDato();
 
-async function visFane(fane, { behold = false } = {}) {
+/** Går til en adresse. Gir tilbake-knappen på Android noe å gå tilbake til. */
+export function naviger(adresse) {
+  if (location.hash === `#${adresse}`) visAdresse();
+  else location.hash = adresse;
+}
+
+function visAdresse() {
+  const [fane, param] = location.hash.slice(1).split('/');
+  return visFane(fane, param ? decodeURIComponent(param) : null);
+}
+
+async function visFane(fane, param = null, { behold = false } = {}) {
   aktivFane = fane in SKJERMER ? fane : 'idag';
+  aktivParam = param;
   for (const knapp of document.querySelectorAll('.fane')) {
     const valgt = knapp.dataset.fane === aktivFane;
     knapp.classList.toggle('valgt', valgt);
@@ -27,7 +42,7 @@ async function visFane(fane, { behold = false } = {}) {
   const rullet = window.scrollY;
   let side;
   try {
-    side = await SKJERMER[aktivFane]();
+    side = await SKJERMER[aktivFane](aktivParam);
   } catch (e) {
     side = document.createTextNode(`Noe gikk galt: ${e.message}`);
   }
@@ -35,13 +50,13 @@ async function visFane(fane, { behold = false } = {}) {
   // Ved bytte av fane: til toppen. Ved oppfrisking av samme skjerm: bli stående.
   window.scrollTo(0, behold ? rullet : 0);
   visningsdato = lokalDato();
-  if (location.hash !== `#${aktivFane}`) history.replaceState(null, '', `#${aktivFane}`);
+  if (!location.hash) history.replaceState(null, '', `#${aktivFane}`);
 }
 
 // Klokka på «I dag» og ny dag (K-10): sjekkes hvert 20. sekund og når appen åpnes igjen.
 function oppdaterTid() {
   if (lokalDato() !== visningsdato) {
-    visFane(aktivFane, { behold: true });
+    visFane(aktivFane, aktivParam, { behold: true });
     return;
   }
   const klokke = document.getElementById('klokke');
@@ -94,7 +109,7 @@ function registrerServiceWorker() {
 
 async function start() {
   for (const knapp of document.querySelectorAll('.fane')) {
-    knapp.addEventListener('click', () => visFane(knapp.dataset.fane));
+    knapp.addEventListener('click', () => naviger(knapp.dataset.fane));
   }
   setInterval(oppdaterTid, 20000);
   document.addEventListener('visibilitychange', () => {
@@ -110,7 +125,8 @@ async function start() {
   }
 
   registrerServiceWorker();
-  await visFane(location.hash.slice(1));
+  window.addEventListener('hashchange', visAdresse);
+  await visAdresse();
 }
 
 start();

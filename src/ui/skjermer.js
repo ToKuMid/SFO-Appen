@@ -1,4 +1,4 @@
-// Skjermene I dag, Andre, Telling og Elever.
+// Skjermene I dag, Andre og Telling. (Elever ligger i elever.js.)
 // I fase 1 viser de data fra databasen, men inn- og utsjekk, telling og redigering kommer i fase 2.
 import { h } from '../dom.js';
 import { hentAlle } from '../db.js';
@@ -35,7 +35,7 @@ export async function visIdag() {
       : null,
     forventet.length > 0 && !helg ? [
       h('p', { class: 'seksjonstittel' }, `Forventet (${forventet.length})`),
-      h('ul', { class: 'liste' }, forventet.map((e) => elevRad(e, { avtale: avtaleFor.get(e.id) }))),
+      h('ul', { class: 'liste' }, forventet.map((e) => elevRad(e, { avtale: avtaleFor.get(e.id), lenke: `#elever/${e.id}` }))),
     ] : null);
 }
 
@@ -49,16 +49,4 @@ export function visTelling() {
   return h('div', { class: 'skjerm' },
     skjermTopp({ tittel: 'Telling' }),
     kommerKort('Telling med avhuking og avvik kommer i fase 2c.'));
-}
-
-export async function visEleverListe() {
-  const { elever, avtaleFor } = await hentAktiveElever();
-  return h('div', { class: 'skjerm' },
-    skjermTopp({ tittel: 'Elever', undertittel: elever.length ? `${elever.length} aktive elever` : null, visDato: false }),
-    elever.length === 0
-      ? kommerKort('Ingen elever ennå. Import fra Excel kommer i fase 2a. For å teste kan du laste inn fiktive testdata under Mer.')
-      : [
-        h('p', { class: 'dempet liten' }, 'Bare visning. Import og redigering kommer i fase 2a.'),
-        h('ul', { class: 'liste' }, elever.map((e) => elevRad(e, { avtale: avtaleFor.get(e.id) }))),
-      ]);
 }

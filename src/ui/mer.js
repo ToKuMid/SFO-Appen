@@ -5,11 +5,12 @@ import {
 } from '../db.js';
 import { byggSikkerhetskopi, filnavn, kontroller, lesTekst, oppsummer } from '../backup.js';
 import { lagreFil, velgFil } from '../filer.js';
-import { dagerMellom, klokkeslett, tidspunktTekst } from '../dato.js';
+import { dagerMellom, klokkeslett, kortDato, tidspunktTekst } from '../dato.js';
 import { sjekkPlattform, testSkjermlas } from '../plattform.js';
 import { lagTestdata } from '../dev/testdata.js';
 import { APP_VERSJON } from '../versjon.js';
 import { skjermTopp } from './felles.js';
+import { hentMal, importerElevliste } from './import.js';
 
 // Husker om «Teknisk test og utviklerverktøy» er åpen når skjermen tegnes på nytt.
 let tekniskApen = false;
@@ -18,8 +19,9 @@ let tekniskApen = false;
 const VARSELTIDER = ['14:50', '14:55', '15:00', '15:05', '15:10', '15:15', '15:20', '15:25', '15:30'];
 
 export async function visMer(oppfrisk) {
-  const [elever, siste, testdata, varsel] = await Promise.all([
+  const [elever, siste, testdata, varsel, sisteImport] = await Promise.all([
     hentAlle('elever'), hentInnstilling('sisteSikkerhetskopi'), hentInnstilling('testdata'), hentInnstilling('varseltidspunkt'),
+    hentInnstilling('sisteImport'),
   ]);
   const aktive = elever.filter((e) => e.aktiv !== false).length;
 
@@ -28,9 +30,11 @@ export async function visMer(oppfrisk) {
     seksjonSikkerhetskopi(siste, oppfrisk),
     h('section', { class: 'kort' },
       h('h2', {}, 'Elevliste'),
-      h('p', {}, `${aktive} aktive elever${testdata ? ' · fiktive testdata' : ''}`),
-      h('button', { type: 'button', class: 'knapp knapp-omriss', disabled: true }, 'Importer fra Excel'),
-      h('p', { class: 'dempet liten' }, 'Import fra Excel og tom Excel-mal kommer i fase 2a.')),
+      h('p', {}, [`${aktive} aktive elever`, testdata ? 'fiktive testdata' : null, sisteImport ? `sist importert ${kortDato(sisteImport)}` : null].filter(Boolean).join(' · ')),
+      h('div', { class: 'knappestabel' },
+        h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'importer', onclick: () => importerElevliste(oppfrisk) }, 'Importer fra Excel'),
+        h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'hent-mal', onclick: () => hentMal() }, 'Hent tom Excel-mal')),
+      h('p', { class: 'dempet liten' }, 'Elever som ikke står i fila, blir deaktivert. Historikken deres beholdes.')),
     h('section', { class: 'kort' },
       h('h2', {}, 'Innstillinger'),
       h('div', { class: 'felt-rad' },

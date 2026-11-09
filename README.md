@@ -18,9 +18,22 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Fase 2a (versjon 0.3.0) er bygget:** elevregister og import fra Excel.
+
+| Krav | Hva | Status |
+| --- | --- | --- |
+| K-01 | Import fra Excel-malen med forhåndsvisning og feilmeldinger | Bygget. En fil med feil lagrer ingenting, og feilene vises med radnummer. |
+| K-02 | Ny import oppdaterer, legger til og deaktiverer | Bygget. Elever kobles på navn og trinn, også når de har gått opp et trinn. Ved navnelikhet velger den ansatte. |
+| K-03 | Legge til, redigere og deaktivere elever | Bygget (Elever-fanen) |
+| K-04 | Ukeplan per elev | Bygget |
+| K-05 | Trinn og skolegruppe, og at de passer sammen | Bygget |
+| K-40, K-41 | Faste avtaler og merknad med påminnelse | Kan redigeres på eleven. Brikkene vises i listene. |
+
+Excel-filer leses og skrives av appens egen kode (`src/import/xlsx.js`), ikke av SheetJS. SheetJS kunne ikke hentes fra nett, og en egen, liten leser gir færre tredjepartsavhengigheter. Den er testet mot filer fra Excel-malen, openpyxl og LibreOffice.
+
 **Versjon 0.2.0** har utseendet fra mockupen: farger, skrifttypene Fraunces og Work Sans, stor overskrift på hver skjerm og faner med ikoner. Appen har både lys og mørk variant og følger telefonens innstilling.
 
-I dag viser hvor mange barn som er forventet etter ukeplanen. Andre og Telling er tomme til fase 2. Elever viser en enkel liste uten redigering. Under Mer kan varseltidspunktet (K-16) allerede velges.
+I dag viser hvor mange barn som er forventet etter ukeplanen. Andre og Telling er tomme til fase 2b og 2c. Under Mer kan varseltidspunktet (K-16) allerede velges.
 
 ## Regel nummer én: ingen ekte elevdata i repoet
 
@@ -39,17 +52,20 @@ sw.js                 – service worker: appens filer i hurtigbuffer
 src/app.js            – oppstart, faner og oppdatering
 src/db.js             – database, tabeller og migrering
 src/backup.js         – sikkerhetskopi: bygge, kontrollere, oppgradere
+src/model/elev.js     – regler for elever: trinn, skolegrupper, ukedager, klokkeslett
+src/import/xlsx.js    – leser og skriver Excel-filer (.xlsx)
+src/import/elevliste.js – import av elevlista: kontroll, kobling og endringsliste
 src/filer.js          – lagre og åpne filer (delingsark eller nedlasting)
 src/plattform.js      – teknisk test av telefonen
 src/dato.js, dom.js   – hjelpere
-src/ui/               – skjermbildene (felles.js, skjermer.js, mer.js)
+src/ui/               – skjermbildene (felles.js, skjermer.js, elever.js, import.js, mer.js)
 src/dev/testdata.js   – fiktive testdata
 icons/                – app-ikoner (fargene er mockupens antatte palett til Erdvias farger er klare)
 fonts/                – skrifttypene Fraunces og Work Sans (SIL Open Font License, se OFL-filene)
 tests/                – automatiske tester (npm test)
 tools/                – lokal server, testdata, e2e-test, git-hook
-vendor/               – tredjepartsbiblioteker (SheetJS kommer i fase 2a)
-testdata/             – fiktiv sikkerhetskopi til test av gjenoppretting
+vendor/               – tredjepartsbiblioteker (ingen i bruk nå)
+testdata/             – fiktiv sikkerhetskopi og fiktive elevlister i Excel
 ```
 
 ## Kjøre på PC-en
@@ -59,7 +75,7 @@ Krever Node.js 20 eller nyere. Ingen pakker må installeres.
 ```
 npm test          # automatiske tester
 npm run serve     # appen på http://localhost:8080
-npm run testdata  # lager testdata/fiktiv-sikkerhetskopi.json på nytt
+npm run testdata  # lager de fiktive testfilene i testdata/ på nytt
 ```
 
 Valgfri nettlesertest (installerer Playwright midlertidig):
@@ -119,3 +135,15 @@ Det som gjelder spesielt for iPhone, testes på SFO-telefonen før fase 3 (kravs
 3. Kjør `npm test`, commit og push. Telefonen viser «Ny versjon av appen er klar» neste gang appen åpnes.
 
 Endres datamodellen: øk `DATAVERSJON` og `DB_VERSJON` i `src/db.js`, legg til et oppgraderingssteg der, og en migrering for sikkerhetskopier i `src/backup.js`. Et oppgraderingssteg skal aldri slette data.
+
+## Teste fase 2a på telefonen
+
+Bruk bare fiktive data på testtelefonen. Testfilene ligger i `testdata/`, og navnene der er oppdiktet.
+
+1. Legg `testdata/fiktive-elever.xlsx` og `testdata/fiktive-elever-endret.xlsx` i en testmappe i OneDrive.
+2. **Mer → Teknisk test og utviklerverktøy → Slett alle data.**
+3. **Mer → Importer fra Excel**, velg `fiktive-elever.xlsx`. Forhåndsvisningen skal vise 32 nye elever. Trykk Importer.
+4. Importer samme fil igjen. Appen skal si «Ingen endringer» (ferdig-kriteriet for fase 2a).
+5. Importer `fiktive-elever-endret.xlsx`. Forhåndsvisningen skal vise 1 ny, 1 oppdatert, 1 gått opp et trinn og 1 som deaktiveres.
+6. **Elever → Legg til elev.** Prøv å lagre tomt skjema (feil skal vises), fyll ut, lagre. Åpne eleven, endre noe, lagre. Deaktiver den.
+7. **Mer → Hent tom Excel-mal** og åpne den i Excel på telefonen eller PC-en.

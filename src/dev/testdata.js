@@ -3,6 +3,10 @@
 
 import { DATAVERSJON } from '../db.js';
 import { lokalDato, ukedagNr } from '../dato.js';
+import { SKOLEGRUPPER } from '../model/elev.js';
+
+// Skolegrupper etter kravspesifikasjonen kapittel 7 (samme regel som i appen).
+export { SKOLEGRUPPER };
 
 const FORNAVN = ['Emma', 'Noah', 'Nora', 'Oskar', 'Ella', 'Lukas', 'Sofie', 'Filip', 'Olivia', 'Jakob',
   'Ingrid', 'Aksel', 'Maja', 'Isak', 'Frida', 'Emil', 'Leah', 'Henrik', 'Sara', 'Theo',
@@ -10,14 +14,6 @@ const FORNAVN = ['Emma', 'Noah', 'Nora', 'Oskar', 'Ella', 'Lukas', 'Sofie', 'Fil
   'Iben', 'Sander', 'Mia', 'Tobias', 'Ylva', 'Kasper'];
 const ETTERNAVN = ['Testesen', 'Prøvestad', 'Eksempelsen', 'Fiktivdal', 'Øvingsrud', 'Demoberg',
   'Utkastvik', 'Skissebakken', 'Malmo', 'Plassholdersen', 'Lekeland', 'Dummyhaug'];
-
-// Skolegrupper etter kravspesifikasjonen kapittel 7: 1.–3. trinn i Gruppe 1, 4. trinn i Gruppe 2.
-export const SKOLEGRUPPER = {
-  1: ['Gruppe 1 blå', 'Gruppe 1 grønn'],
-  2: ['Gruppe 1 blå', 'Gruppe 1 grønn'],
-  3: ['Gruppe 1 blå', 'Gruppe 1 grønn'],
-  4: ['Gruppe 2 oppe', 'Gruppe 2 nede'],
-};
 
 function tilfeldig(frø) {
   // mulberry32: liten, forutsigbar tallgenerator

@@ -144,6 +144,20 @@ export async function erstattAltInnhold(data) {
   return ferdig(tx);
 }
 
+/**
+ * Lagrer og sletter rader i flere tabeller i én transaksjon (alt eller ingenting).
+ * endringer: { lagre: { tabell: [rader] }, slett: { tabell: [nøkler] } }
+ */
+export async function utforEndringer({ lagre = {}, slett = {} }) {
+  const tabeller = [...new Set([...Object.keys(lagre), ...Object.keys(slett)])];
+  if (tabeller.length === 0) return;
+  const db = await apneDb();
+  const tx = db.transaction(tabeller, 'readwrite');
+  for (const [tabell, nokler] of Object.entries(slett)) for (const k of nokler) tx.objectStore(tabell).delete(k);
+  for (const [tabell, rader] of Object.entries(lagre)) for (const r of rader) tx.objectStore(tabell).put(r);
+  return ferdig(tx);
+}
+
 /** Sletter alle data (brukes bare fra utviklerverktøy). */
 export function slettAltInnhold() {
   return erstattAltInnhold({});

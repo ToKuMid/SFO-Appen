@@ -1,0 +1,216 @@
+// Elevregisteret (K-03, K-04, K-05): liste med søk, legge til, redigere og deaktivere elever.
+// Faste avtaler (K-40, K-41) redigeres på samme side.
+import { h, visDialog, visMelding } from '../dom.js';
+import { hent, hentAlle, nyId, utforEndringer } from '../db.js';
+import {
+  ALLE_SKOLEGRUPPER, MAKS_MERKNAD, SKOLEGRUPPER, UKEDAGER, avtaleFra, kontrollerElev, navnNokkel,
+} from '../model/elev.js';
+import { elevRad, pilVenstre, skjermTopp, sorterElever } from './felles.js';
+
+// ---------- Liste ----------
+
+export async function visEleverListe() {
+  const [alle, avtaler] = await Promise.all([hentAlle('elever'), hentAlle('avtaler')]);
+  const avtaleFor = new Map(avtaler.map((a) => [a.elevId, a]));
+  const aktive = sorterElever(alle.filter((e) => e.aktiv !== false));
+  const deaktiverte = sorterElever(alle.filter((e) => e.aktiv === false));
+  const rad = (e) => elevRad(e, { avtale: avtaleFor.get(e.id), lenke: `#elever/${e.id}` });
+
+  const liste = h('ul', { class: 'liste', id: 'elevliste' }, aktive.map(rad));
+  const ingenTreff = h('p', { class: 'dempet', hidden: true }, 'Ingen elever passer søket.');
+  const sok = h('input', {
+    id: 'sok', type: 'search', placeholder: 'Navn, trinn eller gruppe', autocomplete: 'off',
+    oninput: () => {
+      const ord = sok.value.toLocaleLowerCase('nb').trim().split(/\s+/).filter(Boolean);
+      let synlige = 0;
+      for (const li of liste.children) {
+        const treff = ord.every((o) => li.dataset.sok.includes(o));
+        li.hidden = !treff;
+        if (treff) synlige += 1;
+      }
+      ingenTreff.hidden = synlige > 0 || aktive.length === 0;
+    },
+  });
+
+  return h('div', { class: 'skjerm' },
+    skjermTopp({ tittel: 'Elever', undertittel: `${aktive.length} aktive elever`, visDato: false }),
+    h('div', { class: 'knappestabel' },
+      h('a', { class: 'knapp knapp-primar knapp-stor knapp-lenkeknapp', href: '#elever/ny', id: 'ny-elev' }, 'Legg til elev')),
+    aktive.length > 0 ? h('div', { class: 'felt' },
+      h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter elev'),
+      sok) : null,
+    aktive.length === 0
+      ? h('section', { class: 'kort' }, h('p', { class: 'dempet' }, 'Ingen elever ennå. Legg til elever her, eller importer elevlista fra Excel under Mer.'))
+      : [h('p', { class: 'seksjonstittel' }, `Aktive (${aktive.length})`), liste, ingenTreff],
+    deaktiverte.length > 0 ? h('details', { class: 'kort teknisk' },
+      h('summary', {}, `Deaktiverte elever (${deaktiverte.length})`),
+      h('p', { class: 'dempet liten' }, 'Deaktiverte elever vises ikke i dagens lister, men historikken deres er tatt vare på.'),
+      h('ul', { class: 'liste' }, deaktiverte.map(rad))) : null);
+}
+
+// ---------- Legge til og redigere ----------
+
+/** Viser skjemaet for en elev. id = 'ny' for ny elev. */
+export async function visElevSkjema(id, naviger) {
+  const ny = id === 'ny';
+  const elev = ny ? null : await hent('elever', id);
+  if (!ny && !elev) {
+    return h('div', { class: 'skjerm' },
+      tilbakeLenke(),
+      h('section', { class: 'kort' }, h('p', {}, 'Fant ikke eleven.')));
+  }
+  const avtale = ny ? null : await hent('avtaler', id);
+  const v = {
+    fornavn: elev?.fornavn ?? '',
+    etternavn: elev?.etternavn ?? '',
+    trinn: elev?.trinn ?? '',
+    skolegruppe: elev?.skolegruppe ?? '',
+    ukedager: elev?.ukedager ?? [],
+    gaarHjemAleneFra: avtale?.gaarHjemAleneFra ?? '',
+    fastHentetid: avtale?.fastHentetid ?? '',
+    fritekst: avtale?.fritekst ?? '',
+  };
+
+  const feilboks = h('div', { class: 'feilboks', role: 'alert', hidden: true });
+
+  const fornavn = tekstfelt('fornavn', 'Fornavn', v.fornavn, { autocomplete: 'off', autocapitalize: 'words' });
+  const etternavn = tekstfelt('etternavn', 'Etternavn', v.etternavn, { autocomplete: 'off', autocapitalize: 'words' });
+
+  const trinn = h('select', { id: 'trinn', required: true },
+    h('option', { value: '' }, 'Velg'),
+    [1, 2, 3, 4].map((t) => h('option', { value: t, selected: t === v.trinn }, `${t}. trinn`)));
+  const gruppe = h('select', { id: 'skolegruppe', required: true });
+  const fyllGrupper = () => {
+    const t = Number(trinn.value);
+    const valgt = gruppe.value || v.skolegruppe;
+    const lovlige = t ? SKOLEGRUPPER[t] : ALLE_SKOLEGRUPPER;
+    gruppe.replaceChildren(
+      h('option', { value: '' }, t ? 'Velg' : 'Velg trinn først'),
+      ...lovlige.map((g) => h('option', { value: g, selected: g === valgt }, g)));
+  };
+  fyllGrupper();
+  trinn.addEventListener('change', fyllGrupper);
+
+  const dager = UKEDAGER.map((d) => {
+    const boks = h('input', { type: 'checkbox', value: d.nr, checked: v.ukedager.includes(d.nr), 'aria-label': d.navn });
+    return { boks, el: h('label', { class: 'dagvalg' }, boks, h('span', {}, d.kort)) };
+  });
+
+  const alene = h('input', { id: 'alene', type: 'time', value: v.gaarHjemAleneFra ?? '', step: 300 });
+  const hentetid = h('input', { id: 'hentetid', type: 'time', value: v.fastHentetid ?? '', step: 300 });
+  const merknad = h('textarea', { id: 'merknad', rows: 3, maxlength: MAKS_MERKNAD }, v.fritekst);
+
+  const lagre = async () => {
+    const { verdi, feil } = kontrollerElev({
+      fornavn: fornavn.input.value,
+      etternavn: etternavn.input.value,
+      trinn: trinn.value,
+      skolegruppe: gruppe.value,
+      ukedager: dager.filter((d) => d.boks.checked).map((d) => Number(d.boks.value)),
+      gaarHjemAleneFra: alene.value,
+      fastHentetid: hentetid.value,
+      fritekst: merknad.value,
+    });
+    if (feil.length) {
+      feilboks.replaceChildren(h('p', {}, 'Rett dette før du lagrer:'), h('ul', {}, feil.map((f) => h('li', {}, f))));
+      feilboks.hidden = false;
+      feilboks.scrollIntoView({ block: 'center' });
+      return;
+    }
+    feilboks.hidden = true;
+
+    const andre = (await hentAlle('elever')).filter((e) => e.id !== id && e.aktiv !== false);
+    const likt = andre.find((e) => navnNokkel(e.fornavn, e.etternavn) === navnNokkel(verdi.fornavn, verdi.etternavn) && e.trinn === verdi.trinn);
+    if (likt) {
+      const svar = await visDialog({
+        tittel: 'Samme navn finnes',
+        innhold: [h('p', {}, `Det finnes allerede en aktiv elev som heter ${likt.fornavn} ${likt.etternavn} på ${likt.trinn}. trinn (${likt.skolegruppe}).`),
+          h('p', {}, 'Er dette en annen elev med samme navn?')],
+        knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: 'Ja, lagre', verdi: 'ja', type: 'primar' }],
+      });
+      if (svar !== 'ja') return;
+    }
+
+    const elevId = ny ? nyId() : id;
+    const nyElev = {
+      ...(elev ?? {}),
+      id: elevId,
+      fornavn: verdi.fornavn,
+      etternavn: verdi.etternavn,
+      trinn: verdi.trinn,
+      skolegruppe: verdi.skolegruppe,
+      ukedager: verdi.ukedager,
+      aktiv: elev?.aktiv ?? true,
+    };
+    const nyAvtale = avtaleFra(elevId, verdi);
+    await utforEndringer({
+      lagre: { elever: [nyElev], ...(nyAvtale ? { avtaler: [nyAvtale] } : {}) },
+      slett: nyAvtale ? {} : { avtaler: [elevId] },
+    });
+    visMelding(`${verdi.fornavn} ${verdi.etternavn} er lagret.`, 'ok');
+    naviger('elever');
+  };
+
+  const settAktiv = async (aktiv) => {
+    const navn = `${elev.fornavn} ${elev.etternavn}`;
+    const svar = await visDialog({
+      tittel: aktiv ? `Aktivere ${navn}?` : `Deaktivere ${navn}?`,
+      innhold: [h('p', {}, aktiv
+        ? 'Eleven kommer tilbake i dagens lister fra neste SFO-dag i ukeplanen.'
+        : 'Eleven forsvinner fra dagens lister. Historikken tas vare på, og eleven kan aktiveres igjen.')],
+      knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: aktiv ? 'Aktiver' : 'Deaktiver', verdi: 'ja', type: aktiv ? 'primar' : 'fare' }],
+    });
+    if (svar !== 'ja') return;
+    await utforEndringer({ lagre: { elever: [{ ...elev, aktiv }] } });
+    visMelding(aktiv ? `${navn} er aktivert.` : `${navn} er deaktivert.`, 'ok');
+    naviger('elever');
+  };
+
+  return h('div', { class: 'skjerm' },
+    tilbakeLenke(),
+    skjermTopp({
+      tittel: ny ? 'Ny elev' : `${elev.fornavn} ${elev.etternavn}`,
+      undertittel: !ny && elev.aktiv === false ? 'Deaktivert' : null,
+      visDato: false,
+    }),
+    feilboks,
+    h('form', { class: 'skjema', novalidate: true, onsubmit: (e) => { e.preventDefault(); lagre(); } },
+      h('section', { class: 'kort' },
+        h('h2', {}, 'Elev'),
+        fornavn.el,
+        etternavn.el,
+        h('div', { class: 'to-kolonner' },
+          h('div', { class: 'felt' }, h('label', { for: 'trinn', class: 'feltnavn' }, 'Trinn'), trinn),
+          h('div', { class: 'felt' }, h('label', { for: 'skolegruppe', class: 'feltnavn' }, 'Skolegruppe'), gruppe)),
+        h('fieldset', { class: 'felt' },
+          h('legend', { class: 'feltnavn' }, 'SFO-dager'),
+          h('div', { class: 'dagrad' }, dager.map((d) => d.el)))),
+      h('section', { class: 'kort' },
+        h('h2', {}, 'Faste avtaler'),
+        h('div', { class: 'to-kolonner' },
+          h('div', { class: 'felt' }, h('label', { for: 'alene', class: 'feltnavn' }, 'Går hjem alene fra'), alene),
+          h('div', { class: 'felt' }, h('label', { for: 'hentetid', class: 'feltnavn' }, 'Fast hentetid'), hentetid)),
+        h('p', { class: 'dempet liten' }, 'La feltene stå tomme hvis eleven ikke har slike avtaler.'),
+        h('div', { class: 'felt' },
+          h('label', { for: 'merknad', class: 'feltnavn' }, 'Merknad (faste avtaler om henting)'),
+          merknad),
+        h('p', { class: 'paminnelse' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
+      h('div', { class: 'knappestabel' },
+        h('button', { type: 'submit', class: 'knapp knapp-primar knapp-stor', id: 'lagre-elev' }, 'Lagre'),
+        h('a', { class: 'knapp knapp-lenkeknapp', href: '#elever' }, 'Avbryt'),
+        !ny && elev.aktiv !== false
+          ? h('button', { type: 'button', class: 'knapp knapp-fare', id: 'deaktiver', onclick: () => settAktiv(false) }, 'Deaktiver elev')
+          : null,
+        !ny && elev.aktiv === false
+          ? h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'aktiver', onclick: () => settAktiv(true) }, 'Aktiver igjen')
+          : null)));
+}
+
+function tilbakeLenke() {
+  return h('a', { class: 'tilbake', href: '#elever' }, pilVenstre(), 'Elever');
+}
+
+function tekstfelt(id, navn, verdi, attrs = {}) {
+  const input = h('input', { id, type: 'text', value: verdi, ...attrs });
+  return { input, el: h('div', { class: 'felt' }, h('label', { for: id, class: 'feltnavn' }, navn), input) };
+}

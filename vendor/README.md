@@ -2,9 +2,8 @@
 
 Tredjepartsbiblioteker legges her som egne filer, slik at appen ikke henter noe fra nett (IF-03).
 
-| Bibliotek | Brukes til | Når |
-| --- | --- | --- |
-| SheetJS (bare lesedelen, `xlsx.mini.min.js`) | Lese Excel-malen lokalt (K-01) | Fase 2a |
+Ingen biblioteker er i bruk nå. Kravspesifikasjonen planla SheetJS for Excel, men SheetJS kunne ikke
+hentes fra nett. Appen leser og skriver i stedet Excel-filer med egen kode i `src/import/xlsx.js`.
 
-Hent SheetJS fra den offisielle distribusjonen på https://cdn.sheetjs.com (ikke npm-pakken `xlsx`, som er utdatert).
-Noter versjon og lisens (Apache 2.0) i denne filen når den legges inn.
+Legges et bibliotek inn her senere: noter versjon, kilde og lisens i denne filen, og før filen opp i
+`FILER` i `sw.js`.

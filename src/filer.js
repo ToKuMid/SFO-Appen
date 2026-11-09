@@ -1,14 +1,16 @@
 // Lagre og åpne filer. Appen sender aldri filer over nett; brukeren velger selv
 // hvor filen skal (for eksempel OneDrive via delingsarket eller Filer-appen).
 
+const MAKS_FIL = 10 * 1024 * 1024;
+
 /**
  * Lagrer en fil.
  * 1. Delingsarket (iPhone: «Arkiver i Filer» → OneDrive. Android: OneDrive-appen) hvis støttet.
  * 2. Ellers vanlig nedlasting (Android: Nedlastinger-mappen).
- * Returnerer 'delt', 'lastet-ned' eller 'avbrutt'.
+ * innhold: tekst eller Uint8Array. Returnerer 'delt', 'lastet-ned' eller 'avbrutt'.
  */
-export async function lagreFil(tekst, navn, type = 'application/json') {
-  const fil = new File([tekst], navn, { type });
+export async function lagreFil(innhold, navn, type = 'application/json') {
+  const fil = new File([innhold], navn, { type });
   if (navigator.canShare?.({ files: [fil] })) {
     try {
       await navigator.share({ files: [fil], title: navn });
@@ -29,15 +31,20 @@ export async function lagreFil(tekst, navn, type = 'application/json') {
   return 'lastet-ned';
 }
 
-/** Lar brukeren velge en fil og returnerer { navn, tekst }, eller null hvis ingen fil ble valgt. */
-export function velgFil(accept = '.json,application/json') {
-  return new Promise((resolve) => {
+/**
+ * Lar brukeren velge en fil. Returnerer null hvis ingen fil ble valgt.
+ * Som tekst: { navn, tekst }. Med binar: true: { navn, data: ArrayBuffer }.
+ */
+export function velgFil({ accept = '.json,application/json', binar = false } = {}) {
+  return new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = accept;
     input.addEventListener('change', async () => {
       const fil = input.files?.[0];
-      resolve(fil ? { navn: fil.name, tekst: await fil.text() } : null);
+      if (!fil) { resolve(null); return; }
+      if (fil.size > MAKS_FIL) { reject(new Error(`Filen «${fil.name}» er for stor.`)); return; }
+      resolve(binar ? { navn: fil.name, data: await fil.arrayBuffer() } : { navn: fil.name, tekst: await fil.text() });
     });
     input.addEventListener('cancel', () => resolve(null));
     input.click();
