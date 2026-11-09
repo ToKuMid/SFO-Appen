@@ -103,6 +103,12 @@ export async function hentEtterIndeks(tabell, indeks, verdi) {
   return somLofte(db.transaction(tabell).objectStore(tabell).index(indeks).getAll(verdi));
 }
 
+/** Alle rader der en indeks ligger mellom fra og til (begge med), for eksempel hendelser i en periode. */
+export async function hentIntervall(tabell, indeks, fra, til) {
+  const db = await apneDb();
+  return somLofte(db.transaction(tabell).objectStore(tabell).index(indeks).getAll(IDBKeyRange.bound(fra, til)));
+}
+
 export async function lagre(tabell, rad) {
   const db = await apneDb();
   const tx = db.transaction(tabell, 'readwrite');

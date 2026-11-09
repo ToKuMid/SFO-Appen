@@ -93,7 +93,7 @@ export function lagTestdata({ antall = 32, dager = 10, naa = new Date(), frø = 
     return x.toISOString();
   };
 
-  for (const dag of datoer) {
+  datoer.forEach((dag, dagNr) => {
     const dato = lokalDato(dag);
     const forventet = elever.filter((e) => e.ukedager.includes(ukedagNr(dag)));
     const inne = [];
@@ -103,21 +103,29 @@ export function lagTestdata({ antall = 32, dager = 10, naa = new Date(), frø = 
         hendelser.push({ id: testId('hend', ++h), elevId: e.id, dato, tid: tid(dag, 14, 40), type: 'meldt-fravaer', initialer: 'AB', erstatter: null });
         continue;
       }
+      if (x < 0.08) {
+        hendelser.push({ id: testId('hend', ++h), elevId: e.id, dato, tid: tid(dag, 15, 10), type: 'ikke-mott', initialer: 'CD', erstatter: null });
+        continue;
+      }
       hendelser.push({ id: testId('hend', ++h), elevId: e.id, dato, tid: tid(dag, 14, 45 + Math.floor(r() * 8)), type: 'inn', initialer: null, erstatter: null });
       inne.push(e);
     }
+    // Hver fjerde dag mangler ett barn ved tellingen (avvik med kommentar, K-31, K-32).
+    const mangler = dagNr % 4 === 3 && inne.length ? inne[0] : null;
     tellinger.push({
       id: testId('tell', ++t), dato, tid: tid(dag, 15, 30), antallForventet: inne.length,
-      antallTalt: inne.length, initialer: velg(['AB', 'CD', 'EF']), kommentar: '',
+      antallTalt: inne.length - (mangler ? 1 : 0), initialer: velg(['AB', 'CD', 'EF']), kommentar: mangler ? 'Var på do, funnet etter 2 min' : '',
     });
-    for (const e of inne) tellingslinjer.push({ id: testId('tlin', ++tl), tellingId: testId('tell', t), elevId: e.id, talt: true });
-    for (const e of inne) {
+    for (const e of inne) tellingslinjer.push({ id: testId('tlin', ++tl), tellingId: testId('tell', t), elevId: e.id, talt: e !== mangler });
+    inne.forEach((e, i) => {
+      // Én dag blir ett barn aldri sjekket ut, så det vises i rapporten.
+      if (dagNr === 5 && i === inne.length - 1) return;
       hendelser.push({
-        id: testId('hend', ++h), elevId: e.id, dato, tid: tid(dag, 15 + Math.floor(r() * 2), Math.floor(r() * 60)),
+        id: testId('hend', ++h), elevId: e.id, dato, tid: tid(dag, 15 + Math.floor(r() * 2), 35 + Math.floor(r() * 25)),
         type: 'ut', initialer: r() < 0.7 ? velg(['AB', 'CD', 'EF']) : null, erstatter: null,
       });
-    }
-  }
+    });
+  });
 
   return {
     elever,

@@ -147,6 +147,16 @@ const tall = (s) => Number(String(s).trim());
   await page.waitForFunction(() => location.hash === '#idag' && !!document.querySelector('#antall-inne'));
   ok(/meldt fravær/.test(await page.textContent('#melding')), 'fravær på elevkortet sender tilbake til I dag, med melding');
 
+  // Grupperapport for dagen (K-50)
+  await page.click('[data-fane=mer]');
+  await page.click('#apne-grupperapport');
+  await page.click('button[data-periode=dag]');
+  await page.waitForSelector('#rapport-sammendrag');
+  const rapport = (await page.textContent('#rapport')).replace(/\s+/g, ' ');
+  ok(/Tellinger med avvik\s*1/.test(rapport) && /EliD 1\.trinn/.test(rapport) && !/Elias Demoberg/.test(rapport) && /Var på do/.test(rapport), 'grupperapport for i dag viser avviket med forkortet navn og kommentar');
+  ok(/Meldt fravær\s*2/.test(rapport) && /Skrevet ut/.test(rapport), 'grupperapport viser fravær og utskriftsdato');
+  await page.screenshot({ path: `${SP}/8-rapport.png`, fullPage: true });
+
   ok(feil.length === 0, `ingen JavaScript-feil${feil.length ? `: ${feil.join(' | ')}` : ''}`);
   console.log(`Skjermbilder: ${SP}`);
   await browser.close();

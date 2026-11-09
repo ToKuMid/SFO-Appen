@@ -18,6 +18,16 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Grupperapport (versjon 0.5.4, K-50 og K-52) er bygget**, før test med SFO-ansatte. Den ligger under **Mer → Rapporter → Grupperapport**.
+
+- Periode: i dag, denne uka, denne måneden eller egen periode (høyst ett år).
+- Innhold for SFO-leder og rektor: sammendrag med nøkkeltall (avvik, ikke møtt, aldri registrert, ikke sjekket ut og dager uten telling er uthevet), avvik ved telling med navn og kommentar, per dag, fravær per dag og alle tellinger.
+- Navnene i rapporten er forkortet for å gjøre barna mindre gjenkjennelige. Formatet er beskrevet i skolens rutinebeskrivelse for appen. Rapporten inneholder likevel personopplysninger.
+- Skolelogoen (`icons/skolelogo.png`) står sentrert øverst i rapporten.
+- «Skriv ut eller lagre som PDF» åpner telefonens utskrift. Rapporten skrives på A4 uten knapper og faner, med utskriftsdato øverst og nederst.
+- Status og tall regnes ut i `src/model/rapport.js`, med tester i `tests/rapport.test.js`.
+- Elevrapport (K-51) og papirliste (K-53) er ikke laget ennå.
+
 **Fase 2b og 2c (versjon 0.4.0) er bygget:** den daglige flyten, varsel og telling, med layout og flyt som i mockupen.
 
 | Krav | Hva | Hvor i appen |
@@ -68,6 +78,8 @@ src/app.js            – oppstart, faner og oppdatering
 src/db.js             – database, tabeller og migrering
 src/backup.js         – sikkerhetskopi: bygge, kontrollere, oppgradere
 src/model/elev.js     – regler for elever: trinn, skolegrupper, ukedager, klokkeslett
+src/model/status.js   – dagens status regnet ut fra hendelsene
+src/model/rapport.js  – grupperapporten
 src/import/xlsx.js    – leser og skriver Excel-filer (.xlsx)
 src/import/elevliste.js – import av elevlista: kontroll, kobling og endringsliste
 src/filer.js          – lagre og åpne filer (delingsark eller nedlasting)
@@ -75,7 +87,7 @@ src/plattform.js      – teknisk test av telefonen
 src/dato.js, dom.js   – hjelpere
 src/ui/               – skjermbildene (felles.js, skjermer.js, elever.js, import.js, mer.js)
 src/dev/testdata.js   – fiktive testdata
-icons/                – app-ikoner (fargene er mockupens antatte palett til Erdvias farger er klare)
+icons/                – app-ikon (blomsten fra skolelogoen) og skolelogo til rapporten
 fonts/                – skrifttypene Fraunces og Work Sans (SIL Open Font License, se OFL-filene)
 tests/                – automatiske tester (npm test)
 tools/                – lokal server, testdata, e2e-test, git-hook
@@ -178,3 +190,10 @@ Bruk testtelefonen med fiktive data. Testen tar 10–15 minutter og bør gjøres
 8. Sjekk ut alle, og trykk **Avslutt dagen**.
 
 Ferdig-kriteriet for fase 2b er at en hel fiktiv ettermiddag kan gjennomføres fra 14.45 til stengetid.
+
+## Teste grupperapporten på telefonen
+
+1. **Mer → Teknisk test og utviklerverktøy → Last inn fiktive testdata.** Testdataene har nå også «ikke møtt», to tellinger med avvik og én dag der et barn ikke ble sjekket ut.
+2. **Mer → Rapporter → Grupperapport → Denne måneden.** Sammendraget skal vise 2 tellinger med avvik, og avvikstabellen navn og kommentar.
+3. Trykk **Skriv ut eller lagre som PDF**, velg **Lagre som PDF**, og lagre i en testmappe i OneDrive.
+4. Åpne PDF-en og sjekk at den er lesbar på A4, uten knapper og faner.

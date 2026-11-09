@@ -44,6 +44,21 @@ export function tidVerdiFra(iso) {
   return `${to(d.getHours())}:${to(d.getMinutes())}`;
 }
 
+const KORTE_UKEDAGER = ['søn.', 'man.', 'tir.', 'ons.', 'tor.', 'fre.', 'lør.'];
+
+/** 'ÅÅÅÅ-MM-DD' → «man. 9.11.» */
+export function kortDatoMedDag(dato) {
+  const [y, m, d] = dato.split('-').map(Number);
+  const x = new Date(y, m - 1, d);
+  return `${KORTE_UKEDAGER[x.getDay()]} ${d}.${m}.`;
+}
+
+/** 'ÅÅÅÅ-MM-DD' → «Mandag 9. november 2026» */
+export function langDato(dato) {
+  const [y, m, d] = dato.split('-').map(Number);
+  return `${datoTekst(new Date(y, m - 1, d))} ${y}`;
+}
+
 /** «Kl. 15.12» */
 export function klokkeTekst(d = new Date()) {
   return `Kl. ${to(d.getHours())}.${to(d.getMinutes())}`;

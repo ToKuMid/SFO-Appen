@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.4.1';
+const APP_VERSJON = '0.5.4';
 const CACHE = `sfo-appen-${APP_VERSJON}`;
 
 // Alle filer appen trenger. En test sjekker at listen stemmer med filene i repoet.
@@ -12,10 +12,11 @@ const FILER = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png',
+  './icons/app-192.png',
+  './icons/app-512.png',
+  './icons/app-maskable-512.png',
+  './icons/app-apple-touch.png',
+  './icons/skolelogo.png',
   './src/style.css',
   './src/app.js',
   './src/versjon.js',
@@ -33,6 +34,8 @@ const FILER = [
   './src/ui/telling.js',
   './src/ui/handlinger.js',
   './src/model/status.js',
+  './src/model/rapport.js',
+  './src/ui/rapport.js',
   './src/dag.js',
   './src/ui/import.js',
   './src/model/elev.js',

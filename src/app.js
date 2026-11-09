@@ -7,10 +7,12 @@ import { visAndre, visIdag } from './ui/skjermer.js';
 import { visTelling } from './ui/telling.js';
 import { visElevSkjema, visEleverListe } from './ui/elever.js';
 import { visElevkort } from './ui/elevkort.js';
+import { visGrupperapport } from './ui/rapport.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
-// Adresser: #idag, #andre, #telling, #elever, #elever/<id> (rediger), #elever/ny, #elev/<id> (elevkort), #mer
+// Adresser: #idag, #andre, #telling, #elever, #elever/<id> (rediger), #elever/ny, #elev/<id> (elevkort), #mer,
+// #rapport/gruppe (grupperapport)
 const SKJERMER = {
   idag: visIdag,
   andre: visAndre,
@@ -18,6 +20,7 @@ const SKJERMER = {
   elever: (param) => (param ? visElevSkjema(param, naviger) : visEleverListe()),
   elev: (param) => visElevkort(param, { tilbake: forrigeFane }),
   mer: () => visMer(oppfrisk),
+  rapport: () => visGrupperapport(oppfrisk),
 };
 const FANER = ['idag', 'andre', 'telling', 'elever', 'mer'];
 let aktivFane = 'idag';
@@ -42,7 +45,7 @@ async function visFane(fane, param = null, { behold = false } = {}) {
   aktivFane = fane in SKJERMER ? fane : 'idag';
   aktivParam = param;
   if (FANER.includes(aktivFane) && !param) forrigeFane = aktivFane;
-  const merketFane = aktivFane === 'elev' ? forrigeFane : aktivFane;
+  const merketFane = aktivFane === 'elev' ? forrigeFane : aktivFane === 'rapport' ? 'mer' : aktivFane;
   for (const knapp of document.querySelectorAll('.fane')) {
     const valgt = knapp.dataset.fane === merketFane;
     knapp.classList.toggle('valgt', valgt);
