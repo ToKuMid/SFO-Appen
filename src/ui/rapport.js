@@ -18,20 +18,19 @@ const VALG = [
 // Valgt periode huskes mens appen er åpen.
 let valgt = { type: 'uke', fra: null, til: null };
 
-export async function visGrupperapport(oppfrisk) {
-  const idag = lokalDato();
-  let fra;
-  let til;
-  let feil = null;
+/** Periode valgt i rapportene (felles for grupperapport og elevrapport). */
+export function valgtPeriode(idag = lokalDato()) {
   if (valgt.type === 'egen') {
-    fra = valgt.fra ?? periode('maaned', idag).fra;
-    til = valgt.til ?? idag;
-    feil = kontrollerPeriode(fra, til, idag);
-  } else {
-    ({ fra, til } = periode(valgt.type, idag));
+    const fra = valgt.fra ?? periode('maaned', idag).fra;
+    const til = valgt.til ?? idag;
+    return { fra, til, feil: kontrollerPeriode(fra, til, idag) };
   }
+  return { ...periode(valgt.type, idag), feil: null };
+}
 
-  const kontroller = h('section', { class: 'kort ikke-utskrift rapport-kontroller' },
+/** Kort med periodevalg og utskriftsknapp. */
+export function periodeKontroller({ fra, til, feil }, idag, oppfrisk) {
+  return h('section', { class: 'kort ikke-utskrift rapport-kontroller' },
     h('h2', {}, 'Periode'),
     h('div', { class: 'segment', role: 'group', 'aria-label': 'Periode' },
       VALG.map((v) => h('button', {
@@ -45,14 +44,18 @@ export async function visGrupperapport(oppfrisk) {
     feil ? h('p', { class: 'feilboks', role: 'alert' }, feil) : null,
     h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'skriv-ut', disabled: !!feil, onclick: () => window.print() }, 'Skriv ut eller lagre som PDF'),
     h('p', { class: 'dempet liten' }, 'Velg «Lagre som PDF» i utskriftsvinduet, og lagre fila i SFO-mappen i skolens OneDrive. Rapporten inneholder personopplysninger om barn.'));
+}
 
+export async function visGrupperapport(oppfrisk) {
+  const idag = lokalDato();
+  const p = valgtPeriode(idag);
   return h('div', { class: 'skjerm' },
     h('a', { class: 'tilbake ikke-utskrift', href: '#mer' }, pilVenstre(), 'Mer'),
     h('div', { class: 'ikke-utskrift kort-topp' },
       h('h1', { class: 'sidetittel' }, 'Grupperapport'),
       h('p', { class: 'undertittel' }, 'Tellinger, avvik og fravær for SFO-leder og rektor')),
-    kontroller,
-    feil ? null : await lagRapport(fra, til, idag));
+    periodeKontroller(p, idag, oppfrisk),
+    p.feil ? null : await lagRapport(p.fra, p.til, idag));
 }
 
 function egenPeriode(fra, til, idag, oppfrisk) {
@@ -148,5 +151,5 @@ async function lagRapport(fra, til, idag) {
         r.tellinger.map((t) => [kortDatoMedDag(t.dato), klokkeFra(t.tid), avTekst(t), t.avvik || '–', t.initialer ?? '']))) : null,
 
     h('footer', { class: 'rapport-bunn' },
-      `Skrevet ut ${utskrevet} · SFO-appen ${APP_VERSJON} · Inneholder personopplysninger om barn. Lagres i SFO-mappen i skolens OneDrive og slettes etter fastsatt lagringstid.`));
+      `Skrevet ut ${utskrevet} · SFO-appen ${APP_VERSJON}`));
 }

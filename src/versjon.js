@@ -1,2 +1,2 @@
 // Appens versjon. Må være lik APP_VERSJON i sw.js (sjekkes av tests/app.test.js).
-export const APP_VERSJON = '0.5.4';
+export const APP_VERSJON = '0.6.1';

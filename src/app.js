@@ -8,11 +8,12 @@ import { visTelling } from './ui/telling.js';
 import { visElevSkjema, visEleverListe } from './ui/elever.js';
 import { visElevkort } from './ui/elevkort.js';
 import { visGrupperapport } from './ui/rapport.js';
+import { visElevrapport } from './ui/elevrapport.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
 // Adresser: #idag, #andre, #telling, #elever, #elever/<id> (rediger), #elever/ny, #elev/<id> (elevkort), #mer,
-// #rapport/gruppe (grupperapport)
+// #rapport/gruppe (grupperapport), #rapport/elev (velg elev), #rapport/elev/<id> (elevrapport)
 const SKJERMER = {
   idag: visIdag,
   andre: visAndre,
@@ -20,7 +21,9 @@ const SKJERMER = {
   elever: (param) => (param ? visElevSkjema(param, naviger) : visEleverListe()),
   elev: (param) => visElevkort(param, { tilbake: forrigeFane }),
   mer: () => visMer(oppfrisk),
-  rapport: () => visGrupperapport(oppfrisk),
+  rapport: (param) => (param?.startsWith('elev')
+    ? visElevrapport(param.split('/')[1] ?? null, oppfrisk)
+    : visGrupperapport(oppfrisk)),
 };
 const FANER = ['idag', 'andre', 'telling', 'elever', 'mer'];
 let aktivFane = 'idag';
@@ -37,8 +40,9 @@ export function naviger(adresse) {
 }
 
 function visAdresse() {
-  const [fane, param] = location.hash.slice(1).split('/');
-  return visFane(fane, param ? decodeURIComponent(param) : null);
+  const [fane, ...resten] = location.hash.slice(1).split('/');
+  const param = resten.map(decodeURIComponent).join('/');
+  return visFane(fane, param || null);
 }
 
 async function visFane(fane, param = null, { behold = false } = {}) {

@@ -157,6 +157,28 @@ const tall = (s) => Number(String(s).trim());
   ok(/Meldt fravær\s*2/.test(rapport) && /Skrevet ut/.test(rapport), 'grupperapport viser fravær og utskriftsdato');
   await page.screenshot({ path: `${SP}/8-rapport.png`, fullPage: true });
 
+  // Elevrapport for Elias (K-51): velg fra Mer, søk og velg elev
+  await page.click('[data-fane=mer]');
+  await page.click('#apne-elevrapport');
+  await page.waitForSelector('#rapport-elevliste');
+  await page.fill('#rapport-sok', 'elias');
+  const synlige = await page.$$eval('#rapport-elevliste li:not([hidden])', (l) => l.length);
+  ok(synlige === 1, 'søk i elevvalget viser bare Elias');
+  await page.click('#rapport-elevliste li:not([hidden]) a');
+  await page.waitForSelector('#rapport-navn');
+  ok(/#rapport\/elev\//.test(await page.evaluate(() => location.hash)), 'valgt elev ligger i adressen');
+  ok(/Elias Demoberg/.test(await page.textContent('#valgt-elev')), 'fullt navn vises i valget på skjermen');
+  const elevR = (await page.textContent('#rapport')).replace(/\s+/g, ' ');
+  ok(/EliD 1\.trinn/.test(elevR) && !/Elias|Demoberg/.test(elevR), 'elevrapporten bruker forkortet navn');
+  ok(/Manglet ved telling\s*1/.test(elevR) && /Var på do/.test(elevR), 'elevrapporten viser tellingen der eleven manglet');
+  await page.screenshot({ path: `${SP}/9-elevrapport.png`, fullPage: true });
+  await page.emulateMedia({ media: 'print' });
+  await page.screenshot({ path: `${SP}/9-elevrapport-utskrift.png`, fullPage: true });
+  await page.emulateMedia({ media: 'screen' });
+  await page.click('#bytt-elev');
+  await page.waitForSelector('#rapport-elevliste');
+  ok(true, '«Bytt elev» går tilbake til elevvalget');
+
   ok(feil.length === 0, `ingen JavaScript-feil${feil.length ? `: ${feil.join(' | ')}` : ''}`);
   console.log(`Skjermbilder: ${SP}`);
   await browser.close();

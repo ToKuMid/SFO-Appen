@@ -24,9 +24,18 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 - Innhold for SFO-leder og rektor: sammendrag med nøkkeltall (avvik, ikke møtt, aldri registrert, ikke sjekket ut og dager uten telling er uthevet), avvik ved telling med navn og kommentar, per dag, fravær per dag og alle tellinger.
 - Navnene i rapporten er forkortet for å gjøre barna mindre gjenkjennelige. Formatet er beskrevet i skolens rutinebeskrivelse for appen. Rapporten inneholder likevel personopplysninger.
 - Skolelogoen (`icons/skolelogo.png`) står sentrert øverst i rapporten.
+- Bunnteksten viser bare utskriftsdato og klokkeslett, «SFO-appen» og versjonsnummer (fra 0.6.1). Hvor rapporten lagres og hvor lenge, står i rutinebeskrivelsen.
 - «Skriv ut eller lagre som PDF» åpner telefonens utskrift. Rapporten skrives på A4 uten knapper og faner, med utskriftsdato øverst og nederst.
 - Status og tall regnes ut i `src/model/rapport.js`, med tester i `tests/rapport.test.js`.
-- Elevrapport (K-51) og papirliste (K-53) er ikke laget ennå.
+- Papirliste (K-53) er ikke laget ennå.
+
+**Elevrapport (versjon 0.6.0, K-51) er bygget.** Den ligger under **Mer → Rapporter → Elevrapport**.
+
+- Velg elev fra lista (med søk). Deaktiverte elever ligger i en egen gruppe nederst, slik at det også går an å ta ut rapport for barn som har sluttet.
+- Samme periodevalg, logo, utskrift og bunntekst som grupperapporten. Valgt periode huskes mellom de to rapportene.
+- Innhold: sammendrag (SFO-dager, møtt, meldt fravær, ikke møtt, aldri registrert, ikke sjekket ut, manglet ved telling), en tabell per dag med inn, ut (med initialer) og merknad, og tellingene der eleven manglet med kommentar.
+- Rettede tidspunkt merkes med *.
+- Navnet i selve rapporten er forkortet på samme måte som i grupperapporten. Fullt navn vises bare i elevvalget på skjermen og kommer ikke med på utskriften.
 
 **Fase 2b og 2c (versjon 0.4.0) er bygget:** den daglige flyten, varsel og telling, med layout og flyt som i mockupen.
 
@@ -79,7 +88,7 @@ src/db.js             – database, tabeller og migrering
 src/backup.js         – sikkerhetskopi: bygge, kontrollere, oppgradere
 src/model/elev.js     – regler for elever: trinn, skolegrupper, ukedager, klokkeslett
 src/model/status.js   – dagens status regnet ut fra hendelsene
-src/model/rapport.js  – grupperapporten
+src/model/rapport.js  – grupperapporten og elevrapporten
 src/import/xlsx.js    – leser og skriver Excel-filer (.xlsx)
 src/import/elevliste.js – import av elevlista: kontroll, kobling og endringsliste
 src/filer.js          – lagre og åpne filer (delingsark eller nedlasting)
@@ -197,3 +206,11 @@ Ferdig-kriteriet for fase 2b er at en hel fiktiv ettermiddag kan gjennomføres f
 2. **Mer → Rapporter → Grupperapport → Denne måneden.** Sammendraget skal vise 2 tellinger med avvik, og avvikstabellen navn og kommentar.
 3. Trykk **Skriv ut eller lagre som PDF**, velg **Lagre som PDF**, og lagre i en testmappe i OneDrive.
 4. Åpne PDF-en og sjekk at den er lesbar på A4, uten knapper og faner.
+
+## Teste elevrapporten på telefonen
+
+1. Last inn fiktive testdata (som over).
+2. **Mer → Rapporter → Elevrapport.** Søk etter et barn som står i avvikstabellen i grupperapporten, og trykk på det.
+3. Velg **Denne måneden**. Per dag skal vise inn- og utsjekk, og «Tellinger der eleven manglet» skal vise kommentaren.
+4. Sjekk at fullt navn ikke står i selve rapporten, bare forkortelsen.
+5. Trykk **Bytt elev** og velg et annet barn. Lagre en PDF i testmappen og sjekk den på A4.

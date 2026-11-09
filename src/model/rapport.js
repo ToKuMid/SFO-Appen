@@ -166,3 +166,65 @@ export function grupperapport({ elever, hendelser, unntak = [], tellinger, telli
     },
   };
 }
+
+// ---------- Elevrapport (K-51) ----------
+
+/**
+ * Elevrapport for ett barn: inn- og utsjekk per dag, fravær og tellinger der barnet manglet.
+ * Navnet forkortes som i grupperapporten. `elever` brukes bare til å gjøre forkortelsen unik.
+ */
+export function elevrapport({ elev, elever, hendelser, unntak = [], tellinger, tellingslinjer, fra, til, idag = lokalDato() }) {
+  const sisteDag = til > idag ? idag : til;
+  const egne = hendelser.filter((h) => h.elevId === elev.id);
+  const egneUnntak = unntak.filter((u) => u.elevId === elev.id);
+  const tellingFor = new Map(tellinger.map((t) => [t.id, t]));
+  const manglet = tellingslinjer
+    .filter((l) => l.elevId === elev.id && !l.talt && tellingFor.has(l.tellingId))
+    .map((l) => tellingFor.get(l.tellingId))
+    .filter((t) => t.dato >= fra && t.dato <= sisteDag)
+    .sort((a, b) => a.tid.localeCompare(b.tid));
+
+  const dager = [];
+  for (const dato of datoerMellom(fra, sisteDag)) {
+    const iDag = egne.filter((h) => h.dato === dato);
+    const unntakIDag = egneUnntak.filter((u) => u.dato === dato);
+    const forventet = erForventet({ ...elev, aktiv: true }, dato, unntakIDag);
+    if (!forventet && iDag.length === 0) continue;
+
+    const s = elevStatus({ ...elev, aktiv: true }, dato, iDag, unntakIDag);
+    const tid = (h) => ({ tid: h.tid, initialer: h.initialer ?? null, rettet: !!h.erstatter });
+    const fravaer = s.hendelser.filter((h) => h.type === 'meldt-fravaer' || h.type === 'ikke-mott').pop() ?? null;
+    dager.push({
+      dato,
+      forventet,
+      ekstraDag: unntakIDag.some((u) => u.type === 'ekstra-dag'),
+      status: s.status,
+      inn: s.hendelser.filter((h) => h.type === 'inn').map(tid),
+      ut: s.hendelser.filter((h) => h.type === 'ut').map(tid),
+      fravaer: fravaer && (s.status === STATUS.MELDT_FRAVAER || s.status === STATUS.IKKE_MOTT)
+        ? { type: fravaer.type, initialer: fravaer.initialer ?? null } : null,
+      aldriRegistrert: s.status === STATUS.FORVENTET && dato !== idag,
+      ikkeUtsjekket: s.status === STATUS.INNE && dato !== idag,
+      mangletVedTelling: manglet.filter((t) => t.dato === dato).map((t) => ({ tid: t.tid, initialer: t.initialer ?? null, kommentar: t.kommentar ?? '' })),
+    });
+  }
+
+  return {
+    navn: kortNavnFor(elever.some((e) => e.id === elev.id) ? elever : [...elever, elev]).get(elev.id),
+    fra,
+    til: sisteDag,
+    dager,
+    manglet: manglet.map((t) => ({ dato: t.dato, tid: t.tid, antallTalt: t.antallTalt, antallForventet: t.antallForventet, initialer: t.initialer ?? null, kommentar: t.kommentar ?? '' })),
+    harRettelser: dager.some((d) => [...d.inn, ...d.ut].some((x) => x.rettet)),
+    sammendrag: {
+      forventetDager: dager.filter((d) => d.forventet).length,
+      mottDager: dager.filter((d) => d.inn.length > 0).length,
+      meldtFravaer: dager.filter((d) => d.fravaer?.type === 'meldt-fravaer').length,
+      ikkeMott: dager.filter((d) => d.fravaer?.type === 'ikke-mott').length,
+      aldriRegistrert: dager.filter((d) => d.aldriRegistrert).length,
+      ikkeUtsjekket: dager.filter((d) => d.ikkeUtsjekket).length,
+      mangletVedTelling: manglet.length,
+      ekstraDager: dager.filter((d) => d.ekstraDag).length,
+    },
+  };
+}

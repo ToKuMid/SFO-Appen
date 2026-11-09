@@ -111,3 +111,57 @@ test('forkortede navn blir aldri like i samme rapport', () => {
   assert.equal(k.get('e'), 'EmmT 2.trinn');
   assert.equal(new Set(k.values()).size, 5);
 });
+
+test('elevrapport: inn, ut, fravær, rettelser og telling der barnet manglet (K-51)', async () => {
+  const { elevrapport } = await import('../src/model/rapport.js');
+  const innMan = hend('emma', 'inn', 9, 14, 46);
+  const hendelser = [
+    innMan, hend('emma', 'ut', 9, 15, 0, { initialer: 'MH' }), hend('emma', 'inn', 9, 15, 30), hend('emma', 'ut', 9, 16, 10, { initialer: 'KT' }),
+    lagHendelse({ id: 'rett', elevId: 'emma', type: 'inn', naa: kl(9, 14, 50), erstatter: innMan.id }),
+    hend('emma', 'meldt-fravaer', 10, 12, 0, { initialer: 'KT' }),
+    hend('emma', 'inn', 11, 14, 47),
+    hend('noah', 'inn', 9, 14, 45),
+  ];
+  const tellinger = [{ id: 't1', dato: '2026-11-11', tid: kl(11, 15, 30).toISOString(), antallForventet: 2, antallTalt: 1, initialer: 'EF', kommentar: 'Var på do' }];
+  const tellingslinjer = [{ id: 'l1', tellingId: 't1', elevId: 'emma', talt: false }];
+  const r = elevrapport({ elev: emma, elever: [emma, noah], hendelser, tellinger, tellingslinjer, fra: '2026-11-09', til: '2026-11-13', idag: '2026-11-13' });
+
+  assert.equal(r.navn, 'EmmT 2.trinn');
+  assert.deepEqual(r.dager.map((d) => d.dato), ['2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13']);
+  const [man, tir, ons, tor, fre] = r.dager;
+  assert.equal(man.inn.length, 2, 'to innsjekker samme dag');
+  assert.equal(man.inn[0].rettet, true, 'rettet tidspunkt merkes');
+  assert.deepEqual(man.ut.map((u) => u.initialer), ['MH', 'KT']);
+  assert.deepEqual(tir.fravaer, { type: 'meldt-fravaer', initialer: 'KT' });
+  assert.equal(ons.ikkeUtsjekket, true);
+  assert.equal(ons.mangletVedTelling[0].kommentar, 'Var på do');
+  assert.equal(tor.aldriRegistrert, true);
+  assert.equal(fre.aldriRegistrert, false, 'i dag regnes ikke som aldri registrert ennå');
+  assert.equal(r.harRettelser, true);
+  assert.deepEqual(r.sammendrag, {
+    forventetDager: 5, mottDager: 2, meldtFravaer: 1, ikkeMott: 0, aldriRegistrert: 1, ikkeUtsjekket: 1, mangletVedTelling: 1, ekstraDager: 0,
+  });
+});
+
+test('elevrapport: ekstra SFO-dag og deaktivert elev', async () => {
+  const { elevrapport } = await import('../src/model/rapport.js');
+  const r = elevrapport({
+    elev: sara, elever: [emma, noah, sara],
+    hendelser: [hend('sara', 'inn', 10, 14, 50), hend('sara', 'ut', 10, 16, 0)],
+    unntak: [{ id: 'u1', elevId: 'sara', dato: '2026-11-10', type: 'ekstra-dag' }],
+    tellinger: [], tellingslinjer: [], fra: '2026-11-09', til: '2026-11-10', idag: '2026-11-20',
+  });
+  assert.deepEqual(r.dager.map((d) => d.dato), ['2026-11-09', '2026-11-10'], 'deaktivert elev får rapport for dagene etter ukeplanen');
+  assert.equal(r.dager[1].ekstraDag, true);
+  assert.equal(r.sammendrag.ekstraDager, 1);
+});
+
+test('bunnteksten i rapportene har bare utskriftstid, app og versjon', async () => {
+  const { readFile } = await import('node:fs/promises');
+  for (const fil of ['../src/ui/rapport.js', '../src/ui/elevrapport.js']) {
+    const kilde = await readFile(new URL(fil, import.meta.url), 'utf8');
+    const bunn = kilde.slice(kilde.indexOf("'rapport-bunn'"));
+    assert.match(bunn, /`Skrevet ut \$\{utskrevet\} · SFO-appen \$\{APP_VERSJON\}`/);
+    assert.doesNotMatch(bunn, /personopplysninger|OneDrive|lagringstid/);
+  }
+});
