@@ -18,9 +18,10 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
-**Initialer på alt (versjon 0.8.0, K-18) er bygget.**
+**Initialer på alt (versjon 0.8.0, endret i 0.8.1, K-18) er bygget.**
 
-- Etter koden skriver den ansatte initialene sine (2–4 bokstaver). Forrige initialer er foreslått, så det holder å trykke **Fortsett**. Det går ikke an å fortsette uten initialer.
+- Initialene følger telefonen. Låseskjermen viser «Låses opp som KT · Bytt», og koden låser opp med de samme initialene. En annen ansatt trykker **Bytt** før koden, og skriver initialene sine etterpå (uten forslag). Det går ikke an å fortsette uten initialer.
+- Appen spør likevel etter initialer ved ny dag, og når den har vært låst i mer enn 30 minutter. Da er forrige initialer foreslått.
 - Alt som registreres til appen låses igjen, får disse initialene: inn, ut, fravær, ikke møtt, ikke SFO i dag, ekstra dag, angre, rett tidspunkt og telling.
 - Endring av elever og faste avtaler, deaktivering og import lagrer hvem som endret sist og når. Elevkortet viser «Sist endret … av …» under faste avtaler.
 - Tar en annen ansatt over telefonen uten at den har vært låst, trykker hun på initialene på **I dag** og skriver sine egne.
@@ -196,10 +197,11 @@ Endres datamodellen: øk `DATAVERSJON` og `DB_VERSJON` i `src/db.js`, legg til e
 
 ## Teste initialer på telefonen
 
-1. Lås opp: etter koden skal appen spørre etter initialer. Tøm feltet og trykk **Fortsett**: appen skal ikke slippe deg inn.
-2. Sjekk inn og ut, registrer fravær og gjør en telling: initialene skal stå i historikken på elevkortet og ved tellingen.
-3. Trykk på initialene på **I dag** og skriv andre initialer. Neste registrering skal få de nye.
-4. Endre en merknad: elevkortet skal vise «Sist endret … av …».
+1. Lås appen: låseskjermen skal vise «Låses opp som …». Skriv koden: appen skal åpne uten å spørre etter initialer.
+2. Lås igjen, trykk **Bytt** og skriv koden: appen skal spørre etter initialer med tomt felt. Trykk **Fortsett** uten å skrive: appen skal ikke slippe deg inn.
+3. Sjekk inn og ut, registrer fravær og gjør en telling: initialene skal stå i historikken på elevkortet og ved tellingen.
+4. Trykk på initialene på **I dag** og skriv andre initialer. Neste registrering skal få de nye.
+5. Endre en merknad: elevkortet skal vise «Sist endret … av …».
 
 ## Teste koden på telefonen
 

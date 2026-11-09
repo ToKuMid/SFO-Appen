@@ -27,11 +27,16 @@ async function velgKoder(page, init = 'KT') {
   await skriv(page, ADMIN);
   await initialer(page, init);
 }
-/** Lås opp med ansattkoden, og bekreft initialene. */
+/**
+ * Lås opp med ansattkoden. Med init trykkes «Bytt» først, og nye initialer skrives.
+ * Uten init brukes initialene fra sist (appen spør bare ved ny dag eller lang pause).
+ */
 async function lasOpp(page, init) {
   await tittel(page, 'SFO-appen');
+  if (init !== undefined && await page.$('#las-bytt')) await page.click('#las-bytt');
   await skriv(page, ANSATT);
-  await initialer(page, init);
+  await page.waitForFunction(() => !document.querySelector('#las[open]') || document.querySelector('#las-tittel')?.textContent === 'Initialer');
+  if (await page.isVisible('#las[open]')) await initialer(page, init);
 }
 /** Skriv administratorkoden når appen ber om den. */
 async function admin(page) {

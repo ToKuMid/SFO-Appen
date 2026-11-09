@@ -28,14 +28,27 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await kode.skriv(page, '1111');
   await page.waitForFunction(() => /Feil kode/.test(document.querySelector('.las-feil')?.textContent));
   ok(await page.isVisible('#las[open]'), 'feil kode låser ikke opp');
+  ok(/Låses opp som KT/.test(await page.textContent('#las-som')), 'låseskjermen viser hvem appen låses opp som (K-18)');
+  await kode.skriv(page, kode.ANSATT);
+  await page.waitForSelector('#las', { state: 'hidden' });
+  ok(true, 'riktig kode låser opp med samme initialer, uten ekstra spørsmål');
+  // En annen ansatt: «Bytt» på låseskjermen gir spørsmål om initialer, uten forslag
+  await page.click('[data-fane=mer]');
+  await page.click('#las-naa');
+  await kode.tittel(page, 'SFO-appen');
+  await page.click('#las-bytt');
+  ok(/etter koden/.test(await page.textContent('#las-som')), '«Bytt» varsler at initialer skrives etter koden');
   await kode.skriv(page, kode.ANSATT);
   await kode.tittel(page, 'Initialer');
-  ok((await page.inputValue('#las-initialer')) === 'KT', 'initialene fra forrige gang er foreslått');
-  await page.fill('#las-initialer', '');
+  ok((await page.inputValue('#las-initialer')) === '', 'ingen forslag når noen har trykket «Bytt»');
   await page.click('#las-fortsett');
   ok(/2–4 bokstaver/.test(await page.textContent('.las-feil')) && await page.isVisible('#las[open]'), 'kan ikke fortsette uten initialer (K-18)');
+  await kode.initialer(page, 'mh');
+  await page.click('[data-fane=idag]');
+  await page.waitForFunction(() => document.querySelector('#initialer')?.textContent === 'MH');
+  ok(true, 'nye initialer gjelder etter «Bytt»');
+  await page.click('#initialer');
   await kode.initialer(page, 'kt');
-  ok(true, 'riktig kode og initialer låser opp');
   // Skjult og synlig igjen (bytte av app, skjerm av) låser appen (K-71)
   await page.evaluate(() => {
     Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });

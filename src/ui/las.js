@@ -4,7 +4,8 @@
 import { h, visMelding } from '../dom.js';
 import { hentInnstilling, lagreInnstilling } from '../db.js';
 import {
-  ADMIN_LENGDE, ANSATT_LENGDE, FRIE_FORSOK, gjenstaendeVent, kontrollerInitialer, kontrollerNyKode, lagKode, sjekkKode,
+  ADMIN_LENGDE, ANSATT_LENGDE, FRIE_FORSOK, gjenstaendeVent, kontrollerInitialer, kontrollerNyKode, lagKode,
+  lesLagredeInitialer, maaSporeInitialer, sjekkKode,
 } from '../kode.js';
 import {
   erAdmin, erLast, hentSesjonInitialer, settAdmin, settLast, settSesjonInitialer, skalLases,
@@ -56,7 +57,7 @@ const ventTekst = (ms) => (ms >= 60000 ? `${Math.ceil(ms / 60000)} min` : `${sek
  * kontroller(kode) → null (godtatt) eller { feil, vent? }.
  * Løses med koden, med verdien til ekstra-knappen, eller null ved Avbryt.
  */
-function steg({ tittel, tekst, lengde, kontroller, avbryt = false, ekstra = null, logo = false, startVent = 0 }) {
+function steg({ tittel, tekst, lengde, kontroller, avbryt = false, ekstra = null, logo = false, startVent = 0, under = null }) {
   return new Promise((resolve) => {
     let siffer = '';
     let opptatt = false;
@@ -139,6 +140,7 @@ function steg({ tittel, tekst, lengde, kontroller, avbryt = false, ekstra = null
       logo ? h('img', { class: 'las-logo', src: 'icons/app-192.png', alt: '' }) : null,
       h('h1', { class: 'las-tittel', id: 'las-tittel' }, tittel),
       tekst ? h('p', { class: 'las-info' }, tekst) : null,
+      under,
       prikker,
       antall,
       feil,
@@ -154,7 +156,7 @@ function steg({ tittel, tekst, lengde, kontroller, avbryt = false, ekstra = null
  * Spør etter initialene til den som bruker appen (K-18). Forslaget er initialene som ble brukt sist.
  * Løses med initialene, eller null ved Avbryt.
  */
-function sporInitialer({ avbryt = false } = {}) {
+function sporInitialer({ avbryt = false, forslag = true } = {}) {
   return new Promise((resolve) => {
     let ferdigFlagg = false;
     const ferdig = (v) => {
@@ -170,13 +172,18 @@ function sporInitialer({ avbryt = false } = {}) {
       id: 'las-initialer', type: 'text', maxlength: 4, autocomplete: 'off', autocapitalize: 'characters',
       spellcheck: 'false', 'aria-describedby': 'las-initialer-hjelp', placeholder: 'F.eks. KT',
     });
-    hentInnstilling('sisteInitialer').then((v) => { if (v && !felt.value) { felt.value = v; felt.select(); } });
+    if (forslag) {
+      hentInnstilling('sisteInitialer').then((v) => {
+        const l = lesLagredeInitialer(v);
+        if (l && !felt.value) { felt.value = l.verdi; felt.select(); }
+      });
+    }
     const feil = h('p', { class: 'las-feil', role: 'alert' });
     const send = async (e) => {
       e.preventDefault();
       const { verdi, feil: f } = kontrollerInitialer(felt.value);
       if (f) { feil.textContent = f; felt.focus(); return; }
-      await lagreInnstilling('sisteInitialer', verdi);
+      await lagreInnstilling('sisteInitialer', { verdi, tid: new Date().toISOString() });
       ferdig(verdi);
     };
     dialog.replaceChildren(h('div', { class: 'las-innhold' },
@@ -195,7 +202,7 @@ function sporInitialer({ avbryt = false } = {}) {
 export async function byttInitialer() {
   if (erLast()) return false;
   aapne();
-  const verdi = await sporInitialer({ avbryt: true });
+  const verdi = await sporInitialer({ avbryt: true, forslag: false });
   if (erLast()) return false;
   lukk();
   if (!verdi) return false;
@@ -277,12 +284,30 @@ export function laas() {
   settLast(true);
   aktivt?.avbrytHelt();
   aapne();
+  // Husk når appen sist var i bruk, så initialene kan gjelde videre en stund (K-18).
+  const forrige = hentSesjonInitialer();
+  if (forrige) lagreInnstilling('sisteInitialer', { verdi: forrige, tid: new Date().toISOString() });
   lasJobb = (async () => {
+    let bytt = false;
     for (;;) {
+      const lagret = lesLagredeInitialer(await hentInnstilling('sisteInitialer'));
+      const gyldig = lagret && !maaSporeInitialer(lagret);
+      // «Låses opp som KT · Bytt»: koden låser opp med samme initialer, eller spør etter nye.
+      const linje = h('p', { class: 'las-som', id: 'las-som' });
+      const visLinje = () => {
+        if (bytt || !gyldig) {
+          linje.replaceChildren(bytt ? 'Du skriver initialene dine etter koden.' : '');
+          return;
+        }
+        linje.replaceChildren(`Låses opp som ${lagret.verdi} · `,
+          h('button', { type: 'button', class: 'knapp-lenke las-bytt', id: 'las-bytt', onclick: () => { bytt = true; visLinje(); } }, 'Bytt'));
+      };
+      visLinje();
       const svar = await steg({
         logo: true,
         tittel: 'SFO-appen',
         tekst: 'Skriv inn koden',
+        under: linje,
         lengde: ANSATT_LENGDE,
         startVent: gjenstaendeVent(await hentInnstilling('kode-feil-ansatt')),
         kontroller: (k) => proveKode(k, 'kode-ansatt', 'kode-feil-ansatt'),
@@ -294,7 +319,14 @@ export function laas() {
       }
       if (svar) break;
     }
-    const init = await sporInitialer();
+    const lagret = lesLagredeInitialer(await hentInnstilling('sisteInitialer'));
+    let init;
+    if (!bytt && lagret && !maaSporeInitialer(lagret)) {
+      init = lagret.verdi;
+      await lagreInnstilling('sisteInitialer', { verdi: init, tid: new Date().toISOString() });
+    } else {
+      init = await sporInitialer({ forslag: !bytt });
+    }
     lukk();
     lasJobb = null;
     settLast(false);

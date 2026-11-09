@@ -77,3 +77,16 @@ test('initialer: 2–4 bokstaver, store bokstaver, æøå tillatt (K-18)', async
   assert.ok(kontrollerInitialer('ABCDE').feil);
   assert.ok(kontrollerInitialer('K1').feil);
 });
+
+test('initialene følger telefonen til noen bytter, ny dag eller lang pause (K-18)', async () => {
+  const { maaSporeInitialer, lesLagredeInitialer } = await import('../src/kode.js');
+  const naa = new Date(2026, 10, 9, 15, 0);
+  const fersk = { verdi: 'KT', tid: new Date(2026, 10, 9, 14, 45).toISOString() };
+  assert.equal(maaSporeInitialer(fersk, { naa }), false, 'samme person innen 30 min: ingen spørsmål');
+  assert.equal(maaSporeInitialer(fersk, { naa, bytt: true }), true, '«Bytt» gir spørsmål');
+  assert.equal(maaSporeInitialer({ verdi: 'KT', tid: new Date(2026, 10, 9, 14, 20).toISOString() }, { naa }), true, 'over 30 min');
+  assert.equal(maaSporeInitialer({ verdi: 'KT', tid: new Date(2026, 10, 8, 14, 50).toISOString() }, { naa }), true, 'ny dag');
+  assert.equal(maaSporeInitialer(null, { naa }), true);
+  assert.deepEqual(lesLagredeInitialer('KT'), { verdi: 'KT', tid: null }, 'eldre format');
+  assert.equal(maaSporeInitialer('KT', { naa }), true, 'eldre format spør én gang');
+});

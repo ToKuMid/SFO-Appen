@@ -74,3 +74,25 @@ export function kontrollerInitialer(tekst) {
   if (!/^[A-ZÆØÅ]{2,4}$/u.test(verdi)) return { feil: 'Skriv initialene dine med 2–4 bokstaver.' };
   return { verdi };
 }
+
+/**
+ * Initialene følger telefonen (K-18): koden låser opp med initialene fra sist, til noen trykker «Bytt».
+ * Appen spør likevel på nytt ved ny dag, og når appen ikke er brukt på en stund.
+ */
+export const INITIALER_GYLDIG_MIN = 30;
+
+/** Normaliserer lagrede initialer. Eldre versjoner lagret bare teksten. */
+export function lesLagredeInitialer(lagret) {
+  if (!lagret) return null;
+  if (typeof lagret === 'string') return { verdi: lagret, tid: null };
+  return lagret.verdi ? { verdi: lagret.verdi, tid: lagret.tid ?? null } : null;
+}
+
+/** Må appen spørre etter initialer etter koden? */
+export function maaSporeInitialer(lagret, { bytt = false, naa = new Date() } = {}) {
+  const l = lesLagredeInitialer(lagret);
+  if (bytt || !l || !l.tid) return true;
+  const sist = new Date(l.tid);
+  if (sist.toDateString() !== naa.toDateString()) return true;
+  return naa - sist > INITIALER_GYLDIG_MIN * 60000;
+}
