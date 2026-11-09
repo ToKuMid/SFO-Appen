@@ -28,6 +28,11 @@
   <script type="module" src="src/app.js"></script>
 </head>
 <body>
+  <div id="admin-banner" class="admin-banner" role="status" hidden>
+    <span>Du er i administratormodus</span>
+    <button type="button" id="admin-banner-avslutt" class="knapp knapp-liten admin-banner-knapp">Avslutt</button>
+  </div>
+
   <div id="oppdatering" class="oppdatering" hidden>
     <span>Ny versjon av appen er klar.</span>
     <button type="button" id="oppdater-knapp" class="knapp knapp-liten knapp-primar">Oppdater</button>

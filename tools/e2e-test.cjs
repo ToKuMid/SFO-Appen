@@ -217,6 +217,8 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await kode.admin(page);
   await page.waitForSelector('#deaktiver');
   ok(!(await page.isDisabled('#fornavn')), 'med administratorkode kan navn endres');
+  ok(await page.isVisible('#admin-banner'), 'rødt banner øverst i administratormodus');
+  await page.screenshot({ path: `${SP}/admin-banner.png` });
   await page.click('#deaktiver');
   await page.click('#dialog button:text-is("Deaktiver")');
   await page.waitForSelector('#elevliste');
@@ -227,6 +229,14 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.waitForSelector('#elevliste');
   ok((await page.$$('#elevliste > li')).length === 32, 'elevlisten viser 32');
   await page.screenshot({ path: `${SP}/elever.png` });
+
+  // Avslutt administratormodus fra banneret
+  await page.click('#admin-banner-avslutt');
+  await page.waitForSelector('#admin-banner', { state: 'hidden' });
+  await page.click('[data-fane=mer]');
+  ok(/låses hver gang/.test(await page.textContent('#admin-status')), '«Avslutt» i banneret slår av administratormodus');
+  await page.click('[data-fane=elever]');
+  await page.waitForSelector('#elevliste');
 
   // flymodus
   await ctx.setOffline(true);

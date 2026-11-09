@@ -10,7 +10,8 @@ import { visElevkort } from './ui/elevkort.js';
 import { visGrupperapport } from './ui/rapport.js';
 import { visElevrapport } from './ui/elevrapport.js';
 import { visAvviksrapport } from './ui/avviksrapport.js';
-import { startTilgang } from './ui/las.js';
+import { avsluttAdmin, startTilgang } from './ui/las.js';
+import { erAdmin } from './tilgang.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
@@ -145,6 +146,14 @@ async function start() {
   setInterval(oppdaterTid, 15000);
   // Etter hver registrering (inn, ut, fravær, angre …) tegnes skjermen på nytt.
   window.addEventListener('sfo:endret', oppfrisk);
+  // Rødt banner øverst så lenge administratormodus er på. Når modusen slås av, tegnes skjermen på
+  // nytt, så felt som krever administratorkode låses igjen.
+  const adminBanner = document.getElementById('admin-banner');
+  document.getElementById('admin-banner-avslutt').addEventListener('click', () => avsluttAdmin());
+  window.addEventListener('sfo:admin', () => {
+    adminBanner.hidden = !erAdmin();
+    if (!erAdmin()) oppfrisk();
+  });
   // Etter opplåsing: skjermer som viser initialene tegnes på nytt. Skjemaer beholder det som er skrevet.
   window.addEventListener('sfo:opplast', () => { if (['idag', 'andre', 'telling', 'mer'].includes(aktivFane)) oppfrisk(); });
   document.addEventListener('visibilitychange', () => {

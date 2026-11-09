@@ -18,6 +18,13 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Vakt mot overføring av persondata (versjon 0.9.2).**
+
+- Alle skrivefelt har stavekontroll, autokorrektur og autofyll slått av som standard (`src/dom.js`). Da sender ikke nettleserens stavekontroll navn og merknader til en skytjeneste. Tastaturappen på telefonen styres av telefonens egne innstillinger.
+- `tests/personvern.test.js` stopper en ny versjon hvis sikkerhetsregelen (CSP) endres, eller hvis noen legger inn kode som kan sende data: `fetch` utenfor service workeren og selvtesten, `XMLHttpRequest`, `WebSocket`, `sendBeacon`, nettadresser og lignende.
+- Git-hooken (`tools/hooks/pre-commit`) kjører personverntestene før hver commit. GitHub kjører alle testene ved hver push (`.github/workflows/tester.yml`).
+- Skal CSP-regelen eller nettverkskoden endres med vilje, må testen endres også, og DPIA-en vurderes på nytt.
+
 **Avviksrapport (versjon 0.9.0, K-54) er bygget.** Den ligger under **Mer → Rapporter → Avviksrapport**.
 
 - Bare det som skal følges opp: avvik ved telling (med hvilke barn som manglet), ikke møtt, aldri registrert, ikke sjekket ut, dager uten telling og dager uten registreringer.
@@ -40,7 +47,7 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 
 - Første gang appen åpnes, velges en **kode for ansatte (4 siffer)** og en **administratorkode (6 siffer)**. Like siffer (0000) og rekker (1234) godtas ikke.
 - Appen låses **hver gang** den blir skjult: bytte til en annen app, hjem-knappen eller skjermen av. Det er ingen tidsfrist. Unntaket er når appen selv åpner filvelger, delingsark eller utskrift: da låses den ikke, med mindre brukeren er borte i mer enn to minutter.
-- Administratorkoden kreves for import av elevliste, ny elev, endring av navn, trinn, gruppe og SFO-dager, deaktivering, gjenoppretting fra sikkerhetskopi, utviklerverktøy og bytte av koder. Administratormodus varer til appen låses, eller til man trykker **Avslutt administratormodus** under **Mer → Tilgang**. Faste avtaler og merknader kan alle ansatte endre.
+- Administratorkoden kreves for import av elevliste, ny elev, endring av navn, trinn, gruppe og SFO-dager, deaktivering, gjenoppretting fra sikkerhetskopi, utviklerverktøy og bytte av koder. Administratormodus varer til appen låses. Så lenge den er på, står et rødt banner øverst med knappen **Avslutt** (fra versjon 0.9.1). Man kan også trykke **Avslutt administratormodus** under **Mer → Tilgang**. Faste avtaler og merknader kan alle ansatte endre.
 - **Glemt koden?** på låseskjermen: med administratorkoden kan man velge ny kode for ansatte.
 - Etter fem feil forsøk må man vente 30 sekunder, og ventetiden dobles for hver ny feil (høyst 15 minutter).
 - Kodene lagres bare som hash (PBKDF2 med salt), aldri i klartekst. De tas ikke med i sikkerhetskopien, og de beholdes ved gjenoppretting, testdata og «Slett alle data».

@@ -7,8 +7,14 @@
  */
 import { naarOpplast } from './tilgang.js';
 
+// Skrivefelt får ikke stavekontroll, autokorrektur eller autofyll, med mindre det er bedt om.
+// Da sender ikke nettleserens stavekontroll (for eksempel «forbedret stavekontroll» i Chrome)
+// navn og merknader til en skytjeneste. Tastaturappen styres av telefonens innstillinger.
+export const SKRIVEFELT_STANDARD = { spellcheck: 'false', autocorrect: 'off', autocomplete: 'off' };
+
 export function h(tag, attrs = {}, ...barn) {
   const el = document.createElement(tag);
+  if (tag === 'input' || tag === 'textarea') attrs = { ...SKRIVEFELT_STANDARD, ...attrs };
   for (const [k, v] of Object.entries(attrs ?? {})) {
     if (v === null || v === undefined || v === false) continue;
     if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);

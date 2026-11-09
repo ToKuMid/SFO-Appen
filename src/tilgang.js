@@ -13,9 +13,16 @@ export const SYSTEMVINDU_MAKS = 2 * 60000;
 export const erLast = () => last;
 export const erAdmin = () => admin;
 
+// Gir beskjed til banneret for administratormodus når modusen slås av eller på.
+function meldAdmin(forrige) {
+  if (forrige !== admin && typeof window !== 'undefined') window.dispatchEvent(new Event('sfo:admin'));
+}
+
 export function settLast(verdi) {
+  const forrige = admin;
   last = verdi;
   if (last) { admin = false; initialer = null; }
+  meldAdmin(forrige);
   if (!last) {
     const v = ventende;
     ventende = [];
@@ -23,7 +30,11 @@ export function settLast(verdi) {
   }
 }
 
-export function settAdmin(verdi) { admin = verdi && !last; }
+export function settAdmin(verdi) {
+  const forrige = admin;
+  admin = !!verdi && !last;
+  meldAdmin(forrige);
+}
 
 /** Initialene til den som låste opp. Settes ved hver opplåsing og fjernes når appen låses. */
 export const hentSesjonInitialer = () => initialer;

@@ -14,4 +14,15 @@ if [ -n "$blokkert" ]; then
   exit 1
 fi
 
+# Stopper commit hvis sikkerhetsregelen (CSP) er svekket eller det er lagt inn kode som kan sende data.
+if command -v node >/dev/null 2>&1; then
+  if ! node --test tests/personvern.test.js >/dev/null 2>&1; then
+    echo ""
+    echo "STOPP: Personverntestene feiler. Sikkerhetsregelen (CSP) eller nettverkskode er endret."
+    echo "Se hva som feiler med:  node --test tests/personvern.test.js"
+    echo "Endringer her krever ny vurdering i DPIA-en."
+    exit 1
+  fi
+fi
+
 exit 0
