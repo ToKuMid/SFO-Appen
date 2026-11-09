@@ -723,6 +723,10 @@ input[type="date"] {
 .las-tast-tekst { font-size: 1rem; }
 .las-ekstra { margin-top: 0.5rem; }
 .skjult-tekst { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.las-skjema { width: 100%; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
+#las-initialer { text-align: center; text-transform: uppercase; font-size: 1.75rem; letter-spacing: 0.15em; font-weight: 600; }
+.init-knapp { min-width: 4.5rem; font-weight: 600; letter-spacing: 0.06em; }
+.init-verdi { margin: 0; min-height: var(--trykk); display: flex; align-items: center; font-weight: 600; letter-spacing: 0.06em; }
 .admin-merknad { display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px solid var(--skille); padding-top: 0.75rem; }
 input:disabled, select:disabled { opacity: 0.65; }
 

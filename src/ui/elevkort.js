@@ -4,7 +4,7 @@ import { h, visDialog, visMelding } from '../dom.js';
 import { hentDag, rettTidspunkt, settUnntakIDag } from '../dag.js';
 import { elevStatus, gjeldendeHendelser, HENDELSE_TEKST, STATUS, STATUS_TEKST } from '../model/status.js';
 import { UKEDAGER } from '../model/elev.js';
-import { klokkeFra, klokkeslett, tidVerdiFra } from '../dato.js';
+import { klokkeFra, klokkeslett, tidVerdiFra, tidspunktTekst } from '../dato.js';
 import { pilVenstre } from './felles.js';
 import { angreSiste, kanAngres, registrerFravaer, sjekkInn, sjekkUt } from './handlinger.js';
 
@@ -84,6 +84,7 @@ export async function visElevkort(id, { tilbake = 'idag' } = {}) {
       avtale?.fritekst ? h('div', { class: 'merknadsfelt' },
         h('span', { class: 'feltnavn' }, 'Merknad'),
         h('p', {}, avtale.fritekst)) : null,
+      avtale?.endretAv ? h('p', { class: 'dempet liten', id: 'avtale-endret' }, `Sist endret ${tidspunktTekst(avtale.endret)} av ${avtale.endretAv}`) : null,
       h('p', { class: 'paminnelse' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
 
     h('section', { class: 'seksjon' },

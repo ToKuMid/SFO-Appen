@@ -8,9 +8,9 @@ export const ANSATT_LENGDE = 4;
 export const ADMIN_LENGDE = 6;
 export const ITERASJONER = 100000;
 
-// Innstillinger som hører til tilgang. De tas ikke med i sikkerhetskopien, og beholdes ved
-// gjenoppretting, testdata og «slett alle data».
-export const KODE_NOKLER = ['kode-ansatt', 'kode-admin', 'kode-feil-ansatt', 'kode-feil-admin'];
+// Innstillinger som hører til tilgang og til denne telefonen. De tas ikke med i sikkerhetskopien,
+// og beholdes ved gjenoppretting, testdata og «slett alle data».
+export const KODE_NOKLER = ['kode-ansatt', 'kode-admin', 'kode-feil-ansatt', 'kode-feil-admin', 'sisteInitialer'];
 export const erKodeNokkel = (nokkel) => KODE_NOKLER.includes(nokkel);
 
 const tilBase64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes)));
@@ -63,4 +63,14 @@ export function gjenstaendeVent(feil, naa = Date.now()) {
   if (!feil || feil.antall < FRIE_FORSOK) return 0;
   const vent = Math.min(30000 * 2 ** (feil.antall - FRIE_FORSOK), 15 * 60000);
   return Math.max(0, new Date(feil.sist).getTime() + vent - naa);
+}
+
+/**
+ * Initialer for den som bruker appen (K-18). 2–4 bokstaver, lagres med store bokstaver.
+ * Returnerer { verdi } eller { feil }.
+ */
+export function kontrollerInitialer(tekst) {
+  const verdi = String(tekst ?? '').trim().toLocaleUpperCase('nb').replace(/[\s.]/g, '');
+  if (!/^[A-ZÆØÅ]{2,4}$/u.test(verdi)) return { feil: 'Skriv initialene dine med 2–4 bokstaver.' };
+  return { verdi };
 }

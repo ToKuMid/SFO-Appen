@@ -51,7 +51,7 @@ const tall = (s) => Number(String(s).trim());
   ok((await page.$$('#forventet li')).length === 3, 'Andre: tre forventede igjen etter innsjekk (K-14)');
   await page.click('#forventet li:first-child button[data-handling=fravaer]');
   await page.waitForSelector('#dialog[open] input[name=fravaertype]');
-  await page.fill('#fravaer-initialer', 'kt');
+  ok(/Registreres av KT/.test(await page.textContent('#fravaer-initialer')), 'fravær får initialene fra opplåsingen (K-18)');
   await knapp('Lagre fravær');
   await page.waitForSelector('#fravaer li');
   ok(/meldt fravær · KT/.test(await page.textContent('#fravaer')), 'meldt fravær med initialer vises under Fravær (K-11, K-18)');
@@ -79,6 +79,13 @@ const tall = (s) => Number(String(s).trim());
   await page.waitForFunction((n) => document.querySelector('#antall-inne')?.textContent === String(n), forUt);
   ok(true, 'utsjekk kan angres fra meldingen (K-15)');
 
+  // En annen ansatt tar over: bytt initialer på I dag (K-18)
+  await page.click('[data-fane=idag]');
+  await page.click('#initialer');
+  await kode.initialer(page, 'mh');
+  await page.waitForFunction(() => document.querySelector('#initialer')?.textContent === 'MH');
+  ok(true, 'initialene kan byttes på I dag');
+
   // Telling med ett avvik (K-30–K-32)
   await page.click('[data-fane=telling]');
   await page.click('#start-telling');
@@ -88,7 +95,7 @@ const tall = (s) => Number(String(s).trim());
   ok(/1 mangler/.test(await page.textContent('#telling-mangler')), 'telling viser 1 mangler');
   ok((await page.textContent('#avslutt-telling')).includes('Avslutt med 1 avvik'), 'knappen sier «Avslutt med 1 avvik»');
   await page.screenshot({ path: `${SP}/4-telling.png` });
-  await page.fill('#telling-initialer', 'mh');
+  ok((await page.textContent('#telling-initialer')) === 'MH', 'tellingen viser hvem som teller');
   await page.click('#avslutt-telling');
   await page.waitForSelector('#avvik-kommentar');
   await page.fill('#avvik-kommentar', 'Var på do');

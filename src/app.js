@@ -141,6 +141,8 @@ async function start() {
   setInterval(oppdaterTid, 15000);
   // Etter hver registrering (inn, ut, fravær, angre …) tegnes skjermen på nytt.
   window.addEventListener('sfo:endret', oppfrisk);
+  // Etter opplåsing: skjermer som viser initialene tegnes på nytt. Skjemaer beholder det som er skrevet.
+  window.addEventListener('sfo:opplast', () => { if (['idag', 'andre', 'telling', 'mer'].includes(aktivFane)) oppfrisk(); });
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') oppdaterTid();
   });

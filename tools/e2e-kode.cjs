@@ -8,8 +8,15 @@ async function skriv(page, kode) {
 async function tittel(page, tekst) {
   await page.waitForFunction((t) => document.querySelector('#las[open] #las-tittel')?.textContent === t, tekst);
 }
+/** Initialer etter koden (K-18). Uten verdi brukes forslaget (forrige initialer). */
+async function initialer(page, verdi) {
+  await tittel(page, 'Initialer');
+  if (verdi !== undefined) await page.fill('#las-initialer', verdi);
+  await page.click('#las-fortsett');
+  await page.waitForSelector('#las', { state: 'hidden' });
+}
 /** Første start: velg ansattkode og administratorkode. */
-async function velgKoder(page) {
+async function velgKoder(page, init = 'KT') {
   await tittel(page, 'Velg kode for ansatte');
   await skriv(page, ANSATT);
   await tittel(page, 'Gjenta koden');
@@ -18,13 +25,13 @@ async function velgKoder(page) {
   await skriv(page, ADMIN);
   await tittel(page, 'Gjenta koden');
   await skriv(page, ADMIN);
-  await page.waitForSelector('#las', { state: 'hidden' });
+  await initialer(page, init);
 }
-/** Lås opp med ansattkoden. */
-async function lasOpp(page) {
+/** Lås opp med ansattkoden, og bekreft initialene. */
+async function lasOpp(page, init) {
   await tittel(page, 'SFO-appen');
   await skriv(page, ANSATT);
-  await page.waitForSelector('#las', { state: 'hidden' });
+  await initialer(page, init);
 }
 /** Skriv administratorkoden når appen ber om den. */
 async function admin(page) {
@@ -32,4 +39,4 @@ async function admin(page) {
   await skriv(page, ADMIN);
   await page.waitForSelector('#las', { state: 'hidden' });
 }
-module.exports = { ANSATT, ADMIN, skriv, tittel, velgKoder, lasOpp, admin };
+module.exports = { ANSATT, ADMIN, skriv, tittel, initialer, velgKoder, lasOpp, admin };

@@ -28,8 +28,14 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await kode.skriv(page, '1111');
   await page.waitForFunction(() => /Feil kode/.test(document.querySelector('.las-feil')?.textContent));
   ok(await page.isVisible('#las[open]'), 'feil kode låser ikke opp');
-  await kode.lasOpp(page);
-  ok(true, 'riktig kode låser opp');
+  await kode.skriv(page, kode.ANSATT);
+  await kode.tittel(page, 'Initialer');
+  ok((await page.inputValue('#las-initialer')) === 'KT', 'initialene fra forrige gang er foreslått');
+  await page.fill('#las-initialer', '');
+  await page.click('#las-fortsett');
+  ok(/2–4 bokstaver/.test(await page.textContent('.las-feil')) && await page.isVisible('#las[open]'), 'kan ikke fortsette uten initialer (K-18)');
+  await kode.initialer(page, 'kt');
+  ok(true, 'riktig kode og initialer låser opp');
   // Skjult og synlig igjen (bytte av app, skjerm av) låser appen (K-71)
   await page.evaluate(() => {
     Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });

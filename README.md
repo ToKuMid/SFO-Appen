@@ -18,6 +18,14 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Initialer på alt (versjon 0.8.0, K-18) er bygget.**
+
+- Etter koden skriver den ansatte initialene sine (2–4 bokstaver). Forrige initialer er foreslått, så det holder å trykke **Fortsett**. Det går ikke an å fortsette uten initialer.
+- Alt som registreres til appen låses igjen, får disse initialene: inn, ut, fravær, ikke møtt, ikke SFO i dag, ekstra dag, angre, rett tidspunkt og telling.
+- Endring av elever og faste avtaler, deaktivering og import lagrer hvem som endret sist og når. Elevkortet viser «Sist endret … av …» under faste avtaler.
+- Tar en annen ansatt over telefonen uten at den har vært låst, trykker hun på initialene på **I dag** og skriver sine egne.
+- Initialfeltene i telling og fravær er fjernet. De viser hvem som registrerer.
+
 **Kode for å åpne appen (versjon 0.7.0, K-71 til K-73) er bygget.**
 
 - Første gang appen åpnes, velges en **kode for ansatte (4 siffer)** og en **administratorkode (6 siffer)**. Like siffer (0000) og rekker (1234) godtas ikke.
@@ -185,6 +193,13 @@ Det som gjelder spesielt for iPhone, testes på SFO-telefonen før fase 3 (kravs
 3. Kjør `npm test`, commit og push. Telefonen viser «Ny versjon av appen er klar» neste gang appen åpnes.
 
 Endres datamodellen: øk `DATAVERSJON` og `DB_VERSJON` i `src/db.js`, legg til et oppgraderingssteg der, og en migrering for sikkerhetskopier i `src/backup.js`. Et oppgraderingssteg skal aldri slette data.
+
+## Teste initialer på telefonen
+
+1. Lås opp: etter koden skal appen spørre etter initialer. Tøm feltet og trykk **Fortsett**: appen skal ikke slippe deg inn.
+2. Sjekk inn og ut, registrer fravær og gjør en telling: initialene skal stå i historikken på elevkortet og ved tellingen.
+3. Trykk på initialene på **I dag** og skriv andre initialer. Neste registrering skal få de nye.
+4. Endre en merknad: elevkortet skal vise «Sist endret … av …».
 
 ## Teste koden på telefonen
 

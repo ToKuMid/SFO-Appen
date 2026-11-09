@@ -66,3 +66,14 @@ test('administratormodus slutter når appen låses', () => {
   settAdmin(true);
   assert.equal(erAdmin(), false, 'kan ikke bli administrator mens appen er låst');
 });
+
+test('initialer: 2–4 bokstaver, store bokstaver, æøå tillatt (K-18)', async () => {
+  const { kontrollerInitialer } = await import('../src/kode.js');
+  assert.deepEqual(kontrollerInitialer(' kt '), { verdi: 'KT' });
+  assert.deepEqual(kontrollerInitialer('øæå'), { verdi: 'ØÆÅ' });
+  assert.deepEqual(kontrollerInitialer('K.T.'), { verdi: 'KT' });
+  assert.ok(kontrollerInitialer('').feil);
+  assert.ok(kontrollerInitialer('K').feil);
+  assert.ok(kontrollerInitialer('ABCDE').feil);
+  assert.ok(kontrollerInitialer('K1').feil);
+});

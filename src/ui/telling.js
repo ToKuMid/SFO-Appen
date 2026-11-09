@@ -4,7 +4,8 @@
 // En pågående telling lagres i innstillingene, slik at den ikke forsvinner hvis appen lukkes.
 // Lista er alltid barna som er inne akkurat nå; et barn som sjekkes ut under tellingen forsvinner fra den.
 import { h, visDialog, visMelding } from '../dom.js';
-import { hentDag, hentInitialer, lagreInitialer } from '../dag.js';
+import { hentDag, hentInitialer } from '../dag.js';
+import { hentSesjonInitialer } from '../tilgang.js';
 import { hentEtterIndeks, hentInnstilling, lagreInnstilling, nyId, utforEndringer } from '../db.js';
 import { klokkeFra } from '../dato.js';
 import { STATUS, tellingResultat } from '../model/status.js';
@@ -67,7 +68,7 @@ async function visOversikt(d, inne, oppfrisk) {
 
 async function visPagaende(d, telling, inne, oppfrisk) {
   const talt = new Set(telling.talt);
-  const initialer = await hentInitialer();
+  const initialer = hentSesjonInitialer() ?? '';
 
   const tallEl = h('span', { id: 'telling-talt' });
   const avEl = h('span', { class: 'telling-av' });
@@ -104,7 +105,6 @@ async function visPagaende(d, telling, inne, oppfrisk) {
   }
   oppdater();
 
-  const init = h('input', { id: 'telling-initialer', type: 'text', value: initialer, maxlength: 4, placeholder: 'F.eks. KT', autocapitalize: 'characters', autocomplete: 'off' });
 
   const avslutt = async () => {
     const res = tellingResultat(inne, talt);
@@ -124,8 +124,7 @@ async function visPagaende(d, telling, inne, oppfrisk) {
       if (svar !== 'avslutt') return;
       kommentar = felt.value.trim();
     }
-    const initVerdi = init.value.trim().toUpperCase().slice(0, 4);
-    if (initVerdi) await lagreInitialer(initVerdi);
+    const initVerdi = await hentInitialer();
     await utforEndringer({
       lagre: {
         tellinger: [{
@@ -135,7 +134,7 @@ async function visPagaende(d, telling, inne, oppfrisk) {
           avsluttet: new Date().toISOString(),
           antallForventet: res.antallForventet,
           antallTalt: res.antallTalt,
-          initialer: initVerdi || null,
+          initialer: initVerdi,
           kommentar,
         }],
         tellingslinjer: inne.map((r) => ({ id: nyId(), tellingId: telling.id, elevId: r.elev.id, talt: talt.has(r.elev.id) })),
@@ -172,7 +171,7 @@ async function visPagaende(d, telling, inne, oppfrisk) {
     h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'avbryt-telling', onclick: avbryt }, 'Avbryt telling'),
     h('form', { class: 'bunnfelt telling-bunn', onsubmit: (e) => { e.preventDefault(); avslutt(); } },
       h('div', { class: 'telling-avslutt' },
-        h('div', { class: 'felt init-felt' }, h('label', { for: 'telling-initialer', class: 'feltnavn' }, 'Initialer'), init),
+        h('div', { class: 'felt init-felt' }, h('span', { class: 'feltnavn' }, 'Telles av'), h('p', { class: 'init-verdi', id: 'telling-initialer' }, initialer)),
         avsluttKnapp),
       h('p', { class: 'dempet liten' }, 'Avviket lagres med navn og tidspunkt. Du kan legge til en kommentar.')),
   );

@@ -5,6 +5,7 @@ let last = true;
 let admin = false;
 let systemvindu = null; // { siden } mens et systemvindu (filvelger, delingsark, utskrift) er åpent
 let ventende = [];
+let initialer = null; // den som har låst opp appen (K-18)
 
 // Kommer brukeren tilbake fra et systemvindu innen denne tiden, låses ikke appen.
 export const SYSTEMVINDU_MAKS = 2 * 60000;
@@ -14,7 +15,7 @@ export const erAdmin = () => admin;
 
 export function settLast(verdi) {
   last = verdi;
-  if (last) admin = false;
+  if (last) { admin = false; initialer = null; }
   if (!last) {
     const v = ventende;
     ventende = [];
@@ -23,6 +24,10 @@ export function settLast(verdi) {
 }
 
 export function settAdmin(verdi) { admin = verdi && !last; }
+
+/** Initialene til den som låste opp. Settes ved hver opplåsing og fjernes når appen låses. */
+export const hentSesjonInitialer = () => initialer;
+export function settSesjonInitialer(verdi) { initialer = verdi || null; }
 
 /** Løses når appen er låst opp (med en gang hvis den ikke er låst). */
 export function naarOpplast() {

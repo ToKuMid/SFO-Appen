@@ -5,6 +5,7 @@ import { lesXlsx, skrivXlsx, XLSX_TYPE } from '../import/xlsx.js';
 import { elevNavn, lagEndringer, lesElevliste, malForklaring, malRader, planleggImport } from '../import/elevliste.js';
 import { lagreFil, velgFil } from '../filer.js';
 import { dagerMellom } from '../dato.js';
+import { hentInitialer } from '../dag.js';
 
 const MAL_FILNAVN = 'SFO-elevliste-mal.xlsx';
 
@@ -112,10 +113,11 @@ export async function importerElevliste(oppfrisk) {
 
   // 5. Lagre alt i én transaksjon.
   try {
+    const stempel = { endretAv: await hentInitialer(), endret: naa };
     await utforEndringer({
       lagre: {
-        elever: endringer.elever,
-        avtaler: endringer.avtalerLagre,
+        elever: endringer.elever.map((e) => ({ ...e, ...stempel })),
+        avtaler: endringer.avtalerLagre.map((a) => ({ ...a, ...stempel })),
         innstillinger: [{ nokkel: 'sisteImport', verdi: naa }],
       },
       slett: { avtaler: endringer.avtalerSlett },

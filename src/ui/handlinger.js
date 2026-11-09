@@ -1,7 +1,7 @@
 // Knapper og handlinger som brukes på flere skjermer: sjekk inn, sjekk ut, fravær, angre.
 // Hver handling gir en melding med «Angre» (K-15).
 import { h, visDialog, visMelding } from '../dom.js';
-import { angre, ekstraDagOgInn, hentInitialer, lagreInitialer, registrer } from '../dag.js';
+import { angre, ekstraDagOgInn, hentInitialer, registrer } from '../dag.js';
 import { klokkeFra } from '../dato.js';
 import { STATUS } from '../model/status.js';
 
@@ -24,7 +24,7 @@ export async function sjekkUt(rad) {
 
 /** Fravær: meldt fravær eller ikke møtt, med initialer (K-11, K-18). Returnerer true hvis fraværet ble lagret. */
 export async function registrerFravaer(rad) {
-  const initialer = h('input', { id: 'fravaer-initialer', type: 'text', value: await hentInitialer(), maxlength: 4, autocapitalize: 'characters', autocomplete: 'off', placeholder: 'F.eks. KT' });
+  const initialer = await hentInitialer();
   const valg = (verdi, tittel, tekst, valgt) => h('label', { class: 'radiovalg' },
     h('input', { type: 'radio', name: 'fravaertype', value: verdi, checked: valgt }),
     h('span', {}, h('strong', {}, tittel), h('span', { class: 'dempet liten' }, tekst)));
@@ -34,14 +34,13 @@ export async function registrerFravaer(rad) {
       h('div', { class: 'radiogruppe' },
         valg('meldt-fravaer', 'Meldt fravær', 'Foresatte har gitt beskjed, for eksempel i Barn-nett.', true),
         valg('ikke-mott', 'Ikke møtt', 'Barnet kom ikke, og det er fulgt opp.', false)),
-      h('div', { class: 'felt' }, h('label', { for: 'fravaer-initialer', class: 'feltnavn' }, 'Initialer'), initialer),
+      h('p', { class: 'dempet liten', id: 'fravaer-initialer' }, `Registreres av ${initialer}.`),
     ],
     knapper: [{ tekst: 'Avbryt', verdi: 'avbryt' }, { tekst: 'Lagre fravær', verdi: 'lagre', type: 'primar' }],
   });
   if (svar !== 'lagre') return false;
   const type = document.querySelector('input[name="fravaertype"]:checked')?.value ?? 'meldt-fravaer';
-  if (initialer.value.trim()) await lagreInitialer(initialer.value);
-  const hd = await registrer(rad.elev.id, type, { initialer: initialer.value });
+  const hd = await registrer(rad.elev.id, type);
   meldMedAngre(`${navn(rad.elev)}: ${type === 'ikke-mott' ? 'ikke møtt' : 'meldt fravær'}`, hd);
   return true;
 }

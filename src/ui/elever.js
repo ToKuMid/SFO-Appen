@@ -7,6 +7,7 @@ import {
 } from '../model/elev.js';
 import { elevRad, pilVenstre, skjermTopp, sorterElever } from './felles.js';
 import { krevAdmin } from './las.js';
+import { hentInitialer } from '../dag.js';
 import { erAdmin } from '../tilgang.js';
 
 // ---------- Liste ----------
@@ -158,7 +159,14 @@ export async function visElevSkjema(id, naviger) {
       ukedager: verdi.ukedager,
       aktiv: elev?.aktiv ?? true,
     };
-    const nyAvtale = avtaleFra(elevId, verdi);
+    // Hvem som endret sist (K-18). Avtalen får egne felter, så det synes hvem som endret avtalene.
+    const stempel = { endretAv: await hentInitialer(), endret: new Date().toISOString() };
+    const gammelAvtale = avtale ? { gaarHjemAleneFra: avtale.gaarHjemAleneFra, fastHentetid: avtale.fastHentetid, fritekst: avtale.fritekst } : null;
+    const avtaleUten = avtaleFra(elevId, verdi);
+    const avtaleEndret = JSON.stringify(gammelAvtale) !== JSON.stringify(avtaleUten && { gaarHjemAleneFra: avtaleUten.gaarHjemAleneFra, fastHentetid: avtaleUten.fastHentetid, fritekst: avtaleUten.fritekst });
+    const nyAvtale = avtaleUten && (avtaleEndret ? { ...avtaleUten, ...stempel } : { ...avtaleUten, endretAv: avtale?.endretAv ?? null, endret: avtale?.endret ?? null });
+    const elevEndret = ny || ['fornavn', 'etternavn', 'trinn', 'skolegruppe'].some((k) => elev[k] !== nyElev[k]) || (elev.ukedager ?? []).join() !== nyElev.ukedager.join();
+    if (elevEndret) Object.assign(nyElev, stempel);
     await utforEndringer({
       lagre: { elever: [nyElev], ...(nyAvtale ? { avtaler: [nyAvtale] } : {}) },
       slett: nyAvtale ? {} : { avtaler: [elevId] },
@@ -177,7 +185,7 @@ export async function visElevSkjema(id, naviger) {
       knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: aktiv ? 'Aktiver' : 'Deaktiver', verdi: 'ja', type: aktiv ? 'primar' : 'fare' }],
     });
     if (svar !== 'ja') return;
-    await utforEndringer({ lagre: { elever: [{ ...elev, aktiv }] } });
+    await utforEndringer({ lagre: { elever: [{ ...elev, aktiv, endretAv: await hentInitialer(), endret: new Date().toISOString() }] } });
     visMelding(aktiv ? `${navn} er aktivert.` : `${navn} er deaktivert.`, 'ok');
     naviger('elever');
   };

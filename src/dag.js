@@ -1,7 +1,8 @@
 // Dagens registreringer: henter dagens data og lagrer handlinger som hendelser.
 // Etter hver endring sendes hendelsen «sfo:endret», slik at skjermen tegnes på nytt.
-import { hentAlle, hentEtterIndeks, hentInnstilling, lagre, lagreInnstilling, nyId, utforEndringer } from './db.js';
+import { hentAlle, hentEtterIndeks, hentInnstilling, lagre, nyId, utforEndringer } from './db.js';
 import { lokalDato } from './dato.js';
+import { hentSesjonInitialer } from './tilgang.js';
 import { dagsoversikt, lagHendelse, tidspunkt } from './model/status.js';
 
 export function varsleEndring() {
@@ -22,23 +23,20 @@ export async function hentDag(naa = new Date()) {
 }
 
 // ---------- Initialer (K-18) ----------
-// Den ansatte skriver initialene sine én gang. De brukes på utsjekk, fravær og telling resten av dagen.
+// Initialene skrives hver gang appen låses opp, rett etter koden. Alle registreringer og endringer
+// får initialene til den som låste opp, til appen låses igjen.
 
 export async function hentInitialer() {
-  const v = await hentInnstilling('dagensInitialer');
-  return v?.dato === lokalDato() ? v.verdi : '';
-}
-
-export function lagreInitialer(verdi) {
-  const ren = String(verdi ?? '').trim().toUpperCase().slice(0, 4);
-  return lagreInnstilling('dagensInitialer', { dato: lokalDato(), verdi: ren });
+  const verdi = hentSesjonInitialer();
+  if (!verdi) throw new Error('Initialer mangler. Lås appen og lås opp på nytt.');
+  return verdi;
 }
 
 // ---------- Handlinger ----------
 
 /** Registrerer inn, ut, meldt-fravaer eller ikke-mott. Returnerer hendelsen. */
-export async function registrer(elevId, type, { initialer } = {}) {
-  const h = lagHendelse({ id: nyId(), elevId, type, initialer: initialer ?? await hentInitialer() });
+export async function registrer(elevId, type) {
+  const h = lagHendelse({ id: nyId(), elevId, type, initialer: await hentInitialer() });
   await lagre('hendelser', h);
   varsleEndring();
   return h;
@@ -47,8 +45,9 @@ export async function registrer(elevId, type, { initialer } = {}) {
 /** Sjekker inn et barn som ikke har SFO i dag: lagrer ekstra dag (K-19) og inn-hendelse samlet. */
 export async function ekstraDagOgInn(elevId) {
   const naa = new Date();
-  const h = lagHendelse({ id: nyId(), elevId, type: 'inn', naa, initialer: await hentInitialer() });
-  await utforEndringer({ lagre: { unntak: [{ id: nyId(), elevId, dato: lokalDato(naa), type: 'ekstra-dag' }], hendelser: [h] } });
+  const initialer = await hentInitialer();
+  const h = lagHendelse({ id: nyId(), elevId, type: 'inn', naa, initialer });
+  await utforEndringer({ lagre: { unntak: [{ id: nyId(), elevId, dato: lokalDato(naa), type: 'ekstra-dag', initialer }], hendelser: [h] } });
   varsleEndring();
   return h;
 }
@@ -74,7 +73,7 @@ export async function settUnntakIDag(elevId, type) {
   const eksisterende = (await hentEtterIndeks('unntak', 'elevDato', [elevId, dato]));
   await utforEndringer({
     slett: { unntak: eksisterende.map((u) => u.id) },
-    lagre: type ? { unntak: [{ id: nyId(), elevId, dato, type }] } : {},
+    lagre: type ? { unntak: [{ id: nyId(), elevId, dato, type, initialer: await hentInitialer() }] } : {},
   });
   varsleEndring();
 }

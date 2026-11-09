@@ -1,6 +1,7 @@
 // Skjermene «I dag» og «Andre» (K-12, K-13, K-16, K-20). Utseende og flyt som i mockupen.
 import { h, visDialog } from '../dom.js';
-import { hentDag, hentInitialer, lagreInitialer } from '../dag.js';
+import { hentDag } from '../dag.js';
+import { aktiveInitialer, byttInitialer } from './las.js';
 import { hentInnstilling } from '../db.js';
 import { dagerMellom, klokkeFra, klokkeslett } from '../dato.js';
 import { STATUS } from '../model/status.js';
@@ -42,7 +43,7 @@ export async function visIdag() {
   const d = await hentDag();
   const { tall, etterStatus, avtaleFor } = d;
   const inne = sorter(etterStatus[STATUS.INNE]);
-  const initialer = await hentInitialer();
+  const initialer = aktiveInitialer() ?? '';
 
   const inneListe = h('ul', { class: 'liste', id: 'inne-liste' }, inne.map((r) => elevRad(r.elev, {
     avtale: avtaleFor.get(r.elev.id),
@@ -71,11 +72,6 @@ export async function visIdag() {
     filtrer(inneListe, sokTekst);
     if (varselListe) filtrer(varselListe, sokTekst);
   }
-  const init = h('input', {
-    id: 'initialer', type: 'text', value: initialer, maxlength: 4, placeholder: 'F.eks. KT',
-    autocapitalize: 'characters', autocomplete: 'off',
-    onchange: () => { init.value = init.value.trim().toUpperCase(); lagreInitialer(init.value); },
-  });
 
   return h('div', { class: 'skjerm' },
     skjermTopp({ tittel: 'I dag', visKlokke: true }),
@@ -102,7 +98,12 @@ export async function visIdag() {
 
     h('div', { class: 'sokerad' },
       h('div', { class: 'felt sok-felt' }, h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter barn'), sok),
-      h('div', { class: 'felt init-felt' }, h('label', { for: 'initialer', class: 'feltnavn' }, 'Initialer'), init)),
+      h('div', { class: 'felt init-felt' },
+        h('span', { class: 'feltnavn' }, 'Initialer'),
+        h('button', {
+          type: 'button', class: 'knapp init-knapp', id: 'initialer', 'aria-label': `Initialer ${initialer}. Trykk for å bytte`,
+          onclick: async () => { if (await byttInitialer()) window.dispatchEvent(new Event('sfo:endret')); },
+        }, initialer || '–'))),
 
     h('p', { class: 'seksjonstittel' }, `Inne (${tall.inne})`),
     inne.length ? inneListe : h('p', { class: 'dempet' }, tall.forventet ? 'Ingen barn er sjekket inn ennå.' : 'Ingen barn er forventet i dag.'),

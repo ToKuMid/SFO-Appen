@@ -4,9 +4,11 @@
 import { h, visMelding } from '../dom.js';
 import { hentInnstilling, lagreInnstilling } from '../db.js';
 import {
-  ADMIN_LENGDE, ANSATT_LENGDE, FRIE_FORSOK, gjenstaendeVent, kontrollerNyKode, lagKode, sjekkKode,
+  ADMIN_LENGDE, ANSATT_LENGDE, FRIE_FORSOK, gjenstaendeVent, kontrollerInitialer, kontrollerNyKode, lagKode, sjekkKode,
 } from '../kode.js';
-import { erAdmin, erLast, settAdmin, settLast, skalLases } from '../tilgang.js';
+import {
+  erAdmin, erLast, hentSesjonInitialer, settAdmin, settLast, settSesjonInitialer, skalLases,
+} from '../tilgang.js';
 
 let dialog = null;
 let skalVaereApen = false;
@@ -26,7 +28,7 @@ function sikreDialog() {
     if (skalVaereApen) dialog.showModal();
   });
   dialog.addEventListener('keydown', (e) => {
-    if (!aktivt) return;
+    if (!aktivt?.trykk) return;
     if (/^\d$/.test(e.key)) { e.preventDefault(); aktivt.trykk(e.key); }
     else if (e.key === 'Backspace') { e.preventDefault(); aktivt.slett(); }
   });
@@ -148,6 +150,61 @@ function steg({ tittel, tekst, lengde, kontroller, avbryt = false, ekstra = null
   });
 }
 
+/**
+ * Spør etter initialene til den som bruker appen (K-18). Forslaget er initialene som ble brukt sist.
+ * Løses med initialene, eller null ved Avbryt.
+ */
+function sporInitialer({ avbryt = false } = {}) {
+  return new Promise((resolve) => {
+    let ferdigFlagg = false;
+    const ferdig = (v) => {
+      if (ferdigFlagg) return;
+      ferdigFlagg = true;
+      if (aktivt === taster) aktivt = null;
+      resolve(v);
+    };
+    // Uten trykk/slett: tastaturet i dialogen fanger ikke siffer og slett mens det skrives i feltet.
+    const taster = { trykk: null, slett: null, avbryt: avbryt ? () => ferdig(null) : null, avbrytHelt: () => ferdig(null) };
+    aktivt = taster;
+    const felt = h('input', {
+      id: 'las-initialer', type: 'text', maxlength: 4, autocomplete: 'off', autocapitalize: 'characters',
+      spellcheck: 'false', 'aria-describedby': 'las-initialer-hjelp', placeholder: 'F.eks. KT',
+    });
+    hentInnstilling('sisteInitialer').then((v) => { if (v && !felt.value) { felt.value = v; felt.select(); } });
+    const feil = h('p', { class: 'las-feil', role: 'alert' });
+    const send = async (e) => {
+      e.preventDefault();
+      const { verdi, feil: f } = kontrollerInitialer(felt.value);
+      if (f) { feil.textContent = f; felt.focus(); return; }
+      await lagreInnstilling('sisteInitialer', verdi);
+      ferdig(verdi);
+    };
+    dialog.replaceChildren(h('div', { class: 'las-innhold' },
+      h('h1', { class: 'las-tittel', id: 'las-tittel' }, 'Initialer'),
+      h('p', { class: 'las-info', id: 'las-initialer-hjelp' }, 'Alt du registrerer til appen låses igjen, lagres med initialene dine.'),
+      h('form', { class: 'las-skjema', onsubmit: send },
+        felt,
+        feil,
+        h('button', { type: 'submit', class: 'knapp knapp-primar knapp-stor', id: 'las-fortsett' }, 'Fortsett'),
+        avbryt ? h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'las-avbryt', onclick: () => ferdig(null) }, 'Avbryt') : null)));
+    felt.focus();
+  });
+}
+
+/** Bytt initialer uten å låse (for eksempel når en annen ansatt tar over telefonen). */
+export async function byttInitialer() {
+  if (erLast()) return false;
+  aapne();
+  const verdi = await sporInitialer({ avbryt: true });
+  if (erLast()) return false;
+  lukk();
+  if (!verdi) return false;
+  settSesjonInitialer(verdi);
+  return true;
+}
+
+export const aktiveInitialer = () => hentSesjonInitialer();
+
 /** Prøver en kode mot lagret kode, med teller for feil forsøk. */
 async function proveKode(kode, lagretNokkel, feilNokkel) {
   const feilFor = await hentInnstilling(feilNokkel);
@@ -202,9 +259,12 @@ async function oppsett() {
   });
   await lagreInnstilling('kode-ansatt', await lagKode(ansatt));
   await lagreInnstilling('kode-admin', await lagKode(admin));
+  const init = await sporInitialer();
   oppsettPagaar = false;
   lukk();
   settLast(false);
+  settSesjonInitialer(init);
+  window.dispatchEvent(new Event('sfo:opplast'));
   visMelding('Kodene er lagret. Appen låses hver gang den lukkes eller skjermen slås av.', 'ok');
 }
 
@@ -234,9 +294,13 @@ export function laas() {
       }
       if (svar) break;
     }
+    const init = await sporInitialer();
     lukk();
     lasJobb = null;
     settLast(false);
+    settSesjonInitialer(init);
+    // Tegn skjermen på nytt med initialene til den som låste opp.
+    window.dispatchEvent(new Event('sfo:opplast'));
   })();
   return lasJobb;
 }
