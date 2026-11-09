@@ -20,9 +20,20 @@ export function dagerMellom(fra, til = new Date()) {
 const UKEDAGER = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
 const MANEDER = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
 
-/** «mandag 9. november» */
+/** «Mandag 9. november» */
 export function datoTekst(d = new Date()) {
-  return `${UKEDAGER[d.getDay()]} ${d.getDate()}. ${MANEDER[d.getMonth()]}`;
+  const dag = UKEDAGER[d.getDay()];
+  return `${dag[0].toUpperCase()}${dag.slice(1)} ${d.getDate()}. ${MANEDER[d.getMonth()]}`;
+}
+
+/** «Kl. 15.12» */
+export function klokkeTekst(d = new Date()) {
+  return `Kl. ${to(d.getHours())}.${to(d.getMinutes())}`;
+}
+
+/** '15:30' → '15.30' (norsk skrivemåte for klokkeslett) */
+export function klokkeslett(hhmm) {
+  return hhmm ? hhmm.replace(':', '.') : '';
 }
 
 /** «9.11.2026 kl. 14.45» */

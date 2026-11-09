@@ -18,7 +18,9 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
-Fanene I dag, Andre og Telling er plassholdere. Elever viser en enkel liste uten redigering.
+**Versjon 0.2.0** har utseendet fra mockupen: farger, skrifttypene Fraunces og Work Sans, stor overskrift på hver skjerm og faner med ikoner. Appen har både lys og mørk variant og følger telefonens innstilling.
+
+I dag viser hvor mange barn som er forventet etter ukeplanen. Andre og Telling er tomme til fase 2. Elever viser en enkel liste uten redigering. Under Mer kan varseltidspunktet (K-16) allerede velges.
 
 ## Regel nummer én: ingen ekte elevdata i repoet
 
@@ -40,9 +42,10 @@ src/backup.js         – sikkerhetskopi: bygge, kontrollere, oppgradere
 src/filer.js          – lagre og åpne filer (delingsark eller nedlasting)
 src/plattform.js      – teknisk test av telefonen
 src/dato.js, dom.js   – hjelpere
-src/ui/               – skjermbildene
+src/ui/               – skjermbildene (felles.js, skjermer.js, mer.js)
 src/dev/testdata.js   – fiktive testdata
-icons/                – app-ikoner (plassholdere til Erdvias farger er klare)
+icons/                – app-ikoner (fargene er mockupens antatte palett til Erdvias farger er klare)
+fonts/                – skrifttypene Fraunces og Work Sans (SIL Open Font License, se OFL-filene)
 tests/                – automatiske tester (npm test)
 tools/                – lokal server, testdata, e2e-test, git-hook
 vendor/               – tredjepartsbiblioteker (SheetJS kommer i fase 2a)

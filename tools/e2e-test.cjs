@@ -19,7 +19,9 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
   ok(true, 'service worker aktiv');
 
+  const apneTeknisk = async () => { await page.waitForSelector('#teknisk'); if (!(await page.$eval('#teknisk', (d) => d.open))) await page.click('#teknisk summary'); };
   await page.click('[data-fane=mer]');
+  await apneTeknisk();
   await page.waitForSelector('.sjekk');
   await page.waitForFunction(() => [...document.querySelectorAll('.sjekk')].some(li => li.textContent.includes('IF-02')));
   const sjekker = await page.$$eval('.sjekk', ls => ls.map(l => l.className + ' | ' + l.textContent));
@@ -28,7 +30,7 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   ok((await page.textContent('#siste-sikkerhetskopi')).includes('aldri'), 'K-62 viser aldri tatt');
 
   // testdata
-  await page.click('summary');
+  await apneTeknisk();
   await page.click('#last-testdata');
   await page.click('dialog >> text=Last inn testdata');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
@@ -46,7 +48,7 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   ok(true, 'K-62 viser i dag etter eksport');
 
   // slett alt
-  await page.click('summary');
+  await apneTeknisk();
   await page.click('#slett-alt');
   await page.click('dialog >> text=Slett alt');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '0');
@@ -82,6 +84,7 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.waitForSelector('.liste-rad');
   ok((await page.$$('.liste-rad')).length === 32, 'virker i flymodus etter omlasting, data består');
   await page.click('[data-fane=mer]');
+  await apneTeknisk();
   await page.waitForSelector('.sjekk');
   await page.screenshot({ path: `${SP}/mer.png`, fullPage: true });
 

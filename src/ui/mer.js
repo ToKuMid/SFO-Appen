@@ -1,36 +1,53 @@
-// Fanen «Mer»: sikkerhetskopi (K-60–K-62), teknisk test og utviklerverktøy.
+// Fanen «Mer»: sikkerhetskopi (K-60–K-62), elevliste, innstillinger, teknisk test og utviklerverktøy.
 import { h, visDialog, visMelding } from '../dom.js';
 import {
-  DATAVERSJON, erstattAltInnhold, hentAltInnhold, hentInnstilling, lagreInnstilling, slettAltInnhold, tell,
+  DATAVERSJON, erstattAltInnhold, hentAlle, hentAltInnhold, hentInnstilling, lagreInnstilling, slettAltInnhold, tell,
 } from '../db.js';
 import { byggSikkerhetskopi, filnavn, kontroller, lesTekst, oppsummer } from '../backup.js';
 import { lagreFil, velgFil } from '../filer.js';
-import { dagerMellom, tidspunktTekst } from '../dato.js';
+import { dagerMellom, klokkeslett, tidspunktTekst } from '../dato.js';
 import { sjekkPlattform, testSkjermlas } from '../plattform.js';
 import { lagTestdata } from '../dev/testdata.js';
 import { APP_VERSJON } from '../versjon.js';
+import { skjermTopp } from './felles.js';
+
+// Husker om «Teknisk test og utviklerverktøy» er åpen når skjermen tegnes på nytt.
+let tekniskApen = false;
+
+// Valg for varseltidspunkt (K-16): 14.50 til 15.30 hvert 5. minutt.
+const VARSELTIDER = ['14:50', '14:55', '15:00', '15:05', '15:10', '15:15', '15:20', '15:25', '15:30'];
 
 export async function visMer(oppfrisk) {
-  const [elever, hendelser, tellinger, siste, testdata] = await Promise.all([
-    tell('elever'), tell('hendelser'), tell('tellinger'),
-    hentInnstilling('sisteSikkerhetskopi'), hentInnstilling('testdata'),
+  const [elever, siste, testdata, varsel] = await Promise.all([
+    hentAlle('elever'), hentInnstilling('sisteSikkerhetskopi'), hentInnstilling('testdata'), hentInnstilling('varseltidspunkt'),
   ]);
+  const aktive = elever.filter((e) => e.aktiv !== false).length;
 
-  return h('div', { class: 'stabel' },
+  return h('div', { class: 'skjerm' },
+    skjermTopp({ tittel: 'Mer', visDato: false }),
     seksjonSikkerhetskopi(siste, oppfrisk),
     h('section', { class: 'kort' },
-      h('h2', {}, 'Data på denne telefonen'),
-      testdata ? h('p', { class: 'merknad' }, 'Telefonen inneholder fiktive testdata.') : null,
-      h('dl', { class: 'tall' },
-        h('div', {}, h('dt', {}, 'Elever'), h('dd', {}, elever)),
-        h('div', {}, h('dt', {}, 'Hendelser'), h('dd', {}, hendelser)),
-        h('div', {}, h('dt', {}, 'Tellinger'), h('dd', {}, tellinger)))),
-    seksjonTekniskTest(),
-    seksjonUtvikler(oppfrisk),
+      h('h2', {}, 'Elevliste'),
+      h('p', {}, `${aktive} aktive elever${testdata ? ' · fiktive testdata' : ''}`),
+      h('button', { type: 'button', class: 'knapp knapp-omriss', disabled: true }, 'Importer fra Excel'),
+      h('p', { class: 'dempet liten' }, 'Import fra Excel og tom Excel-mal kommer i fase 2a.')),
     h('section', { class: 'kort' },
-      h('h2', {}, 'Om appen'),
-      h('p', {}, `Versjon ${APP_VERSJON} · dataversjon ${DATAVERSJON}`),
-      h('p', { class: 'dempet' }, 'Alle data lagres bare på denne telefonen. Appen sender ingen data over nett.')),
+      h('h2', {}, 'Innstillinger'),
+      h('div', { class: 'felt-rad' },
+        h('label', { for: 'varseltid' }, 'Varsel for uregistrerte barn'),
+        h('select', {
+          id: 'varseltid',
+          onchange: async (e) => {
+            await lagreInnstilling('varseltidspunkt', e.target.value);
+            visMelding(`Varselet kommer kl. ${klokkeslett(e.target.value)}.`, 'ok');
+          },
+        }, VARSELTIDER.map((t) => h('option', { value: t, selected: t === varsel }, klokkeslett(t))))),
+      h('div', { class: 'felt-rad' },
+        h('span', { class: 'dempet' }, 'Rapporter'),
+        h('span', { class: 'chip chip-dempet' }, 'Kommer i versjon 2'))),
+    seksjonTeknisk(oppfrisk),
+    h('p', { class: 'fotnote' }, 'Alle data lagres bare på denne telefonen.'),
+    h('p', { class: 'fotnote' }, `Versjon ${APP_VERSJON} · dataversjon ${DATAVERSJON}`),
   );
 }
 
@@ -39,20 +56,20 @@ export async function visMer(oppfrisk) {
 function sistTekst(siste) {
   if (!siste) return { tekst: 'Det er aldri tatt sikkerhetskopi.', varsel: true };
   const dager = dagerMellom(siste);
-  if (dager <= 0) return { tekst: 'Siste sikkerhetskopi: i dag.', varsel: false };
-  if (dager === 1) return { tekst: 'Siste sikkerhetskopi: i går.', varsel: false };
-  return { tekst: `Siste sikkerhetskopi: ${dager} dager siden.`, varsel: dager > 7 };
+  if (dager <= 0) return { tekst: 'Siste sikkerhetskopi: i dag', varsel: false };
+  if (dager === 1) return { tekst: 'Siste sikkerhetskopi: i går', varsel: false };
+  return { tekst: `Siste sikkerhetskopi: ${dager} dager siden`, varsel: dager > 7 };
 }
 
 function seksjonSikkerhetskopi(siste, oppfrisk) {
   const s = sistTekst(siste);
-  return h('section', { class: 'kort' },
+  return h('section', { class: `kort ${s.varsel ? 'kort-varsel' : ''}` },
     h('h2', {}, 'Sikkerhetskopi'),
-    h('p', { class: s.varsel ? 'advarsel' : '', id: 'siste-sikkerhetskopi' }, s.tekst),
-    h('p', { class: 'dempet' }, 'Lagre kopien i SFO-mappen i skolens OneDrive. Ta kopi ved dagsavslutning, eller minst én gang i uka.'),
-    h('div', { class: 'knapperad' },
-      h('button', { type: 'button', class: 'knapp knapp-primar', id: 'eksporter', onclick: () => eksporter(oppfrisk) }, 'Ta sikkerhetskopi'),
-      h('button', { type: 'button', class: 'knapp', id: 'gjenopprett', onclick: () => gjenopprett(oppfrisk) }, 'Gjenopprett fra fil')));
+    h('p', { class: `statuslinje ${s.varsel ? 'varsel' : ''}`, id: 'siste-sikkerhetskopi' }, s.tekst),
+    h('div', { class: 'knappestabel' },
+      h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'eksporter', onclick: () => eksporter(oppfrisk) }, 'Ta sikkerhetskopi nå'),
+      h('button', { type: 'button', class: 'knapp', id: 'gjenopprett', onclick: () => gjenopprett(oppfrisk) }, 'Gjenopprett fra fil')),
+    h('p', { class: 'dempet liten' }, 'Lagres via delingsarket i SFO-mappen på OneDrive. Ta kopi ved dagsavslutning, eller minst én gang i uka.'));
 }
 
 async function eksporter(oppfrisk) {
@@ -100,7 +117,7 @@ async function gjenopprett(oppfrisk) {
   }
 
   const ny = oppsummer(resultat.kopi);
-  const naa = { elever: await tell('elever'), hendelser: await tell('hendelser') };
+  const naa = { elever: await tell('elever'), hendelser: await tell('hendelser'), tellinger: await tell('tellinger') };
   const svar = await visDialog({
     tittel: 'Gjenopprette fra sikkerhetskopi?',
     innhold: [
@@ -110,7 +127,7 @@ async function gjenopprett(oppfrisk) {
         h('tbody', {},
           h('tr', {}, h('th', {}, 'Elever'), h('td', {}, ny.elever), h('td', {}, naa.elever)),
           h('tr', {}, h('th', {}, 'Hendelser'), h('td', {}, ny.hendelser), h('td', {}, naa.hendelser)),
-          h('tr', {}, h('th', {}, 'Tellinger'), h('td', {}, ny.tellinger), h('td', {}, '')))),
+          h('tr', {}, h('th', {}, 'Tellinger'), h('td', {}, ny.tellinger), h('td', {}, naa.tellinger)))),
       h('p', {}, `Tatt: ${ny.eksportert ? tidspunktTekst(ny.eksportert) : 'ukjent'}`),
       h('p', {}, `Siste registrering i filen: ${ny.sisteDato ?? 'ingen'}`),
       h('p', { class: 'advarsel' }, 'Alt som ligger på telefonen nå, blir erstattet av innholdet i filen.'),
@@ -132,57 +149,64 @@ async function gjenopprett(oppfrisk) {
   }
 }
 
-// ---------- Teknisk test ----------
+// ---------- Teknisk test og utviklerverktøy (sammenfoldet) ----------
 
-function seksjonTekniskTest() {
+function seksjonTeknisk(oppfrisk) {
+  const tall = h('dl', { class: 'tall' }, h('div', {}, h('dt', {}, 'Laster …')));
+  Promise.all([tell('elever'), tell('hendelser'), tell('tellinger')]).then(([e, hd, t]) => {
+    tall.replaceChildren(
+      h('div', {}, h('dt', {}, 'Elever'), h('dd', {}, e)),
+      h('div', {}, h('dt', {}, 'Hendelser'), h('dd', {}, hd)),
+      h('div', {}, h('dt', {}, 'Tellinger'), h('dd', {}, t)));
+  });
+
   const liste = h('ul', { class: 'sjekkliste', id: 'teknisk-test' }, h('li', { class: 'dempet' }, 'Kjører test …'));
   sjekkPlattform().then((rader) => {
     liste.replaceChildren(...rader.map((r) => h('li', { class: `sjekk sjekk-${r.ok === true ? 'ok' : r.ok === false ? 'feil' : 'info'}` },
       h('span', { class: 'sjekk-navn' }, r.navn),
       h('span', { class: 'sjekk-verdi' }, r.verdi))));
   });
-  return h('section', { class: 'kort' },
-    h('h2', {}, 'Teknisk test'),
-    h('p', { class: 'dempet' }, 'Viser hva denne telefonen støtter. Kjør testen på både testtelefonen og SFO-telefonen (kravspesifikasjonen kapittel 15).'),
-    liste,
-    h('div', { class: 'knapperad' },
-      h('button', { type: 'button', class: 'knapp', onclick: async () => visMelding(await testSkjermlas(30)) }, 'Test skjermlås'),
-      h('button', { type: 'button', class: 'knapp', onclick: () => window.print() }, 'Test utskrift/PDF')));
+
+  const detaljer = h('details', { class: 'kort teknisk', id: 'teknisk', open: tekniskApen },
+    h('summary', {}, 'Teknisk test og utviklerverktøy'),
+    h('div', { class: 'teknisk-innhold' },
+      h('p', { class: 'underoverskrift' }, 'Data på denne telefonen'),
+      tall,
+      h('p', { class: 'underoverskrift' }, 'Teknisk test'),
+      h('p', { class: 'dempet liten' }, 'Viser hva denne telefonen støtter. Kjør testen på både testtelefonen og SFO-telefonen (kravspesifikasjonen kapittel 15).'),
+      liste,
+      h('div', { class: 'knapperad' },
+        h('button', { type: 'button', class: 'knapp', onclick: async () => visMelding(await testSkjermlas(30)) }, 'Test skjermlås'),
+        h('button', { type: 'button', class: 'knapp', onclick: () => window.print() }, 'Test utskrift/PDF')),
+      h('p', { class: 'underoverskrift' }, 'Utviklerverktøy'),
+      h('p', { class: 'advarsel' }, 'Brukes bare på testtelefonen. Begge knappene erstatter alle data på telefonen.'),
+      h('div', { class: 'knapperad' },
+        h('button', { type: 'button', class: 'knapp', id: 'last-testdata', onclick: () => lastTestdata(oppfrisk) }, 'Last inn fiktive testdata'),
+        h('button', { type: 'button', class: 'knapp knapp-fare', id: 'slett-alt', onclick: () => slettAlt(oppfrisk) }, 'Slett alle data'))));
+  detaljer.addEventListener('toggle', () => { tekniskApen = detaljer.open; });
+  return detaljer;
 }
 
-// ---------- Utviklerverktøy ----------
+async function lastTestdata(oppfrisk) {
+  const svar = await visDialog({
+    tittel: 'Laste inn fiktive testdata?',
+    innhold: [h('p', {}, 'Alle data på telefonen erstattes med 32 fiktive elever og 10 dager med registreringer.')],
+    knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: 'Last inn testdata', verdi: 'ja', type: 'fare' }],
+  });
+  if (svar !== 'ja') return;
+  await erstattAltInnhold(lagTestdata());
+  visMelding('Fiktive testdata er lastet inn.', 'ok');
+  oppfrisk();
+}
 
-function seksjonUtvikler(oppfrisk) {
-  return h('details', { class: 'kort utvikler' },
-    h('summary', {}, 'Utviklerverktøy (bare for test)'),
-    h('p', { class: 'advarsel' }, 'Brukes bare på testtelefonen. Begge knappene erstatter alle data på telefonen.'),
-    h('div', { class: 'knapperad' },
-      h('button', {
-        type: 'button', class: 'knapp', id: 'last-testdata',
-        onclick: async () => {
-          const svar = await visDialog({
-            tittel: 'Laste inn fiktive testdata?',
-            innhold: [h('p', {}, 'Alle data på telefonen erstattes med 32 fiktive elever og 10 dager med registreringer.')],
-            knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: 'Last inn testdata', verdi: 'ja', type: 'fare' }],
-          });
-          if (svar !== 'ja') return;
-          await erstattAltInnhold(lagTestdata());
-          visMelding('Fiktive testdata er lastet inn.', 'ok');
-          oppfrisk();
-        },
-      }, 'Last inn fiktive testdata'),
-      h('button', {
-        type: 'button', class: 'knapp knapp-fare', id: 'slett-alt',
-        onclick: async () => {
-          const svar = await visDialog({
-            tittel: 'Slette alle data?',
-            innhold: [h('p', {}, 'Alle elever, hendelser og tellinger på telefonen slettes. Dette kan ikke angres uten sikkerhetskopi.')],
-            knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: 'Slett alt', verdi: 'ja', type: 'fare' }],
-          });
-          if (svar !== 'ja') return;
-          await slettAltInnhold();
-          visMelding('Alle data er slettet.', 'ok');
-          oppfrisk();
-        },
-      }, 'Slett alle data')));
+async function slettAlt(oppfrisk) {
+  const svar = await visDialog({
+    tittel: 'Slette alle data?',
+    innhold: [h('p', {}, 'Alle elever, hendelser og tellinger på telefonen slettes. Dette kan ikke angres uten sikkerhetskopi.')],
+    knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: 'Slett alt', verdi: 'ja', type: 'fare' }],
+  });
+  if (svar !== 'ja') return;
+  await slettAltInnhold();
+  visMelding('Alle data er slettet.', 'ok');
+  oppfrisk();
 }

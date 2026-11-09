@@ -1,15 +1,22 @@
 // Oppstart, faner og oppdatering av appen.
 import { apneDb, beOmVedvarendeLagring, DATAVERSJON, hentInnstilling, lagreInnstilling } from './db.js';
-import { datoTekst } from './dato.js';
+import { klokkeTekst, lokalDato } from './dato.js';
 import { visMelding } from './dom.js';
 import { visMer } from './ui/mer.js';
-import { visEleverListe, visPlassholder } from './ui/plassholder.js';
+import { visAndre, visEleverListe, visIdag, visTelling } from './ui/skjermer.js';
 
-const FANER = ['idag', 'andre', 'telling', 'elever', 'mer'];
+const SKJERMER = {
+  idag: visIdag,
+  andre: visAndre,
+  telling: visTelling,
+  elever: visEleverListe,
+  mer: () => visMer(() => visFane('mer', { behold: true })),
+};
 let aktivFane = 'idag';
+let visningsdato = lokalDato();
 
-async function visFane(fane) {
-  aktivFane = FANER.includes(fane) ? fane : 'idag';
+async function visFane(fane, { behold = false } = {}) {
+  aktivFane = fane in SKJERMER ? fane : 'idag';
   for (const knapp of document.querySelectorAll('.fane')) {
     const valgt = knapp.dataset.fane === aktivFane;
     knapp.classList.toggle('valgt', valgt);
@@ -17,20 +24,28 @@ async function visFane(fane) {
     else knapp.removeAttribute('aria-current');
   }
   const innhold = document.getElementById('innhold');
+  const rullet = window.scrollY;
   let side;
   try {
-    if (aktivFane === 'mer') side = await visMer(() => visFane('mer'));
-    else if (aktivFane === 'elever') side = await visEleverListe();
-    else side = visPlassholder(aktivFane);
+    side = await SKJERMER[aktivFane]();
   } catch (e) {
     side = document.createTextNode(`Noe gikk galt: ${e.message}`);
   }
   innhold.replaceChildren(side);
+  // Ved bytte av fane: til toppen. Ved oppfrisking av samme skjerm: bli stående.
+  window.scrollTo(0, behold ? rullet : 0);
+  visningsdato = lokalDato();
   if (location.hash !== `#${aktivFane}`) history.replaceState(null, '', `#${aktivFane}`);
 }
 
-function oppdaterDato() {
-  document.getElementById('dato').textContent = datoTekst();
+// Klokka på «I dag» og ny dag (K-10): sjekkes hvert 20. sekund og når appen åpnes igjen.
+function oppdaterTid() {
+  if (lokalDato() !== visningsdato) {
+    visFane(aktivFane, { behold: true });
+    return;
+  }
+  const klokke = document.getElementById('klokke');
+  if (klokke) klokke.textContent = klokkeTekst();
 }
 
 // Ny versjon av appen: vis knapp, og bytt først når brukeren trykker (oppdatering endrer aldri data, IF-09).
@@ -62,8 +77,15 @@ function registrerServiceWorker() {
     venter?.postMessage('HOPP_OVER_VENTING');
   });
 
+  // Første installasjon gir også «controllerchange». Da skal siden ikke lastes på nytt,
+  // bare når en ny versjon tar over etter at brukeren har trykket «Oppdater».
+  let haddeKontroller = !!navigator.serviceWorker.controller;
   let lastetPaNytt = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!haddeKontroller) {
+      haddeKontroller = true;
+      return;
+    }
     if (lastetPaNytt) return;
     lastetPaNytt = true;
     location.reload();
@@ -71,12 +93,12 @@ function registrerServiceWorker() {
 }
 
 async function start() {
-  oppdaterDato();
   for (const knapp of document.querySelectorAll('.fane')) {
     knapp.addEventListener('click', () => visFane(knapp.dataset.fane));
   }
+  setInterval(oppdaterTid, 20000);
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') oppdaterDato();
+    if (document.visibilityState === 'visible') oppdaterTid();
   });
 
   try {

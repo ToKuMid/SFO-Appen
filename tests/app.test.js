@@ -27,7 +27,8 @@ test('versjon i sw.js og src/versjon.js er like', () => {
 test('service worker lagrer alle appens filer, og alle filene finnes (IF-01)', async () => {
   const liste = [...sw.matchAll(/'\.\/([^']*)'/g)].map((m) => m[1]).filter(Boolean);
   for (const f of liste) await access(join(rot, f));
-  const kreves = [...await filerUnder('src'), ...await filerUnder('icons'), 'index.html', 'manifest.webmanifest'];
+  const fonter = (await filerUnder('fonts')).filter((f) => f.endsWith('.woff2'));
+  const kreves = [...await filerUnder('src'), ...await filerUnder('icons'), ...fonter, 'index.html', 'manifest.webmanifest'];
   for (const f of kreves) assert.ok(liste.includes(f), `${f} mangler i FILER i sw.js`);
 });
 
