@@ -32,24 +32,25 @@ export function avtaleBrikker(avtale) {
 }
 
 /**
- * Én elevrad: navn, trinn og gruppe, brikker og eventuell knapp til høyre.
- * Med `lenke` blir hele raden en lenke (for eksempel til redigering av eleven).
+ * Én elevrad: navn, trinn og gruppe (eller egen `meta`), brikker og eventuell knapp til høyre.
+ * Med `lenke` og uten knapp blir hele raden en lenke. Med både lenke og knapp er navnet lenken.
  */
-export function elevRad(elev, { avtale, ekstraMeta, handling, lenke } = {}) {
-  const innhold = [
-    h('div', { class: 'rad-tekst' },
-      h('p', { class: 'navn' }, `${elev.fornavn} ${elev.etternavn}`),
-      h('div', { class: 'rad-meta' },
-        h('span', { class: 'meta' }, [`${elev.trinn}. trinn`, kortGruppe(elev.skolegruppe), ekstraMeta].filter(Boolean).join(' · ')),
-        avtaleBrikker(avtale))),
-    handling ?? null,
+export function elevRad(elev, { avtale, ekstraMeta, meta, handling, lenke, klasse = '' } = {}) {
+  const tekst = [
+    h('p', { class: 'navn' }, `${elev.fornavn} ${elev.etternavn}`),
+    h('div', { class: 'rad-meta' },
+      h('span', { class: 'meta' }, meta ?? [`${elev.trinn}. trinn`, kortGruppe(elev.skolegruppe), ekstraMeta].filter(Boolean).join(' · ')),
+      avtaleBrikker(avtale)),
   ];
   const sok = `${elev.fornavn} ${elev.etternavn} ${elev.trinn}. trinn ${elev.skolegruppe}`.toLocaleLowerCase('nb');
-  if (lenke) {
+  if (lenke && !handling) {
     return h('li', { 'data-sok': sok },
-      h('a', { class: 'liste-rad lenke-rad', href: lenke }, innhold, pilHoyre()));
+      h('a', { class: `liste-rad lenke-rad ${klasse}`, href: lenke }, h('div', { class: 'rad-tekst' }, tekst), pilHoyre()));
   }
-  return h('li', { class: 'liste-rad', 'data-sok': sok }, innhold);
+  const tekstdel = lenke
+    ? h('a', { class: 'rad-tekst rad-lenke', href: lenke }, tekst)
+    : h('div', { class: 'rad-tekst' }, tekst);
+  return h('li', { class: `liste-rad ${klasse}`, 'data-sok': sok }, tekstdel, handling ?? null);
 }
 
 const SVG = 'http://www.w3.org/2000/svg';

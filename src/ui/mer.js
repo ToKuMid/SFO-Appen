@@ -76,7 +76,7 @@ function seksjonSikkerhetskopi(siste, oppfrisk) {
     h('p', { class: 'dempet liten' }, 'Lagres via delingsarket i SFO-mappen på OneDrive. Ta kopi ved dagsavslutning, eller minst én gang i uka.'));
 }
 
-async function eksporter(oppfrisk) {
+export async function eksporter(oppfrisk) {
   try {
     const naa = new Date();
     const kopi = byggSikkerhetskopi(await hentAltInnhold(), { appversjon: APP_VERSJON, naa });

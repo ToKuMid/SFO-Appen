@@ -54,15 +54,26 @@ export function visDialog({ tittel, innhold = [], knapper = [{ tekst: 'OK', verd
   });
 }
 
-/** Kort melding nederst på skjermen. */
-export function visMelding(tekst, type = 'info') {
+/**
+ * Kort melding nederst på skjermen.
+ * handling: { tekst, onclick } gir en knapp i meldingen, for eksempel «Angre».
+ */
+export function visMelding(tekst, type = 'info', { handling } = {}) {
   let boks = document.getElementById('melding');
   if (!boks) {
     boks = h('div', { id: 'melding', class: 'melding', role: 'status', 'aria-live': 'polite' });
     document.body.append(boks);
   }
-  boks.className = `melding melding-${type} synlig`;
-  boks.textContent = tekst;
+  boks.className = `melding melding-${type} synlig${handling ? ' med-handling' : ''}`;
+  const skjul = () => boks.classList.remove('synlig');
+  boks.replaceChildren(...[
+    h('span', {}, tekst),
+    handling ? h('button', {
+      type: 'button',
+      class: 'melding-knapp',
+      onclick: () => { skjul(); handling.onclick(); },
+    }, handling.tekst) : null,
+  ].filter(Boolean));
   clearTimeout(boks._timer);
-  boks._timer = setTimeout(() => boks.classList.remove('synlig'), 6000);
+  boks._timer = setTimeout(skjul, handling ? 8000 : 6000);
 }

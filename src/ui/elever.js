@@ -14,7 +14,7 @@ export async function visEleverListe() {
   const avtaleFor = new Map(avtaler.map((a) => [a.elevId, a]));
   const aktive = sorterElever(alle.filter((e) => e.aktiv !== false));
   const deaktiverte = sorterElever(alle.filter((e) => e.aktiv === false));
-  const rad = (e) => elevRad(e, { avtale: avtaleFor.get(e.id), lenke: `#elever/${e.id}` });
+  const rad = (e) => elevRad(e, { avtale: avtaleFor.get(e.id), lenke: `#elev/${e.id}` });
 
   const liste = h('ul', { class: 'liste', id: 'elevliste' }, aktive.map(rad));
   const ingenTreff = h('p', { class: 'dempet', hidden: true }, 'Ingen elever passer søket.');
@@ -148,7 +148,7 @@ export async function visElevSkjema(id, naviger) {
       slett: nyAvtale ? {} : { avtaler: [elevId] },
     });
     visMelding(`${verdi.fornavn} ${verdi.etternavn} er lagret.`, 'ok');
-    naviger('elever');
+    naviger(ny ? 'elever' : `elev/${elevId}`);
   };
 
   const settAktiv = async (aktiv) => {
@@ -166,8 +166,9 @@ export async function visElevSkjema(id, naviger) {
     naviger('elever');
   };
 
+  const tilbake = ny ? '#elever' : `#elev/${id}`;
   return h('div', { class: 'skjerm' },
-    tilbakeLenke(),
+    tilbakeLenke(tilbake, ny ? 'Elever' : 'Elevkort'),
     skjermTopp({
       tittel: ny ? 'Ny elev' : `${elev.fornavn} ${elev.etternavn}`,
       undertittel: !ny && elev.aktiv === false ? 'Deaktivert' : null,
@@ -197,7 +198,7 @@ export async function visElevSkjema(id, naviger) {
         h('p', { class: 'paminnelse' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
       h('div', { class: 'knappestabel' },
         h('button', { type: 'submit', class: 'knapp knapp-primar knapp-stor', id: 'lagre-elev' }, 'Lagre'),
-        h('a', { class: 'knapp knapp-lenkeknapp', href: '#elever' }, 'Avbryt'),
+        h('a', { class: 'knapp knapp-lenkeknapp', href: tilbake }, 'Avbryt'),
         !ny && elev.aktiv !== false
           ? h('button', { type: 'button', class: 'knapp knapp-fare', id: 'deaktiver', onclick: () => settAktiv(false) }, 'Deaktiver elev')
           : null,
@@ -206,8 +207,8 @@ export async function visElevSkjema(id, naviger) {
           : null)));
 }
 
-function tilbakeLenke() {
-  return h('a', { class: 'tilbake', href: '#elever' }, pilVenstre(), 'Elever');
+function tilbakeLenke(href = '#elever', tekst = 'Elever') {
+  return h('a', { class: 'tilbake', href }, pilVenstre(), tekst);
 }
 
 function tekstfelt(id, navn, verdi, attrs = {}) {

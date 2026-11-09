@@ -1,52 +1,191 @@
-// Skjermene I dag, Andre og Telling. (Elever ligger i elever.js.)
-// I fase 1 viser de data fra databasen, men inn- og utsjekk, telling og redigering kommer i fase 2.
-import { h } from '../dom.js';
-import { hentAlle } from '../db.js';
-import { ukedagNr } from '../dato.js';
-import { elevRad, skjermTopp, sorterElever } from './felles.js';
+// Skjermene «I dag» og «Andre» (K-12, K-13, K-16, K-20). Utseende og flyt som i mockupen.
+import { h, visDialog } from '../dom.js';
+import { hentDag, hentInitialer, lagreInitialer } from '../dag.js';
+import { hentInnstilling } from '../db.js';
+import { dagerMellom, klokkeFra, klokkeslett } from '../dato.js';
+import { STATUS } from '../model/status.js';
+import { elevRad, kortGruppe, skjermTopp, sorterElever } from './felles.js';
+import { kanAngres, knappAngre, knappFravaer, knappSjekkInn, knappSjekkUt } from './handlinger.js';
+import { eksporter } from './mer.js';
 
-async function hentAktiveElever() {
-  const [elever, avtaler] = await Promise.all([hentAlle('elever'), hentAlle('avtaler')]);
-  const avtaleFor = new Map(avtaler.map((a) => [a.elevId, a]));
-  return { elever: sorterElever(elever.filter((e) => e.aktiv !== false)), avtaleFor };
+// Søketeksten huskes når skjermen tegnes på nytt etter en inn- eller utsjekk.
+let sokTekst = '';
+
+const lenkeTil = (r) => `#elev/${r.elev.id}`;
+const sorter = (rader) => {
+  const rekkefolge = new Map(sorterElever(rader.map((r) => r.elev)).map((e, i) => [e.id, i]));
+  return [...rader].sort((a, b) => rekkefolge.get(a.elev.id) - rekkefolge.get(b.elev.id));
+};
+
+function varselIkon() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('class', 'varsel-ikon');
+  svg.setAttribute('aria-hidden', 'true');
+  for (const d of ['M12 3 2 20h20L12 3z', 'M12 10v4', 'M12 17h.01']) {
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', d);
+    svg.append(p);
+  }
+  return svg;
 }
 
-function kommerKort(tekst) {
-  return h('section', { class: 'kort' }, h('p', { class: 'dempet' }, tekst));
+function filtrer(liste, tekst) {
+  const ord = tekst.toLocaleLowerCase('nb').trim().split(/\s+/).filter(Boolean);
+  for (const li of liste.querySelectorAll('li[data-sok]')) li.hidden = !ord.every((o) => li.dataset.sok.includes(o));
 }
+
+// ---------- I dag ----------
 
 export async function visIdag() {
-  const { elever, avtaleFor } = await hentAktiveElever();
-  const dag = ukedagNr();
-  const forventet = elever.filter((e) => e.ukedager?.includes(dag));
-  const helg = dag > 5;
+  const d = await hentDag();
+  const { tall, etterStatus, avtaleFor } = d;
+  const inne = sorter(etterStatus[STATUS.INNE]);
+  const initialer = await hentInitialer();
+
+  const inneListe = h('ul', { class: 'liste', id: 'inne-liste' }, inne.map((r) => elevRad(r.elev, {
+    avtale: avtaleFor.get(r.elev.id),
+    ekstraMeta: r.innSiden ? `inn ${klokkeFra(r.innSiden)}` : null,
+    lenke: lenkeTil(r),
+    handling: knappSjekkUt(r),
+  })));
+
+  const varselListe = d.uregistrert.length ? h('ul', { class: 'liste varsel-liste', id: 'varsel-liste' },
+    sorter(d.uregistrert).map((r) => elevRad(r.elev, {
+      meta: `${r.elev.trinn}. trinn · ${kortGruppe(r.elev.skolegruppe)} · forventet`,
+      lenke: lenkeTil(r),
+      handling: knappSjekkInn(r, { stil: 'knapp-varsel' }),
+      klasse: 'rad-i-varsel',
+    }))) : null;
+
+  const sok = h('input', {
+    id: 'sok', type: 'search', placeholder: 'Navn eller trinn', autocomplete: 'off', value: sokTekst,
+    oninput: () => {
+      sokTekst = sok.value;
+      filtrer(inneListe, sokTekst);
+      if (varselListe) filtrer(varselListe, sokTekst);
+    },
+  });
+  if (sokTekst) {
+    filtrer(inneListe, sokTekst);
+    if (varselListe) filtrer(varselListe, sokTekst);
+  }
+  const init = h('input', {
+    id: 'initialer', type: 'text', value: initialer, maxlength: 4, placeholder: 'F.eks. KT',
+    autocapitalize: 'characters', autocomplete: 'off',
+    onchange: () => { init.value = init.value.trim().toUpperCase(); lagreInitialer(init.value); },
+  });
 
   return h('div', { class: 'skjerm' },
     skjermTopp({ tittel: 'I dag', visKlokke: true }),
+
     h('div', { class: 'hovedtall' },
       h('div', {},
-        h('p', { class: 'hovedtall-etikett' }, 'Forventet i dag'),
-        h('p', { class: 'hovedtall-tall', id: 'antall-forventet' }, helg ? '–' : forventet.length)),
+        h('p', { class: 'hovedtall-etikett' }, 'Inne nå'),
+        h('p', { class: 'hovedtall-tall', id: 'antall-inne' }, tall.inne)),
       h('div', { class: 'hovedtall-side' },
-        h('p', {}, helg ? 'Ingen SFO i helgen' : `av ${elever.length} elever`),
-        h('p', {}, 'Inn og ut kommer i fase 2b'))),
-    elever.length === 0
-      ? kommerKort('Ingen elever ennå. For å teste kan du laste inn fiktive testdata under Mer → Teknisk test og utviklerverktøy.')
-      : null,
-    forventet.length > 0 && !helg ? [
-      h('p', { class: 'seksjonstittel' }, `Forventet (${forventet.length})`),
-      h('ul', { class: 'liste' }, forventet.map((e) => elevRad(e, { avtale: avtaleFor.get(e.id), lenke: `#elever/${e.id}` }))),
-    ] : null);
+        h('p', {}, `av ${tall.forventet} forventet`),
+        h('p', {}, `${tall.sjekketUt} sjekket ut`),
+        h('p', {}, `${tall.meldtFravaer} meldt fravær`),
+        tall.ikkeMott ? h('p', {}, `${tall.ikkeMott} ikke møtt`) : null)),
+
+    // K-16: varsel for forventede barn som ikke er registrert etter varseltidspunktet
+    varselListe ? h('section', { class: 'varselboks', id: 'varsel', 'aria-label': 'Varsel' },
+      h('div', { class: 'varsel-topp' }, varselIkon(),
+        h('p', {}, `${d.uregistrert.length} ${d.uregistrert.length === 1 ? 'barn er' : 'barn er'} ikke registrert etter ${klokkeslett(d.varseltid)}`)),
+      varselListe) : null,
+
+    !varselListe && tall.ikkeRegistrert > 0 ? h('a', { class: 'infolinje', href: '#andre' },
+      h('span', {}, `${tall.ikkeRegistrert} forventet er ikke registrert ennå`),
+      h('span', { class: 'infolinje-handling' }, 'Sjekk inn under Andre')) : null,
+
+    h('div', { class: 'sokerad' },
+      h('div', { class: 'felt sok-felt' }, h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter barn'), sok),
+      h('div', { class: 'felt init-felt' }, h('label', { for: 'initialer', class: 'feltnavn' }, 'Initialer'), init)),
+
+    h('p', { class: 'seksjonstittel' }, `Inne (${tall.inne})`),
+    inne.length ? inneListe : h('p', { class: 'dempet' }, tall.forventet ? 'Ingen barn er sjekket inn ennå.' : 'Ingen barn er forventet i dag.'),
+
+    h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'avslutt-dagen', onclick: () => dagsavslutning() }, 'Avslutt dagen'),
+  );
 }
 
-export function visAndre() {
+// ---------- Andre ----------
+
+export async function visAndre() {
+  const d = await hentDag();
+  const { etterStatus, avtaleFor, naa } = d;
+  const forventet = sorter(etterStatus[STATUS.FORVENTET]);
+  const ute = sorter(etterStatus[STATUS.UT]);
+  const fravaer = sorter([...etterStatus[STATUS.MELDT_FRAVAER], ...etterStatus[STATUS.IKKE_MOTT]]);
+  const ikkeSfo = sorter(etterStatus[STATUS.IKKE_SFO]);
+
+  const seksjon = (tittel, rader, lagRad, { varsel = false, id } = {}) => (rader.length ? h('section', { class: 'seksjon', id },
+    h('h2', { class: `seksjonstittel ${varsel ? 'varsel' : ''}` }, `${tittel} (${rader.length})`),
+    h('ul', { class: 'liste' }, rader.map(lagRad))) : null);
+
+  const tom = !forventet.length && !ute.length && !fravaer.length;
+
   return h('div', { class: 'skjerm' },
     skjermTopp({ tittel: 'Andre', undertittel: 'Barn som ikke er inne akkurat nå' }),
-    kommerKort('Forventet og ikke registrert, sjekket ut, fravær og ikke SFO i dag kommer i fase 2b.'));
+
+    seksjon(d.varselAktivt ? 'Forventet, ikke registrert' : 'Forventet', forventet, (r) => elevRad(r.elev, {
+      avtale: avtaleFor.get(r.elev.id),
+      lenke: lenkeTil(r),
+      klasse: d.varselAktivt ? 'rad-varsel' : '',
+      handling: h('div', { class: 'radknapper' }, knappSjekkInn(r), knappFravaer(r)),
+    }), { varsel: d.varselAktivt, id: 'forventet' }),
+
+    seksjon('Sjekket ut', ute, (r) => elevRad(r.elev, {
+      meta: [`${r.elev.trinn}. trinn`, `ut ${klokkeFra(r.siste.tid)}`, r.siste.initialer].filter(Boolean).join(' · '),
+      lenke: lenkeTil(r),
+      handling: kanAngres(r, naa) ? knappAngre(r) : knappSjekkInn(r, { tekst: 'Sjekk inn igjen', stil: '' }),
+    }), { id: 'sjekket-ut' }),
+
+    seksjon('Fravær', fravaer, (r) => elevRad(r.elev, {
+      meta: [`${r.elev.trinn}. trinn`, r.status === STATUS.IKKE_MOTT ? 'ikke møtt' : 'meldt fravær', r.siste.initialer].filter(Boolean).join(' · '),
+      lenke: lenkeTil(r),
+      handling: kanAngres(r, naa) ? knappAngre(r) : knappSjekkInn(r, { stil: '' }),
+    }), { id: 'fravaer' }),
+
+    tom ? h('section', { class: 'kort' }, h('p', { class: 'dempet' }, 'Alle forventede barn er inne.')) : null,
+
+    ikkeSfo.length ? h('details', { class: 'ikke-sfo', id: 'ikke-sfo' },
+      h('summary', {}, `Ikke SFO i dag (${ikkeSfo.length})`),
+      h('p', { class: 'dempet liten' }, 'Kommer et av disse barna likevel, sjekk det inn her. Det lagres som ekstra SFO-dag.'),
+      h('ul', { class: 'liste' }, ikkeSfo.map((r) => elevRad(r.elev, {
+        lenke: lenkeTil(r),
+        handling: knappSjekkInn(r, { stil: '' }),
+      })))) : null,
+  );
 }
 
-export function visTelling() {
-  return h('div', { class: 'skjerm' },
-    skjermTopp({ tittel: 'Telling' }),
-    kommerKort('Telling med avhuking og avvik kommer i fase 2c.'));
+// ---------- Dagsavslutning (K-20) ----------
+
+async function dagsavslutning() {
+  const d = await hentDag();
+  const inne = sorter(d.etterStatus[STATUS.INNE]);
+  const uregistrert = sorter(d.etterStatus[STATUS.FORVENTET]);
+  const siste = await hentInnstilling('sisteSikkerhetskopi');
+  const kopiIDag = siste && dagerMellom(siste) === 0;
+  const navneliste = (rader) => h('ul', { class: 'importliste' }, rader.map((r) => h('li', {}, `${r.elev.fornavn} ${r.elev.etternavn}`)));
+
+  const svar = await visDialog({
+    tittel: 'Avslutte dagen',
+    innhold: [
+      inne.length
+        ? [h('p', { class: 'advarsel' }, `${inne.length} ${inne.length === 1 ? 'barn står' : 'barn står'} fortsatt som inne. Sjekk ut eller rett før du går.`), navneliste(inne)]
+        : h('p', {}, 'Ingen barn står som inne.'),
+      uregistrert.length
+        ? [h('p', {}, `${uregistrert.length} forventet ble aldri registrert. Marker fravær eller sjekk inn under Andre.`), navneliste(uregistrert)]
+        : null,
+      h('p', { class: kopiIDag ? '' : 'advarsel' }, kopiIDag ? 'Sikkerhetskopi er tatt i dag.' : 'Husk sikkerhetskopi før du går.'),
+    ],
+    knapper: [
+      { tekst: 'Lukk', verdi: 'lukk' },
+      kopiIDag ? null : { tekst: 'Ta sikkerhetskopi nå', verdi: 'kopi', type: 'primar' },
+    ].filter(Boolean),
+  });
+  if (svar === 'kopi') await eksporter(() => {});
 }

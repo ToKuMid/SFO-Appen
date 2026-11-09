@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.3.0';
+const APP_VERSJON = '0.4.0';
 const CACHE = `sfo-appen-${APP_VERSJON}`;
 
 // Alle filer appen trenger. En test sjekker at listen stemmer med filene i repoet.
@@ -29,6 +29,11 @@ const FILER = [
   './src/ui/felles.js',
   './src/ui/skjermer.js',
   './src/ui/elever.js',
+  './src/ui/elevkort.js',
+  './src/ui/telling.js',
+  './src/ui/handlinger.js',
+  './src/model/status.js',
+  './src/dag.js',
   './src/ui/import.js',
   './src/model/elev.js',
   './src/import/xlsx.js',

@@ -151,14 +151,20 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
 
   await page.fill('#sok', 'nyhilde');
   await page.click('#elevliste a:has-text("Nyhilde")');
+  await page.waitForSelector('#rediger');
+  await page.click('#rediger');
   await page.waitForSelector('#merknad');
   ok((await page.inputValue('#fornavn')) === 'Nyhilde', 'redigering viser lagrede verdier');
   await page.fill('#merknad', 'Hentes av tante på torsdager');
   await page.click('#lagre-elev');
+  await page.waitForSelector('#kort-status');
+  await page.click('[data-fane=elever]');
   await page.waitForSelector('#elevliste');
   ok(/Merknad/.test(await page.textContent('#elevliste a:has-text("Nyhilde")')), 'redigert elev lagret med merknad (K-03, K-40)');
 
   await page.click('#elevliste a:has-text("Prøve Personsen")');
+  await page.waitForSelector('#rediger');
+  await page.click('#rediger');
   await page.waitForSelector('#deaktiver');
   await page.click('#deaktiver');
   await page.click('dialog button:text-is("Deaktiver")');

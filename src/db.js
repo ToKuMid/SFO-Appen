@@ -97,6 +97,12 @@ export async function hent(tabell, nokkel) {
   return somLofte(db.transaction(tabell).objectStore(tabell).get(nokkel));
 }
 
+/** Alle rader der en indeks har en bestemt verdi, for eksempel hendelser for én dato. */
+export async function hentEtterIndeks(tabell, indeks, verdi) {
+  const db = await apneDb();
+  return somLofte(db.transaction(tabell).objectStore(tabell).index(indeks).getAll(verdi));
+}
+
 export async function lagre(tabell, rad) {
   const db = await apneDb();
   const tx = db.transaction(tabell, 'readwrite');

@@ -32,6 +32,18 @@ export function kortDato(iso) {
   return `${d.getDate()}. ${MANEDER[d.getMonth()]}`;
 }
 
+/** ISO-tidspunkt → «14.47» */
+export function klokkeFra(iso) {
+  const d = new Date(iso);
+  return `${to(d.getHours())}.${to(d.getMinutes())}`;
+}
+
+/** ISO-tidspunkt → '14:47' (verdi til <input type="time">) */
+export function tidVerdiFra(iso) {
+  const d = new Date(iso);
+  return `${to(d.getHours())}:${to(d.getMinutes())}`;
+}
+
 /** «Kl. 15.12» */
 export function klokkeTekst(d = new Date()) {
   return `Kl. ${to(d.getHours())}.${to(d.getMinutes())}`;

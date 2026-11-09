@@ -18,6 +18,21 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Fase 2b og 2c (versjon 0.4.0) er bygget:** den daglige flyten, varsel og telling, med layout og flyt som i mockupen.
+
+| Krav | Hva | Hvor i appen |
+| --- | --- | --- |
+| K-10, K-19 | Ny dag og forventede fra ukeplanen, unntak for én dag | Automatisk. Unntak på elevkortet, og «Ikke SFO i dag» nederst på Andre. |
+| K-11 til K-13 | Statuser, hovedliste med teller og egen liste for resten | I dag (inne), Andre (forventet, sjekket ut, fravær, ikke SFO i dag) |
+| K-14, K-17 | Inn og ut med ett trykk, flere ganger samme dag | Knapper i listene og på elevkortet |
+| K-15 | Angre og rette tidspunkt | «Angre» i meldingen etter hver handling, i listene og på elevkortet. «Rett tidspunkt» på elevkortet. Historikken viser angrede og rettede registreringer. |
+| K-16 | Varsel etter varseltidspunktet | Gul boks øverst på I dag. Kommer av seg selv når appen står åpen. |
+| K-18 | Valgfrie initialer | Skrives én gang i feltet «Initialer» på I dag og brukes resten av dagen. Kan endres i fravær og telling. |
+| K-20 | Dagsavslutning | «Avslutt dagen» nederst på I dag |
+| K-30 til K-32 | Telling med avhuking, resultat og avvik med kommentar | Telling-fanen |
+
+Status lagres aldri. Den regnes ut fra hendelsene i `src/model/status.js`, som har egne tester i `tests/status.test.js`.
+
 **Fase 2a (versjon 0.3.0) er bygget:** elevregister og import fra Excel.
 
 | Krav | Hva | Status |
@@ -84,7 +99,8 @@ Valgfri nettlesertest (installerer Playwright midlertidig):
 npm install --no-save playwright
 npx playwright install chromium
 npm run serve     # i ett vindu
-npm run e2e       # i et annet
+npm run e2e       # i et annet: sikkerhetskopi, import og elevregister
+npm run e2e:ettermiddag  # en hel fiktiv ettermiddag fra 14.45 til stengetid
 ```
 
 ## Publisere på GitHub Pages
@@ -147,3 +163,18 @@ Bruk bare fiktive data på testtelefonen. Testfilene ligger i `testdata/`, og na
 5. Importer `fiktive-elever-endret.xlsx`. Forhåndsvisningen skal vise 1 ny, 1 oppdatert, 1 gått opp et trinn og 1 som deaktiveres.
 6. **Elever → Legg til elev.** Prøv å lagre tomt skjema (feil skal vises), fyll ut, lagre. Åpne eleven, endre noe, lagre. Deaktiver den.
 7. **Mer → Hent tom Excel-mal** og åpne den i Excel på telefonen eller PC-en.
+
+## Teste fase 2b og 2c på telefonen (en fiktiv ettermiddag)
+
+Bruk testtelefonen med fiktive data. Testen tar 10–15 minutter og bør gjøres en hverdag rundt kl. 14.45, så varselet kommer av seg selv kl. 15.00.
+
+1. **Mer → Teknisk test og utviklerverktøy → Last inn fiktive testdata.**
+2. **I dag:** Skriv initialene dine i feltet «Initialer». Teller viser 0 inne og hvor mange som er forventet.
+3. **Andre:** Sjekk inn de fleste. Registrer fravær på én. La to stå.
+4. **Kl. 15.00:** Gå til I dag og vent. Den gule boksen med de to barna skal komme av seg selv. Sjekk inn ett av dem fra boksen.
+5. Sjekk ut ett barn, og trykk **Angre** i meldingen nederst. Barnet skal være inne igjen.
+6. **Telling:** Start telling, huk av alle unntatt ett, avslutt med avvik og skriv en kommentar. Tellingen skal stå under «Dagens tellinger».
+7. Trykk på et navn for å åpne **elevkortet**. Prøv «Rett tidspunkt», og sjekk at historikken viser det gamle tidspunktet som rettet.
+8. Sjekk ut alle, og trykk **Avslutt dagen**.
+
+Ferdig-kriteriet for fase 2b er at en hel fiktiv ettermiddag kan gjennomføres fra 14.45 til stengetid.
