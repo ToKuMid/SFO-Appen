@@ -1,4 +1,4 @@
-// Skjermene «I dag» og «Andre» (K-12, K-13, K-16, K-20). Utseende og flyt som i mockupen.
+// Skjermene «I dag» og «Ikke inne» (adresse #andre) (K-12, K-13, K-16, K-20). Utseende og flyt som i mockupen.
 import { h, visDialog } from '../dom.js';
 import { hentDag } from '../dag.js';
 import { aktiveInitialer, byttInitialer } from './las.js';
@@ -94,7 +94,7 @@ export async function visIdag() {
 
     !varselListe && tall.ikkeRegistrert > 0 ? h('a', { class: 'infolinje', href: '#andre' },
       h('span', {}, `${tall.ikkeRegistrert} forventet er ikke registrert ennå`),
-      h('span', { class: 'infolinje-handling' }, 'Sjekk inn under Andre')) : null,
+      h('span', { class: 'infolinje-handling' }, 'Sjekk inn under Ikke inne')) : null,
 
     h('div', { class: 'sokerad' },
       h('div', { class: 'felt sok-felt' }, h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter barn'), sok),
@@ -112,7 +112,7 @@ export async function visIdag() {
   );
 }
 
-// ---------- Andre ----------
+// ---------- Ikke inne (#andre) ----------
 
 export async function visAndre() {
   const d = await hentDag();
@@ -129,7 +129,7 @@ export async function visAndre() {
   const tom = !forventet.length && !ute.length && !fravaer.length;
 
   return h('div', { class: 'skjerm' },
-    skjermTopp({ tittel: 'Andre', undertittel: 'Barn som ikke er inne akkurat nå' }),
+    skjermTopp({ tittel: 'Ikke inne', undertittel: 'Forventet, sjekket ut og fravær' }),
 
     seksjon(d.varselAktivt ? 'Forventet, ikke registrert' : 'Forventet', forventet, (r) => elevRad(r.elev, {
       avtale: avtaleFor.get(r.elev.id),
@@ -179,7 +179,7 @@ async function dagsavslutning() {
         ? [h('p', { class: 'advarsel' }, `${inne.length} ${inne.length === 1 ? 'barn står' : 'barn står'} fortsatt som inne. Sjekk ut eller rett før du går.`), navneliste(inne)]
         : h('p', {}, 'Ingen barn står som inne.'),
       uregistrert.length
-        ? [h('p', {}, `${uregistrert.length} forventet ble aldri registrert. Marker fravær eller sjekk inn under Andre.`), navneliste(uregistrert)]
+        ? [h('p', {}, `${uregistrert.length} forventet ble aldri registrert. Marker fravær eller sjekk inn under Ikke inne.`), navneliste(uregistrert)]
         : null,
       h('p', { class: kopiIDag ? '' : 'advarsel' }, kopiIDag ? 'Sikkerhetskopi er tatt i dag.' : 'Husk sikkerhetskopi før du går.'),
     ],

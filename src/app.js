@@ -82,7 +82,7 @@ async function visFane(fane, param = null, { behold = false } = {}) {
 }
 
 // Klokka, varselet (K-16) og ny dag (K-10): sjekkes hvert 15. sekund og når appen åpnes igjen.
-// «I dag» og «Andre» tegnes på nytt hvert minutt, så varselet kommer av seg selv på varseltidspunktet.
+// «I dag» og «Ikke inne» tegnes på nytt hvert minutt, så varselet kommer av seg selv på varseltidspunktet.
 // Det skjer ikke mens noen skriver i et felt eller har en dialog åpen.
 function oppdaterTid() {
   if (lokalDato() !== visningsdato) {

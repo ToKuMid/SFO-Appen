@@ -115,7 +115,7 @@ export async function visElevSkjema(id, naviger) {
 
   const alene = h('input', { id: 'alene', type: 'time', value: v.gaarHjemAleneFra ?? '', step: 300 });
   const hentetid = h('input', { id: 'hentetid', type: 'time', value: v.fastHentetid ?? '', step: 300 });
-  const merknad = h('textarea', { id: 'merknad', rows: 3, maxlength: MAKS_MERKNAD }, v.fritekst);
+  const merknad = h('textarea', { id: 'merknad', rows: 3, maxlength: MAKS_MERKNAD, 'aria-describedby': 'merknad-hjelp' }, v.fritekst);
 
   const lagre = async () => {
     const { verdi, feil } = kontrollerElev({
@@ -225,7 +225,7 @@ export async function visElevSkjema(id, naviger) {
         h('div', { class: 'felt' },
           h('label', { for: 'merknad', class: 'feltnavn' }, 'Merknad (faste avtaler om henting)'),
           merknad),
-        h('p', { class: 'paminnelse' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
+        h('p', { class: 'paminnelse', id: 'merknad-hjelp' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
       h('div', { class: 'knappestabel' },
         h('button', { type: 'submit', class: 'knapp knapp-primar knapp-stor', id: 'lagre-elev' }, 'Lagre'),
         h('a', { class: 'knapp knapp-lenkeknapp', href: tilbake }, 'Avbryt'),

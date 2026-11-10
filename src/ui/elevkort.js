@@ -8,7 +8,7 @@ import { klokkeFra, klokkeslett, tidVerdiFra, tidspunktTekst } from '../dato.js'
 import { pilVenstre } from './felles.js';
 import { angreSiste, kanAngres, registrerFravaer, sjekkInn, sjekkUt } from './handlinger.js';
 
-const FANENAVN = { idag: 'I dag', andre: 'Andre', telling: 'Telling', elever: 'Elever', mer: 'Mer' };
+const FANENAVN = { idag: 'I dag', andre: 'Ikke inne', telling: 'Telling', elever: 'Elever', mer: 'Mer' };
 
 export async function visElevkort(id, { tilbake = 'idag' } = {}) {
   const d = await hentDag();
@@ -84,8 +84,7 @@ export async function visElevkort(id, { tilbake = 'idag' } = {}) {
       avtale?.fritekst ? h('div', { class: 'merknadsfelt' },
         h('span', { class: 'feltnavn' }, 'Merknad'),
         h('p', {}, avtale.fritekst)) : null,
-      avtale?.endretAv ? h('p', { class: 'dempet liten', id: 'avtale-endret' }, `Sist endret ${tidspunktTekst(avtale.endret)} av ${avtale.endretAv}`) : null,
-      h('p', { class: 'paminnelse' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
+      avtale?.endretAv ? h('p', { class: 'dempet liten', id: 'avtale-endret' }, `Sist endret ${tidspunktTekst(avtale.endret)} av ${avtale.endretAv}`) : null),
 
     h('section', { class: 'seksjon' },
       h('h2', { class: 'seksjonstittel' }, 'I dag'),

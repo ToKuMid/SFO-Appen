@@ -25,6 +25,8 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 - Git-hooken (`tools/hooks/pre-commit`) kjører personverntestene før hver commit. GitHub kjører alle testene ved hver push (`.github/workflows/tester.yml`).
 - Skal CSP-regelen eller nettverkskoden endres med vilje, må testen endres også, og DPIA-en vurderes på nytt.
 
+**Fanen «Andre» heter nå «Ikke inne» (versjon 0.9.3).** Adressen er fortsatt `#andre`, så lenker og bokmerker virker som før. Påminnelsen om hva som ikke skal stå i merknaden, vises nå bare der merknaden skrives (Rediger avtaler), ikke på elevkortet.
+
 **Avviksrapport (versjon 0.9.0, K-54) er bygget.** Den ligger under **Mer → Rapporter → Avviksrapport**.
 
 - Bare det som skal følges opp: avvik ved telling (med hvilke barn som manglet), ikke møtt, aldri registrert, ikke sjekket ut, dager uten telling og dager uten registreringer.
@@ -77,8 +79,8 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 
 | Krav | Hva | Hvor i appen |
 | --- | --- | --- |
-| K-10, K-19 | Ny dag og forventede fra ukeplanen, unntak for én dag | Automatisk. Unntak på elevkortet, og «Ikke SFO i dag» nederst på Andre. |
-| K-11 til K-13 | Statuser, hovedliste med teller og egen liste for resten | I dag (inne), Andre (forventet, sjekket ut, fravær, ikke SFO i dag) |
+| K-10, K-19 | Ny dag og forventede fra ukeplanen, unntak for én dag | Automatisk. Unntak på elevkortet, og «Ikke SFO i dag» nederst på Ikke inne. |
+| K-11 til K-13 | Statuser, hovedliste med teller og egen liste for resten | I dag (inne), Ikke inne (forventet, sjekket ut, fravær, ikke SFO i dag) |
 | K-14, K-17 | Inn og ut med ett trykk, flere ganger samme dag | Knapper i listene og på elevkortet |
 | K-15 | Angre og rette tidspunkt | «Angre» i meldingen etter hver handling, i listene og på elevkortet. «Rett tidspunkt» på elevkortet. Historikken viser angrede og rettede registreringer. |
 | K-16 | Varsel etter varseltidspunktet | Gul boks øverst på I dag. Kommer av seg selv når appen står åpen. |
@@ -253,7 +255,7 @@ Bruk testtelefonen med fiktive data. Testen tar 10–15 minutter og bør gjøres
 
 1. **Mer → Teknisk test og utviklerverktøy → Last inn fiktive testdata.**
 2. **I dag:** Skriv initialene dine i feltet «Initialer». Teller viser 0 inne og hvor mange som er forventet.
-3. **Andre:** Sjekk inn de fleste. Registrer fravær på én. La to stå.
+3. **Ikke inne:** Sjekk inn de fleste. Registrer fravær på én. La to stå.
 4. **Kl. 15.00:** Gå til I dag og vent. Den gule boksen med de to barna skal komme av seg selv. Sjekk inn ett av dem fra boksen.
 5. Sjekk ut ett barn, og trykk **Angre** i meldingen nederst. Barnet skal være inne igjen.
 6. **Telling:** Start telling, huk av alle unntatt ett, avslutt med avvik og skriv en kommentar. Tellingen skal stå under «Dagens tellinger».

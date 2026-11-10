@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.9.2';
+const APP_VERSJON = '0.9.3';
 const CACHE = `sfo-appen-${APP_VERSJON}`;
 
 // Alle filer appen trenger. En test sjekker at listen stemmer med filene i repoet.

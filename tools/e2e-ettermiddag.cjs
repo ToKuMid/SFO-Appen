@@ -30,7 +30,7 @@ const tall = (s) => Number(String(s).trim());
   await knapp('Last inn testdata');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
 
-  // 14.45: I dag – ingen inne, lenke til Andre
+  // 14.45: I dag – ingen inne, lenke til Ikke inne
   await page.clock.fastForward('05:00');
   await page.click('[data-fane=idag]');
   await page.waitForSelector('#antall-inne');
@@ -38,17 +38,18 @@ const tall = (s) => Number(String(s).trim());
   const forventetTekst = await page.textContent('.hovedtall-side');
   const forventet = Number(forventetTekst.match(/av (\d+) forventet/)[1]);
   ok(forventet > 5, `I dag: ${forventet} forventet etter ukeplan (K-10)`);
-  ok(await page.isVisible('.infolinje'), 'før varseltid: lenke «Sjekk inn under Andre» i stedet for varsel');
+  ok(/Sjekk inn under Ikke inne/.test(await page.textContent('.infolinje')), 'infolinja viser nytt fanenavn');
+  ok(await page.isVisible('.infolinje'), 'før varseltid: lenke «Sjekk inn under Ikke inne» i stedet for varsel');
   await page.screenshot({ path: `${SP}/1-idag-start.png` });
 
-  // Andre: sjekk inn alle unntatt tre, ett meldt fravær
+  // Ikke inne: sjekk inn alle unntatt tre, ett meldt fravær
   await page.click('[data-fane=andre]');
   await page.waitForSelector('#forventet');
   for (let i = 0; i < forventet - 3; i++) {
     await page.click('#forventet li:first-child button[data-handling=inn]');
     await page.waitForFunction((n) => document.querySelectorAll('#forventet li').length === n, forventet - i - 1);
   }
-  ok((await page.$$('#forventet li')).length === 3, 'Andre: tre forventede igjen etter innsjekk (K-14)');
+  ok((await page.$$('#forventet li')).length === 3, 'Ikke inne: tre forventede igjen etter innsjekk (K-14)');
   await page.click('#forventet li:first-child button[data-handling=fravaer]');
   await page.waitForSelector('#dialog[open] input[name=fravaertype]');
   ok(/Registreres av KT/.test(await page.textContent('#fravaer-initialer')), 'fravær får initialene fra opplåsingen (K-18)');
