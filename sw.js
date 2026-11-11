@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.12.4';
+const APP_VERSJON = '0.12.5';
 // Testmiljøet (…/SFO-Appen-test/) ligger på samme domene, og har derfor eget navn på hurtigbufferet.
 const PREFIKS = /\/sfo-appen-test\//i.test(self.location.pathname) ? 'sfo-appen-test-' : 'sfo-appen-';
 const CACHE = `${PREFIKS}${APP_VERSJON}`;

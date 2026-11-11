@@ -18,6 +18,10 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Test-appen og SFO-appen kan installeres på samme telefon (versjon 0.12.5).**
+
+- Test-appen har fått egen app-ID (`"id": "sfo-appen-test"` i `manifest-test.webmanifest`). Før fikk begge samme ID, fordi «id» tolkes fra roten av domenet, og Android sa at appen allerede var installert. SFO-appens ID er ikke endret.
+
 **Oppdatering henter alltid nye filer (versjon 0.12.4).**
 
 - Service workeren henter hver fil med versjonsnummeret i adressen (`?v=0.12.4`). GitHub Pages kan i noen minutter etter en push sende ut gamle filer fra mellomlageret sitt. Før kunne en ny versjon da bli lagret med gamle filer, og bare tømming av nettleserdata hjalp.

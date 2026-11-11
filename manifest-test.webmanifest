@@ -3,7 +3,7 @@
   "short_name": "SFO TEST",
   "description": "Inn- og utsjekk, fravær og telling på SFO. Testmiljø med fiktive data.",
   "lang": "nb",
-  "id": "./",
+  "id": "sfo-appen-test",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
