@@ -23,4 +23,8 @@ test('testmiljøet har egen database, eget hurtigbuffer og eget navn på hjemskj
   assert.equal(egenGammel('sfo-appen-0.12.3', 'sfo-appen-0.12.4'), true);
   const manifest = JSON.parse(readFileSync(new URL('../manifest-test.webmanifest', import.meta.url), 'utf8'));
   assert.equal(manifest.short_name, 'SFO TEST');
+  // Eget ikon med gul TEST-stripe, så appene ikke forveksles på hjemskjermen.
+  assert.ok(manifest.icons.length >= 3 && manifest.icons.every((i) => i.src.startsWith('icons/test-')));
+  const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /icons\/test-apple-touch\.png/);
 });

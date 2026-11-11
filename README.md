@@ -18,6 +18,12 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Oppdatering henter alltid nye filer (versjon 0.12.4).**
+
+- Service workeren henter hver fil med versjonsnummeret i adressen (`?v=0.12.4`). GitHub Pages kan i noen minutter etter en push sende ut gamle filer fra mellomlageret sitt. Før kunne en ny versjon da bli lagret med gamle filer, og bare tømming av nettleserdata hjalp.
+- Har versjonsfila likevel feil versjon, avbrytes installasjonen, og telefonen prøver igjen neste gang appen åpnes.
+- Test-appen har eget ikon med gul TEST-stripe (`icons/test-*.png`), så den ikke forveksles med SFO-appen på hjemskjermen. Installer test-appen på nytt for å få nytt ikon og navnet «SFO TEST».
+
 **Testmiljø og retting av sikkerhetskopi på Android (versjon 0.12.3).**
 
 - Testmiljø på egen adresse (`…/SFO-Appen-test/`) med gult TEST-banner, eget navn på hjemskjermen («SFO TEST»), egen database og eget hurtigbuffer. Se «Testmiljø» under.

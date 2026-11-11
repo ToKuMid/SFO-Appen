@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.12.3';
+const APP_VERSJON = '0.12.4';
 // Testmiljøet (…/SFO-Appen-test/) ligger på samme domene, og har derfor eget navn på hurtigbufferet.
 const PREFIKS = /\/sfo-appen-test\//i.test(self.location.pathname) ? 'sfo-appen-test-' : 'sfo-appen-';
 const CACHE = `${PREFIKS}${APP_VERSJON}`;
@@ -21,6 +21,10 @@ const FILER = [
   './icons/app-512.png',
   './icons/app-maskable-512.png',
   './icons/app-apple-touch.png',
+  './icons/test-192.png',
+  './icons/test-512.png',
+  './icons/test-maskable-512.png',
+  './icons/test-apple-touch.png',
   './icons/skolelogo.png',
   './src/style.css',
   './src/app.js',
@@ -64,10 +68,27 @@ const FILER = [
   './src/dev/testdata.js',
 ];
 
+// Hver fil hentes med versjonsnummeret i adressen (?v=0.12.4). GitHub Pages kan i noen minutter etter
+// en publisering sende ut gamle filer fra mellomlageret sitt. En ny adresse tvinger fram de nye filene,
+// slik at en ny versjon aldri blir lagret med gamle filer. Filene lagres under vanlig adresse.
+const medVersjon = (f) => `${f}${f.includes('?') ? '&' : '?'}v=${encodeURIComponent(APP_VERSJON)}`;
+
+async function hentFil(f) {
+  const svar = await fetch(new Request(medVersjon(f), { cache: 'reload' }));
+  if (!svar.ok) throw new Error(`${f}: ${svar.status}`);
+  return svar;
+}
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(FILER.map((f) => new Request(f, { cache: 'reload' }))))
-  );
+  event.waitUntil((async () => {
+    const svar = await Promise.all(FILER.map(hentFil));
+    // Ekstra kontroll: versjonsfila må ha samme versjon som service workeren. Ellers avbrytes
+    // installasjonen, og nettleseren prøver igjen neste gang appen åpnes.
+    const versjon = await svar[FILER.indexOf('./src/versjon.js')].clone().text();
+    if (!versjon.includes(`'${APP_VERSJON}'`)) throw new Error('Fikk gammel versjon av appens filer. Prøver igjen senere.');
+    const cache = await caches.open(CACHE);
+    await Promise.all(FILER.map((f, i) => cache.put(f, svar[i])));
+  })());
   // Ny versjon venter til brukeren trykker «Oppdater», så en registrering midt i noe ikke avbrytes.
 });
 

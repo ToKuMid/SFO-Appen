@@ -150,13 +150,15 @@ async function slettGammelHistorikk() {
   }
 }
 
-// Testmiljø: gult banner, eget navn i fanen og på hjemskjermen.
+// Testmiljø: gult banner, eget navn og ikon med gul TEST-stripe i fanen og på hjemskjermen.
 function visTestmiljo() {
   if (!ER_TEST) return;
   document.getElementById('test-banner').hidden = false;
   document.title = 'SFO TEST';
   document.querySelector('link[rel="manifest"]')?.setAttribute('href', 'manifest-test.webmanifest');
   document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', 'SFO TEST');
+  document.querySelector('link[rel="apple-touch-icon"]')?.setAttribute('href', 'icons/test-apple-touch.png');
+  document.querySelector('link[rel="icon"]')?.setAttribute('href', 'icons/test-192.png');
 }
 
 async function start() {
