@@ -6,6 +6,7 @@ import { elevStatus, gjeldendeHendelser, HENDELSE_TEKST, STATUS, STATUS_TEKST } 
 import { UKEDAGER } from '../model/elev.js';
 import { klokkeFra, klokkeslett, tidVerdiFra, tidspunktTekst } from '../dato.js';
 import { pilVenstre } from './felles.js';
+import { merknadIDag } from '../model/merknad.js';
 import { angreSiste, kanAngres, registrerFravaer, sjekkInn, sjekkUt } from './handlinger.js';
 
 const FANENAVN = { idag: 'I dag', andre: 'Ikke inne', telling: 'Telling', elever: 'Elever', mer: 'Mer' };
@@ -21,6 +22,7 @@ export async function visElevkort(id, { tilbake = 'idag' } = {}) {
   }
   const { elev, status } = rad;
   const avtale = d.avtaleFor.get(elev.id);
+  const merknad = merknadIDag(avtale, d.dato);
   const unntak = d.unntak.find((u) => u.elevId === elev.id);
   const dager = UKEDAGER.filter((u) => elev.ukedager?.includes(u.nr)).map((u) => u.navn).join(', ');
 
@@ -77,13 +79,14 @@ export async function visElevkort(id, { tilbake = 'idag' } = {}) {
       unntak ? h('p', { class: 'dempet liten' }, unntak.type === 'ikke-sfo' ? 'Unntak i dag: ikke SFO.' : 'Unntak i dag: ekstra SFO-dag.') : null,
       elev.aktiv === false ? h('p', { class: 'advarsel' }, 'Eleven er deaktivert.') : null),
 
+    merknad ? h('section', { class: 'kort merknad-i-dag', id: 'merknad-i-dag' },
+      h('h2', {}, 'Merknad i dag'),
+      h('p', {}, merknad)) : null,
+
     h('section', { class: 'kort' },
       h('h2', {}, 'Faste avtaler'),
       h('div', { class: 'felt-rad' }, h('span', {}, 'Går hjem alene'), h('strong', {}, avtale?.gaarHjemAleneFra ? `Fra ${klokkeslett(avtale.gaarHjemAleneFra)}` : 'Nei')),
       h('div', { class: 'felt-rad' }, h('span', {}, 'Fast hentetid'), h('strong', {}, avtale?.fastHentetid ? klokkeslett(avtale.fastHentetid) : '–')),
-      avtale?.fritekst ? h('div', { class: 'merknadsfelt' },
-        h('span', { class: 'feltnavn' }, 'Merknad'),
-        h('p', {}, avtale.fritekst)) : null,
       avtale?.endretAv ? h('p', { class: 'dempet liten', id: 'avtale-endret' }, `Sist endret ${tidspunktTekst(avtale.endret)} av ${avtale.endretAv}`) : null),
 
     h('section', { class: 'seksjon' },
@@ -103,7 +106,7 @@ export async function visElevkort(id, { tilbake = 'idag' } = {}) {
       hoved,
       h('div', { class: 'to-kolonner' },
         h('button', { type: 'button', class: 'knapp', id: 'rett-tid', disabled: rad.hendelser.length === 0, onclick: () => rettTid(rad) }, 'Rett tidspunkt'),
-        h('a', { class: 'knapp knapp-lenkeknapp', href: `#elever/${elev.id}`, id: 'rediger' }, 'Rediger avtaler')),
+        h('a', { class: 'knapp knapp-lenkeknapp', href: `#elever/${elev.id}`, id: 'rediger' }, 'Merknad og avtaler')),
       ekstra.length ? h('div', { class: 'knapperad' }, ekstra) : null),
   );
 }

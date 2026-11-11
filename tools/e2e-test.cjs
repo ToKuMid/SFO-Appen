@@ -217,8 +217,9 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   ok((await page.$$('#elevliste > li:not([hidden])')).length === 1, 'søk finner elev');
   await page.click('.sok-kryss');
   ok((await page.inputValue('#sok')) === '' && (await page.$$('#elevliste > li:not([hidden])')).length === 32 && await page.isHidden('.sok-kryss'), 'det røde krysset tømmer søket');
-  const navnIListe = await page.$$eval('#elevliste .navn', (l) => l.map((x) => x.textContent));
-  ok(JSON.stringify(navnIListe) === JSON.stringify([...navnIListe].sort((a, b) => a.localeCompare(b, 'nb'))), 'elevlista er sortert på fornavn');
+  const rekkefolge = await page.$$eval('#elevliste > li', (l) => l.map((x) => [Number(x.querySelector('.meta').textContent.match(/(\d)\. trinn/)[1]), x.querySelector('.navn').textContent]));
+  const sortertRiktig = rekkefolge.every((r, i) => i === 0 || rekkefolge[i - 1][0] < r[0] || (rekkefolge[i - 1][0] === r[0] && rekkefolge[i - 1][1].localeCompare(r[1], 'nb') <= 0));
+  ok(sortertRiktig && rekkefolge[0][0] === 1 && rekkefolge.at(-1)[0] === 4, 'elevlista er sortert på trinn, og på fornavn innad i trinnet');
 
   await page.click('#ny-elev');
   await page.waitForSelector('#lagre-elev');
@@ -255,12 +256,14 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.waitForSelector('#merknad');
   ok((await page.inputValue('#fornavn')) === 'Nyhilde', 'redigering viser lagrede verdier');
   ok(await page.isDisabled('#fornavn') && !(await page.isDisabled('#merknad')) && !(await page.$('#deaktiver')), 'uten administratorkode: navn låst, merknad åpen, ingen deaktivering');
-  await page.fill('#merknad', 'Hentes av tante på torsdager');
+  ok(/slettes når dagen avsluttes/.test(await page.textContent('#merknad-dag')), 'skjemaet sier at merknaden gjelder i dag');
+  await page.fill('#merknad', 'Hentes av tante i dag');
   await page.click('#lagre-elev');
   await page.waitForSelector('#kort-status');
+  ok(/Hentes av tante i dag/.test(await page.textContent('#merknad-i-dag')), 'elevkortet viser dagens merknad');
   await page.click('[data-fane=elever]');
   await page.waitForSelector('#elevliste');
-  ok(/Merknad/.test(await page.textContent('#elevliste a:has-text("Nyhilde")')), 'redigert elev lagret med merknad (K-03, K-40)');
+  ok(/Hentes av tante i dag/.test(await page.textContent('#elevliste a:has-text("Nyhilde") .rad-merknad')), 'merknaden står med tekst under navnet i lista (K-03, K-40)');
 
   await page.click('#elevliste a:has-text("Prøve Personsen")');
   await page.waitForSelector('#rediger');

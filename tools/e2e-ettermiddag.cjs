@@ -126,10 +126,21 @@ const tall = (s) => Number(String(s).trim());
   await page.waitForFunction(() => /Inne siden/.test(document.querySelector('#kort-status')?.textContent ?? ''));
   ok((await page.$$('#historikk li')).length >= 4, 'inn igjen etter ut samme dag (K-17)');
 
+  // Merknad for dagen (K-40): skrives på elevkortet og står med tekst under navnet på I dag
+  await page.click('#rediger');
+  await page.waitForSelector('#merknad');
+  await page.fill('#merknad', 'Hentes av bestemor i dag');
+  await page.click('#lagre-elev');
+  await page.waitForSelector('#merknad-i-dag');
+  ok(/Hentes av bestemor i dag/.test(await page.textContent('#merknad-i-dag')), 'merknaden vises på elevkortet');
+
   // 16.30: alle hentes, dagsavslutning (K-20)
   await page.clock.fastForward('01:30:00');
   await page.click('.tilbake');
   await page.waitForSelector('#antall-inne');
+  ok((await page.$$eval('#inne-liste .rad-merknad', (l) => l.map((x) => x.textContent))).includes('Hentes av bestemor i dag'), 'merknaden står med tekst under navnet på I dag');
+  const trinnIListe = await page.$$eval('#inne-liste .meta', (l) => l.map((x) => Number(x.textContent.match(/(\d)\. trinn/)[1])));
+  ok(trinnIListe.every((t, i) => i === 0 || trinnIListe[i - 1] <= t), 'I dag er sortert på trinn');
   while (await page.$('#inne-liste li button[data-handling=ut]')) {
     const n = tall(await page.textContent('#antall-inne'));
     await page.click('#inne-liste li:first-child button[data-handling=ut]');
@@ -152,11 +163,34 @@ const tall = (s) => Number(String(s).trim());
   await page.waitForSelector('#kopi-og-avslutt');
   const [kopiFil] = await Promise.all([page.waitForEvent('download'), page.click('#kopi-og-avslutt')]);
   ok(/^SFO-backup-2026-11-09\.json$/.test(kopiFil.suggestedFilename()), 'sikkerhetskopi lagres fra «Avslutt dagen»');
-  await page.waitForFunction(() => /Dagen er avsluttet/.test(document.querySelector('#melding')?.textContent ?? ''));
-  await page.click('#avslutt-dagen');
-  await page.waitForSelector('#dialog[open] #kopi-status');
-  ok(/✓ Sikkerhetskopi er tatt i dag kl\./.test(await page.textContent('#kopi-status')), 'avslutningen viser at kopien er tatt i dag');
-  await knapp('Tilbake');
+
+  // K-21: «Takk for i dag» med tall, avvik og sikkerhetskopi, uten navn
+  await page.waitForSelector('#ferdig-oppsummering');
+  await page.waitForFunction(() => location.hash === '#ferdig');
+  await page.waitForSelector('#ferdig-kopi-ok');
+  const ferdig = (await page.textContent('#ferdig')).replace(/\s+/g, ' ');
+  ok(/Dagen er avsluttet/.test(ferdig) && /Takk for i dag/.test(ferdig), '«Takk for i dag» vises etter avslutning (K-21)');
+  ok(/Møtt\s*\d+/.test(ferdig) && /Meldt fravær\s*1/.test(ferdig) && /1 forventet ble aldri registrert/.test(ferdig) && /1 av 1 telling hadde avvik/.test(ferdig), 'oppsummeringen viser møtt, fravær og avvik');
+  ok(/✓ Sikkerhetskopi tatt kl\./.test(ferdig), 'oppsummeringen bekrefter sikkerhetskopien');
+  const alleNavn = await page.evaluate(async () => (await (await import('/src/db.js')).hentAlle('elever')).flatMap((e) => [e.fornavn, e.etternavn]));
+  ok(!alleNavn.some((n) => ferdig.includes(n)), 'ingen navn på «Takk for i dag»');
+  await page.screenshot({ path: `${SP}/7b-takk-for-i-dag.png`, fullPage: true });
+  await page.click('#tilbake-idag');
+  await page.waitForSelector('#dag-avsluttet');
+  ok(/Dagen er avsluttet kl\./.test(await page.textContent('#dag-avsluttet')) && !(await page.$('#avslutt-dagen')), 'I dag viser at dagen er avsluttet');
+  await page.click('[data-fane=elever]');
+  await page.waitForSelector('#elevliste');
+  ok((await page.$$('#elevliste .rad-merknad')).length === 0, 'dagens merknader er slettet når dagen er avsluttet');
+
+  // Registrering etter avslutning krever bekreftelse (K-21)
+  await page.click('[data-fane=andre]');
+  await page.waitForSelector('#forventet li');
+  const forventetFor = (await page.$$('#forventet li')).length;
+  await page.click('#forventet li:first-child button[data-handling=inn]');
+  await page.waitForSelector('#dialog[open] #registrer-likevel');
+  await knapp('Avbryt');
+  await page.waitForTimeout(300);
+  ok((await page.$$('#forventet li')).length === forventetFor, '«Avbryt» etter avslutning registrerer ingenting');
 
   // Fra elevkortet: «Ikke SFO i dag» og fravær sender tilbake til I dag
   await page.click('[data-fane=andre]');
@@ -170,9 +204,12 @@ const tall = (s) => Number(String(s).trim());
   ok(true, '«Angre» i meldingen fjerner unntaket igjen');
   await page.click('#forventet li:first-child a.rad-lenke');
   await page.click('#kort-fravaer');
+  await page.click('#registrer-likevel');
   await knapp('Lagre fravær');
   await page.waitForFunction(() => location.hash === '#idag' && !!document.querySelector('#antall-inne'));
   ok(/meldt fravær/.test(await page.textContent('#melding')), 'fravær på elevkortet sender tilbake til I dag, med melding');
+  await page.waitForSelector('#dag-avsluttet.avsluttet-endret');
+  ok(/Endret etter avslutning/.test(await page.textContent('#dag-avsluttet')) && !!(await page.$('#avslutt-dagen')), 'etter registrering: «Endret etter avslutning» med knapp for å avslutte på nytt');
 
   // Grupperapport for dagen (K-50)
   await page.click('[data-fane=mer]');

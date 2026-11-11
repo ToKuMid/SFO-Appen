@@ -18,6 +18,13 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Dagsavslutning, merknad for dagen og sortering på trinn (versjon 0.13.0).**
+
+- **«Takk for i dag» (K-21):** Etter «Avslutt dagen» vises en egen side med hake, tall for møtt, meldt fravær og ikke møtt, avvik (aldri registrert, fortsatt inne, tellinger med avvik) og status for sikkerhetskopien. Siden viser bare tall, ingen navn. På I dag står det deretter «✓ Dagen er avsluttet kl. …».
+- **Registrering etter avslutning:** Inn, ut, fravær og angre spør først «Dagen er avsluttet. Vil du registrere likevel?». Etterpå står det «Endret etter avslutning» med knappen «Avslutt dagen på nytt».
+- **Merknad for dagen (K-40):** Merknaden er en beskjed for i dag, for eksempel fra Barn-nett. Den står med tekst under navnet i listene og øverst på elevkortet. Den slettes når dagen avsluttes, og senest ved første oppstart neste dag. Merknader fra før 0.13.0 slettes ved første oppstart. Excel-malen har ikke lenger kolonnen Merknad. Står den i en eldre fil, hoppes den over med en melding.
+- **Sortering:** Listene sorteres på trinn (1.–4.), og innad i trinnet på fornavn, så etternavn.
+
 **Manifestet velges av koden (versjon 0.12.6).**
 
 - `index.html` har ikke lenger en fast lenke til manifestet. `src/app.js` legger inn `manifest.webmanifest` eller `manifest-test.webmanifest` etter adressen. Før kunne Chrome lese SFO-appens manifest på test-adressen før koden rakk å bytte det, og test-appen fikk da samme app-ID som SFO-appen.

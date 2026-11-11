@@ -69,8 +69,11 @@ export function lagTestdata({ antall = 32, dager = 10, naa = new Date(), frø = 
         elevId: elev.id,
         gaarHjemAleneFra: trinn >= 3 && r() < 0.6 ? velg(['15:00', '15:30', '16:00']) : null,
         fastHentetid: r() < 0.5 ? velg(['15:30', '16:00', '16:30']) : null,
-        fritekst: r() < 0.4 ? velg(['Hentes av besteforeldre på fredager', 'Går til fotball kl. 16 på tirsdager']) : '',
+        // Merknad for i dag (model/merknad.js), som en beskjed fra Barn-nett.
+        fritekst: r() < 0.4 ? velg(['Hentes av bestemor i dag', 'Skal på fotball kl. 16 i dag']) : '',
       });
+      const a = avtaler[avtaler.length - 1];
+      a.fritekstDato = a.fritekst ? lokalDato(naa) : null;
     }
   }
 

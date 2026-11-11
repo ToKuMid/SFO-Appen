@@ -13,7 +13,7 @@ const MAL_FILNAVN = 'SFO-elevliste-mal.xlsx';
 /** Lagrer en tom Excel-mal med forklaring (kravspesifikasjonen kap. 7). */
 export async function hentMal() {
   const bytes = skrivXlsx([
-    { navn: 'Elever', rader: malRader(), frysForsteRad: true, bredder: [14, 16, 7, 16, 6, 6, 6, 6, 6, 18, 14, 40] },
+    { navn: 'Elever', rader: malRader(), frysForsteRad: true, bredder: [14, 16, 7, 16, 6, 6, 6, 6, 6, 18, 14] },
     { navn: 'Forklaring', rader: malForklaring(), bredder: [22, 9, 70, 30] },
   ]);
   const resultat = await lagreFilMedTrykk(bytes, MAL_FILNAVN, XLSX_TYPE);

@@ -31,10 +31,10 @@ const somRad = (e) => {
   const a = avtaleFor.get(e.id) ?? {};
   return [e.fornavn, e.etternavn, e.trinn, e.skolegruppe,
     ...[1, 2, 3, 4, 5].map((d) => (e.ukedager.includes(d) ? 'X' : '')),
-    a.gaarHjemAleneFra ?? '', a.fastHentetid ?? '', a.fritekst ?? ''];
+    a.gaarHjemAleneFra ?? '', a.fastHentetid ?? ''];
 };
 const xlsx = (rader) => skrivXlsx([
-  { navn: 'Elever', rader: [...malRader(), ...rader], frysForsteRad: true, bredder: [14, 16, 7, 16, 6, 6, 6, 6, 6, 18, 14, 40] },
+  { navn: 'Elever', rader: [...malRader(), ...rader], frysForsteRad: true, bredder: [14, 16, 7, 16, 6, 6, 6, 6, 6, 18, 14] },
   { navn: 'Forklaring', rader: malForklaring(), bredder: [22, 9, 70, 30] },
 ]);
 

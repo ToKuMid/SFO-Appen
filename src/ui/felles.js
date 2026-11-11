@@ -1,6 +1,7 @@
 // Felles byggeklosser for skjermene: topp med dato og overskrift, elevrader og brikker.
 import { h } from '../dom.js';
-import { datoTekst, klokkeTekst, klokkeslett } from '../dato.js';
+import { datoTekst, klokkeTekst, klokkeslett, lokalDato } from '../dato.js';
+import { merknadIDag } from '../model/merknad.js';
 
 /**
  * Topp på en skjerm: datolinje og stor overskrift (som i mockupen).
@@ -21,13 +22,12 @@ export function kortGruppe(gruppe) {
   return String(gruppe ?? '').replace(/^Gruppe /, 'Gr. ');
 }
 
-/** Brikker for faste avtaler (K-41): går hjem alene, fast hentetid, merknad. */
+/** Brikker for faste avtaler (K-41): går hjem alene, fast hentetid. Merknaden vises som tekst (elevRad). */
 export function avtaleBrikker(avtale) {
   if (!avtale) return [];
   return [
     avtale.gaarHjemAleneFra ? h('span', { class: 'chip chip-gronn' }, `Går alene ${klokkeslett(avtale.gaarHjemAleneFra)}`) : null,
     avtale.fastHentetid ? h('span', { class: 'chip' }, `Hentes ${klokkeslett(avtale.fastHentetid)}`) : null,
-    avtale.fritekst ? h('span', { class: 'chip' }, 'Merknad') : null,
   ].filter(Boolean);
 }
 
@@ -41,7 +41,9 @@ export function elevRad(elev, { avtale, ekstraMeta, meta, handling, lenke, klass
     h('div', { class: 'rad-meta' },
       h('span', { class: 'meta' }, meta ?? [`${elev.trinn}. trinn`, kortGruppe(elev.skolegruppe), ekstraMeta].filter(Boolean).join(' · ')),
       avtaleBrikker(avtale)),
-  ];
+    // Dagens merknad står med tekst under navnet (ønske fra SFO-leder).
+    merknadIDag(avtale, lokalDato()) ? h('p', { class: 'rad-merknad' }, merknadIDag(avtale, lokalDato())) : null,
+  ].filter(Boolean);
   const sok = `${elev.fornavn} ${elev.etternavn} ${elev.trinn}. trinn ${elev.skolegruppe}`.toLocaleLowerCase('nb');
   if (lenke && !handling) {
     return h('li', { 'data-sok': sok },
@@ -73,12 +75,11 @@ export function pilVenstre() {
   return svg;
 }
 
-/** Sorterer elever på trinn, etternavn og fornavn. */
+/** Sorterer elever på trinn (1.–4.), og innad i trinnet alfabetisk på fornavn, så etternavn (ønske fra SFO-leder). */
 export function sorterElever(elever) {
-  // Alfabetisk på fornavn, så etternavn og trinn (ønske fra piloten).
-  return [...elever].sort((a, b) => a.fornavn.localeCompare(b.fornavn, 'nb')
-    || a.etternavn.localeCompare(b.etternavn, 'nb')
-    || a.trinn - b.trinn);
+  return [...elever].sort((a, b) => a.trinn - b.trinn
+    || a.fornavn.localeCompare(b.fornavn, 'nb')
+    || a.etternavn.localeCompare(b.etternavn, 'nb'));
 }
 
 /** Søkefelt med rødt kryss til høyre som tømmer søket. Krysset vises bare når det står noe i feltet. */

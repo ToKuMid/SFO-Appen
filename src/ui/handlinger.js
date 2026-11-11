@@ -4,6 +4,7 @@ import { h, visDialog, visMelding } from '../dom.js';
 import { angre, ekstraDagOgInn, hentInitialer, registrer } from '../dag.js';
 import { klokkeFra } from '../dato.js';
 import { STATUS } from '../model/status.js';
+import { bekreftEtterAvslutning } from './avslutning.js';
 
 const navn = (e) => `${e.fornavn} ${e.etternavn}`;
 const ANGRE_GRENSE_MIN = 10;
@@ -12,18 +13,22 @@ function meldMedAngre(tekst, hendelse) {
   visMelding(tekst, 'ok', { handling: { tekst: 'Angre', onclick: () => angre(hendelse) } });
 }
 
+// Er dagen avsluttet, spør appen før hver registrering (K-21).
 export async function sjekkInn(rad) {
+  if (!(await bekreftEtterAvslutning())) return;
   const hd = rad.status === STATUS.IKKE_SFO ? await ekstraDagOgInn(rad.elev.id) : await registrer(rad.elev.id, 'inn');
   meldMedAngre(`${navn(rad.elev)} sjekket inn ${klokkeFra(hd.tid)}`, hd);
 }
 
 export async function sjekkUt(rad) {
+  if (!(await bekreftEtterAvslutning())) return;
   const hd = await registrer(rad.elev.id, 'ut');
   meldMedAngre(`${navn(rad.elev)} sjekket ut ${klokkeFra(hd.tid)}`, hd);
 }
 
 /** Fravær: meldt fravær eller ikke møtt, med initialer (K-11, K-18). Returnerer true hvis fraværet ble lagret. */
 export async function registrerFravaer(rad) {
+  if (!(await bekreftEtterAvslutning())) return false;
   const initialer = await hentInitialer();
   const valg = (verdi, tittel, tekst, valgt) => h('label', { class: 'radiovalg' },
     h('input', { type: 'radio', name: 'fravaertype', value: verdi, checked: valgt }),
@@ -47,6 +52,7 @@ export async function registrerFravaer(rad) {
 
 export async function angreSiste(rad) {
   if (!rad.siste) return;
+  if (!(await bekreftEtterAvslutning())) return;
   await angre(rad.siste);
   visMelding(`Angret for ${navn(rad.elev)}.`, 'ok');
 }

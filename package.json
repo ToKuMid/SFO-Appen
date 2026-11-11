@@ -1,6 +1,6 @@
 {
   "name": "sfo-appen",
-  "version": "0.12.6",
+  "version": "0.13.0",
   "private": true,
   "description": "Lokal webapp (PWA) for inn- og utsjekk, fravær og telling på SFO. Ingen data sendes over nett.",
   "type": "module",

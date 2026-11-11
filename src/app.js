@@ -14,12 +14,14 @@ import { visAvviksrapport } from './ui/avviksrapport.js';
 import { avsluttAdmin, startTilgang } from './ui/las.js';
 import { erAdmin } from './tilgang.js';
 import { kjorAutomatiskSletting } from './sletting.js';
+import { nullstillMerknader } from './merknad.js';
+import { visFerdig } from './ui/avslutning.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
 // Adresser: #idag, #andre, #telling, #elever, #elever/<id> (rediger), #elever/ny, #elev/<id> (elevkort), #mer,
 // #rapport/gruppe (grupperapport), #rapport/elev (velg elev), #rapport/elev/<id> (elevrapport),
-// #rapport/avvik (avviksrapport)
+// #rapport/avvik (avviksrapport), #ferdig («Takk for i dag» etter dagsavslutning)
 const SKJERMER = {
   idag: visIdag,
   andre: visAndre,
@@ -27,6 +29,7 @@ const SKJERMER = {
   elever: (param) => (param ? visElevSkjema(param, naviger) : visEleverListe()),
   elev: (param) => visElevkort(param, { tilbake: forrigeFane }),
   mer: () => visMer(oppfrisk),
+  ferdig: () => visFerdig(oppfrisk),
   rapport: (param) => {
     if (param?.startsWith('elev')) return visElevrapport(param.split('/')[1] ?? null, oppfrisk);
     if (param === 'avvik') return visAvviksrapport(oppfrisk);
@@ -57,7 +60,7 @@ async function visFane(fane, param = null, { behold = false } = {}) {
   aktivFane = fane in SKJERMER ? fane : 'idag';
   aktivParam = param;
   if (FANER.includes(aktivFane) && !param) forrigeFane = aktivFane;
-  const merketFane = aktivFane === 'elev' ? forrigeFane : aktivFane === 'rapport' ? 'mer' : aktivFane;
+  const merketFane = aktivFane === 'elev' ? forrigeFane : aktivFane === 'rapport' ? 'mer' : aktivFane === 'ferdig' ? 'idag' : aktivFane;
   for (const knapp of document.querySelectorAll('.fane')) {
     const valgt = knapp.dataset.fane === merketFane;
     knapp.classList.toggle('valgt', valgt);
@@ -142,11 +145,18 @@ function registrerServiceWorker() {
 }
 
 // K-63: gammel historikk slettes automatisk, høyst én gang per dag. Feil her stopper ikke appen.
+// Merknader fra tidligere dager slettes også her (ved oppstart og ved ny dag).
 async function slettGammelHistorikk() {
   try {
     await kjorAutomatiskSletting();
   } catch (e) {
     console.warn('Automatisk sletting feilet:', e);
+  }
+  // Merknader gjelder bare én dag. Ble ikke dagen avsluttet, slettes gårsdagens her.
+  try {
+    await nullstillMerknader();
+  } catch (e) {
+    console.warn('Sletting av merknader feilet:', e);
   }
 }
 

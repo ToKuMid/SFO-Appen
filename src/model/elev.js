@@ -118,8 +118,17 @@ export function kontrollerElev(inn) {
   };
 }
 
-/** Lager avtale-raden (K-41) for en elev, eller null hvis eleven ikke har faste avtaler. */
-export function avtaleFra(elevId, { gaarHjemAleneFra, fastHentetid, fritekst }) {
+/**
+ * Lager avtale-raden (K-41) for en elev, eller null hvis eleven verken har faste avtaler eller merknad.
+ * fritekstDato: datoen merknaden gjelder (model/merknad.js).
+ */
+export function avtaleFra(elevId, { gaarHjemAleneFra, fastHentetid, fritekst, fritekstDato = null }) {
   if (!gaarHjemAleneFra && !fastHentetid && !fritekst) return null;
-  return { elevId, gaarHjemAleneFra: gaarHjemAleneFra || null, fastHentetid: fastHentetid || null, fritekst: fritekst || '' };
+  return {
+    elevId,
+    gaarHjemAleneFra: gaarHjemAleneFra || null,
+    fastHentetid: fastHentetid || null,
+    fritekst: fritekst || '',
+    fritekstDato: fritekst ? fritekstDato : null,
+  };
 }

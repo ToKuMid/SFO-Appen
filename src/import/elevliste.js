@@ -17,8 +17,11 @@ export const MAL_KOLONNER = [
   ...UKEDAGER.map((d) => ({ nokkel: `dag${d.nr}`, navn: d.kort, pakrevd: true, alias: [d.navn] })),
   { nokkel: 'gaarHjemAleneFra', navn: 'Går hjem alene fra', pakrevd: false, alias: ['går hjem alene', 'går alene fra', 'gar hjem alene fra'] },
   { nokkel: 'fastHentetid', navn: 'Fast hentetid', pakrevd: false, alias: ['hentetid'] },
-  { nokkel: 'fritekst', navn: 'Merknad', pakrevd: false, alias: ['merknader', 'fast merknad'] },
 ];
+
+// Merknad er en beskjed for dagen og skrives i appen (model/merknad.js). Står kolonnen i en eldre fil,
+// hoppes den over med en melding.
+const MERKNAD_KOLONNER = ['merknad', 'merknader', 'fast merknad'];
 
 const norm = (v) => String(v ?? '').normalize('NFC').trim().replace(/\s+/g, ' ').toLocaleLowerCase('nb');
 const tom = (v) => v === '' || v === null || v === undefined || (typeof v === 'string' && v.trim() === '');
@@ -48,6 +51,7 @@ export function lesElevliste(ark) {
     if (!n) return;
     const k = MAL_KOLONNER.find((m) => norm(m.navn) === n || m.alias.includes(n));
     if (k && kolonneFor[k.nokkel] === undefined) kolonneFor[k.nokkel] = i;
+    else if (!k && MERKNAD_KOLONNER.includes(n)) advarsler.push(`Kolonnen «${c}» leses ikke. Merknader er beskjeder for dagen og skrives i appen.`);
     else if (!k) advarsler.push(`Kolonnen «${c}» er ukjent og blir ikke lest.`);
   });
   const mangler = MAL_KOLONNER.filter((k) => k.pakrevd && kolonneFor[k.nokkel] === undefined).map((k) => `«${k.navn}»`);
@@ -79,7 +83,6 @@ export function lesElevliste(ark) {
       ukedager,
       gaarHjemAleneFra: celle('gaarHjemAleneFra'),
       fastHentetid: celle('fastHentetid'),
-      fritekst: celle('fritekst'),
     });
     radFeil.push(...elevFeil);
 
@@ -139,7 +142,8 @@ export function planleggImport(importerte, elever, avtaler) {
 function avtaleLik(a, b) {
   return (a?.gaarHjemAleneFra ?? null) === (b?.gaarHjemAleneFra ?? null)
     && (a?.fastHentetid ?? null) === (b?.fastHentetid ?? null)
-    && (a?.fritekst ?? '') === (b?.fritekst ?? '');
+    && (a?.fritekst ?? '') === (b?.fritekst ?? '')
+    && (a?.fritekstDato ?? null) === (b?.fritekstDato ?? null);
 }
 
 /**
@@ -184,7 +188,8 @@ export function lagEndringer(plan, valg = {}, { nyId }) {
     matchet.add(elevId);
     const gammel = elevFor.get(elevId);
     const gammelAvtale = avtaleFor.get(elevId);
-    const nyAvtale = avtaleFra(elevId, imp);
+    // Dagens merknad står ikke i fila og beholdes som den er.
+    const nyAvtale = avtaleFra(elevId, { ...imp, fritekst: gammelAvtale?.fritekst ?? '', fritekstDato: gammelAvtale?.fritekstDato ?? null });
     const endringer = [];
     if (gammel.fornavn !== imp.fornavn || gammel.etternavn !== imp.etternavn) endringer.push('skrivemåte på navn');
     if (gammel.trinn !== imp.trinn) endringer.push(`trinn ${gammel.trinn} → ${imp.trinn}`);
@@ -192,7 +197,6 @@ export function lagEndringer(plan, valg = {}, { nyId }) {
     if ((gammel.ukedager ?? []).join() !== imp.ukedager.join()) endringer.push('SFO-dager');
     if ((gammelAvtale?.gaarHjemAleneFra ?? null) !== imp.gaarHjemAleneFra) endringer.push('går hjem alene');
     if ((gammelAvtale?.fastHentetid ?? null) !== imp.fastHentetid) endringer.push('fast hentetid');
-    if ((gammelAvtale?.fritekst ?? '') !== imp.fritekst) endringer.push('merknad');
     const varDeaktivert = gammel.aktiv === false;
 
     if (endringer.length || varDeaktivert) ut.elever.push({ ...gammel, ...felter, aktiv: true });
@@ -245,9 +249,9 @@ export function malForklaring() {
     ['Man, Tir, Ons, Tor, Fre', 'Ja', 'X de dagene eleven har SFO, ellers tom', 'X'],
     ['Går hjem alene fra', 'Nei', 'Klokkeslett eleven kan gå hjem alene fra', '15:30'],
     ['Fast hentetid', 'Nei', 'Klokkeslett eleven hentes fast', '16:00'],
-    ['Merknad', 'Nei', 'Faste avtaler om henting. IKKE helseopplysninger, barnevernssaker eller foreldretvister.', 'Hentes av besteforeldre på fredager'],
     [],
     ['Viktig', '', 'Lagre fila i skolens OneDrive, ikke på egen PC eller i e-post. Fila inneholder personopplysninger om barn.', ''],
+    ['', '', 'Merknader er beskjeder for dagen og skrives i appen, ikke i denne fila.', ''],
     ['', '', 'Ved ny import kobles elever på navn og trinn. Elever som ikke står i fila, blir deaktivert, men historikken beholdes.', ''],
   ];
 }

@@ -9,7 +9,7 @@ import { tolkKlokkeslett, tolkSkolegruppe, tolkTrinn, kontrollerElev } from '../
 const H = MAL_KOLONNER.map((k) => k.navn);
 const rad = (n, celler) => ({ rad: n, celler });
 const ark = (...rader) => ({ rader: [rad(1, H), ...rader.map((c, i) => rad(i + 2, c))] });
-// Fornavn, Etternavn, Trinn, Skolegruppe, Man, Tir, Ons, Tor, Fre, Går alene, Hentetid, Merknad
+// Fornavn, Etternavn, Trinn, Skolegruppe, Man, Tir, Ons, Tor, Fre, Går alene, Hentetid (+ en gammel Merknad-celle)
 const emma = ['Emma', 'Testesen', 3, 'Gruppe 1 blå', 'X', 'X', '', 'X', '', '15:30', '', ''];
 const noah = ['Noah', 'Prøvestad', 4, 'Gruppe 2 oppe', 'x', 'x', 'x', 'x', 'x', '', 0.6666666666666666, 'Hentes av mormor'];
 
@@ -58,7 +58,23 @@ test('leser gyldige rader med ukedager og avtaler', () => {
   assert.deepEqual(r.elever[0].ukedager, [1, 2, 4]);
   assert.equal(r.elever[0].gaarHjemAleneFra, '15:30');
   assert.equal(r.elever[1].fastHentetid, '16:00');
-  assert.equal(r.elever[1].fritekst, 'Hentes av mormor');
+  assert.equal(r.elever[1].fritekst, '', 'merknad leses ikke fra fila');
+});
+
+test('kolonnen «Merknad» i eldre filer leses ikke, men gir en forklarende melding', () => {
+  const r = lesElevliste({ rader: [rad(1, [...H, 'Merknad']), rad(2, noah)] });
+  assert.deepEqual(r.feil, []);
+  assert.equal(r.elever[0].fritekst, '');
+  assert.ok(r.advarsler.some((a) => /Merknad.*leses ikke.*beskjeder for dagen/.test(a)));
+  assert.ok(!H.includes('Merknad'), 'malen har ikke kolonnen Merknad');
+});
+
+test('import beholder dagens merknad', () => {
+  const elever = [{ id: 'n', fornavn: 'Noah', etternavn: 'Prøvestad', trinn: 4, skolegruppe: 'Gruppe 2 oppe', ukedager: [1, 2, 3, 4, 5], aktiv: true }];
+  const avtaler = [{ elevId: 'n', gaarHjemAleneFra: null, fastHentetid: '16:00', fritekst: 'Hentes av bestemor i dag', fritekstDato: '2026-11-12' }];
+  const plan = planleggImport(lesElevliste(ark(noah)).elever, elever, avtaler);
+  const e = lagEndringer(plan, {}, { nyId });
+  assert.equal(e.sammendrag.ingenEndringer, true);
 });
 
 test('tomme rader hoppes over, og overskrift kan ha en tittelrad over seg', () => {

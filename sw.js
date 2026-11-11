@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.12.6';
+const APP_VERSJON = '0.13.0';
 // Testmiljøet (…/SFO-Appen-test/) ligger på samme domene, og har derfor eget navn på hurtigbufferet.
 const PREFIKS = /\/sfo-appen-test\//i.test(self.location.pathname) ? 'sfo-appen-test-' : 'sfo-appen-';
 const CACHE = `${PREFIKS}${APP_VERSJON}`;
@@ -48,6 +48,10 @@ const FILER = [
   './src/ui/telling.js',
   './src/ui/handlinger.js',
   './src/ui/sikkerhetskopi.js',
+  './src/ui/avslutning.js',
+  './src/merknad.js',
+  './src/model/merknad.js',
+  './src/model/avslutning.js',
   './src/model/status.js',
   './src/model/rapport.js',
   './src/ui/rapport.js',

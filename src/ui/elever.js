@@ -9,6 +9,8 @@ import { elevRad, pilVenstre, skjermTopp, sokMedKryss, sorterElever } from './fe
 import { krevAdmin } from './las.js';
 import { hentInitialer } from '../dag.js';
 import { erAdmin } from '../tilgang.js';
+import { lokalDato } from '../dato.js';
+import { merknadIDag } from '../model/merknad.js';
 
 // ---------- Liste ----------
 
@@ -57,7 +59,7 @@ export async function visEleverListe() {
 export async function visElevSkjema(id, naviger) {
   const ny = id === 'ny';
   // Navn, trinn, gruppe, SFO-dager og deaktivering krever administratorkode (K-72).
-  // Faste avtaler og merknad kan alle ansatte endre.
+  // Faste avtaler og dagens merknad kan alle ansatte endre.
   const admin = erAdmin();
   if (ny && !admin) {
     return h('div', { class: 'skjerm' },
@@ -85,7 +87,8 @@ export async function visElevSkjema(id, naviger) {
     ukedager: elev?.ukedager ?? [],
     gaarHjemAleneFra: avtale?.gaarHjemAleneFra ?? '',
     fastHentetid: avtale?.fastHentetid ?? '',
-    fritekst: avtale?.fritekst ?? '',
+    // Merknaden gjelder bare i dag (model/merknad.js). En merknad fra en annen dag vises ikke.
+    fritekst: merknadIDag(avtale, lokalDato()),
   };
 
   const feilboks = h('div', { class: 'feilboks', role: 'alert', hidden: true });
@@ -161,9 +164,9 @@ export async function visElevSkjema(id, naviger) {
     };
     // Hvem som endret sist (K-18). Avtalen får egne felter, så det synes hvem som endret avtalene.
     const stempel = { endretAv: await hentInitialer(), endret: new Date().toISOString() };
-    const gammelAvtale = avtale ? { gaarHjemAleneFra: avtale.gaarHjemAleneFra, fastHentetid: avtale.fastHentetid, fritekst: avtale.fritekst } : null;
-    const avtaleUten = avtaleFra(elevId, verdi);
-    const avtaleEndret = JSON.stringify(gammelAvtale) !== JSON.stringify(avtaleUten && { gaarHjemAleneFra: avtaleUten.gaarHjemAleneFra, fastHentetid: avtaleUten.fastHentetid, fritekst: avtaleUten.fritekst });
+    const felt = (a) => a && { gaarHjemAleneFra: a.gaarHjemAleneFra ?? null, fastHentetid: a.fastHentetid ?? null, fritekst: merknadIDag(a, lokalDato()) };
+    const avtaleUten = avtaleFra(elevId, { ...verdi, fritekstDato: verdi.fritekst ? lokalDato() : null });
+    const avtaleEndret = JSON.stringify(felt(avtale) ?? null) !== JSON.stringify(felt(avtaleUten) ?? null);
     const nyAvtale = avtaleUten && (avtaleEndret ? { ...avtaleUten, ...stempel } : { ...avtaleUten, endretAv: avtale?.endretAv ?? null, endret: avtale?.endret ?? null });
     const elevEndret = ny || ['fornavn', 'etternavn', 'trinn', 'skolegruppe'].some((k) => elev[k] !== nyElev[k]) || (elev.ukedager ?? []).join() !== nyElev.ukedager.join();
     if (elevEndret) Object.assign(nyElev, stempel);
@@ -217,14 +220,15 @@ export async function visElevSkjema(id, naviger) {
             onclick: async () => { if (await krevAdmin('Endring av elevopplysninger krever administratorkode.')) naviger(`elever/${id}`); },
           }, 'Endre elevopplysninger'))),
       h('section', { class: 'kort' },
-        h('h2', {}, 'Faste avtaler'),
+        h('h2', {}, 'Faste avtaler og merknad'),
         h('div', { class: 'to-kolonner' },
           h('div', { class: 'felt' }, h('label', { for: 'alene', class: 'feltnavn' }, 'Går hjem alene fra'), alene),
           h('div', { class: 'felt' }, h('label', { for: 'hentetid', class: 'feltnavn' }, 'Fast hentetid'), hentetid)),
         h('p', { class: 'dempet liten' }, 'La feltene stå tomme hvis eleven ikke har slike avtaler.'),
         h('div', { class: 'felt' },
-          h('label', { for: 'merknad', class: 'feltnavn' }, 'Merknad (faste avtaler om henting)'),
+          h('label', { for: 'merknad', class: 'feltnavn' }, 'Merknad i dag'),
           merknad),
+        h('p', { class: 'dempet liten', id: 'merknad-dag' }, 'Beskjed for i dag, for eksempel fra Barn-nett. Merknaden slettes når dagen avsluttes.'),
         h('p', { class: 'paminnelse', id: 'merknad-hjelp' }, 'Ikke skriv helseopplysninger, barnevernssaker eller foreldretvister her.')),
       h('div', { class: 'knappestabel' },
         h('button', { type: 'submit', class: 'knapp knapp-primar knapp-stor', id: 'lagre-elev' }, 'Lagre'),

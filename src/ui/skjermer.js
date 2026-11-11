@@ -1,5 +1,5 @@
 // Skjermene «I dag» og «Ikke inne» (adresse #andre) (K-12, K-13, K-16, K-20). Utseende og flyt som i mockupen.
-import { h, visDialog, visMelding } from '../dom.js';
+import { h, visDialog } from '../dom.js';
 import { hentDag } from '../dag.js';
 import { aktiveInitialer, byttInitialer } from './las.js';
 import { hentInnstilling } from '../db.js';
@@ -8,6 +8,7 @@ import { STATUS } from '../model/status.js';
 import { elevRad, kortGruppe, skjermTopp, sokMedKryss, sorterElever } from './felles.js';
 import { kanAngres, knappAngre, knappFravaer, knappSjekkInn, knappSjekkUt } from './handlinger.js';
 import { delKopi, lagKopi } from './sikkerhetskopi.js';
+import { hentAvslutning, registrerAvslutning } from './avslutning.js';
 
 // Søketeksten huskes når skjermen tegnes på nytt etter en inn- eller utsjekk.
 let sokTekst = '';
@@ -42,6 +43,7 @@ function filtrer(liste, tekst) {
 export async function visIdag() {
   const d = await hentDag();
   const { tall, etterStatus, avtaleFor } = d;
+  const avsluttet = await hentAvslutning(d);
   const inne = sorter(etterStatus[STATUS.INNE]);
   const initialer = aktiveInitialer() ?? '';
 
@@ -54,6 +56,7 @@ export async function visIdag() {
 
   const varselListe = d.uregistrert.length ? h('ul', { class: 'liste varsel-liste', id: 'varsel-liste' },
     sorter(d.uregistrert).map((r) => elevRad(r.elev, {
+      avtale: avtaleFor.get(r.elev.id),
       meta: `${r.elev.trinn}. trinn · ${kortGruppe(r.elev.skolegruppe)} · forventet`,
       lenke: lenkeTil(r),
       handling: knappSjekkInn(r, { stil: 'knapp-varsel' }),
@@ -108,8 +111,23 @@ export async function visIdag() {
     h('p', { class: 'seksjonstittel' }, `Inne (${tall.inne})`),
     inne.length ? inneListe : h('p', { class: 'dempet' }, tall.forventet ? 'Ingen barn er sjekket inn ennå.' : 'Ingen barn er forventet i dag.'),
 
-    h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'avslutt-dagen', onclick: () => dagsavslutning() }, 'Avslutt dagen'),
+    avslutningsfelt(avsluttet),
   );
+}
+
+// K-21: etter avslutning står det et grønt felt i stedet for «Avslutt dagen». Er noe registrert etterpå,
+// ber feltet om å avslutte på nytt.
+function avslutningsfelt(avsluttet) {
+  const knapp = (tekst) => h('button', { type: 'button', class: 'knapp knapp-lenke', id: 'avslutt-dagen', onclick: () => dagsavslutning() }, tekst);
+  if (!avsluttet) return knapp('Avslutt dagen');
+  if (avsluttet.endretEtter) {
+    return h('div', { class: 'avsluttet-felt avsluttet-endret', id: 'dag-avsluttet' },
+      h('p', {}, 'Endret etter avslutning.'),
+      knapp('Avslutt dagen på nytt'));
+  }
+  return h('a', { class: 'avsluttet-felt', href: '#ferdig', id: 'dag-avsluttet' },
+    h('span', {}, `✓ Dagen er avsluttet kl. ${klokkeFra(avsluttet.tid)}`),
+    h('span', { class: 'avsluttet-lenke' }, 'Vis oppsummering'));
 }
 
 // ---------- Ikke inne (#andre) ----------
@@ -203,8 +221,6 @@ async function dagsavslutning() {
 
   if (svar === 'kopi' && deling) {
     await deling;
-  } else if (svar === 'avslutt') {
-    visMelding('Dagen er avsluttet.', 'ok');
   } else if (svar === 'uten') {
     // Mer enn en uke uten sikkerhetskopi: be om en ekstra bekreftelse.
     if (dagerSiden === null || dagerSiden > 7) {
@@ -217,7 +233,12 @@ async function dagsavslutning() {
       });
       if (bekreft !== 'ja') return;
     }
-    visMelding('Dagen er avsluttet uten sikkerhetskopi.', 'advarsel');
+  }
+  if (['kopi', 'avslutt', 'uten'].includes(svar)) {
+    // K-21: lagre avslutningen, slett dagens merknader og vis «Takk for i dag».
+    await registrerAvslutning();
+    location.hash = 'ferdig';
+    return;
   }
   window.dispatchEvent(new Event('sfo:endret'));
 }

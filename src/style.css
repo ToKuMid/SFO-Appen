@@ -572,6 +572,51 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid var(--primar); 
 }
 .infolinje-handling { color: var(--primar); font-weight: 600; white-space: nowrap; }
 
+/* Dagens merknad under navnet i listene (model/merknad.js) */
+.rad-merknad {
+  margin: 0.25rem 0 0;
+  padding: 0.25rem 0.5rem;
+  border-left: 3px solid var(--varsel-kant);
+  background: var(--varsel-bakgrunn);
+  color: var(--varsel-tekst);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.merknad-i-dag { border-color: var(--varsel-kant); background: var(--varsel-bakgrunn); }
+.merknad-i-dag h2 { color: var(--varsel-tekst); }
+.merknad-i-dag p { margin: 0; overflow-wrap: anywhere; }
+
+/* K-21: dagen er avsluttet (I dag) og «Takk for i dag» (#ferdig) */
+.avsluttet-felt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  min-height: var(--trykk);
+  padding: 0.625rem 0.875rem;
+  border-radius: 12px;
+  background: var(--primar-svak);
+  color: var(--primar-svak-tekst);
+  font-weight: 600;
+  text-decoration: none;
+}
+.avsluttet-felt p { margin: 0; }
+.avsluttet-lenke { font-weight: 500; text-decoration: underline; white-space: nowrap; }
+.avsluttet-endret { background: var(--varsel-bakgrunn); color: var(--varsel-tekst); border: 1px solid var(--varsel-kant); }
+.ferdig-topp { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.25rem; padding: 1rem 0 0.5rem; }
+.ferdig-ikon { width: 72px; height: 72px; }
+.ferdig-ikon circle { fill: var(--primar); }
+.ferdig-ikon path { fill: none; stroke: var(--primar-tekst); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.ferdig-tallrad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0; }
+.ferdig-tall { display: flex; flex-direction: column-reverse; align-items: center; padding: 0.5rem; border-radius: 10px; background: var(--flate-dempet); text-align: center; }
+.ferdig-tall dt { font-size: 0.8125rem; color: var(--dempet); }
+.ferdig-tall dd { margin: 0; font-family: var(--skrift-tittel); font-size: 1.75rem; font-weight: 600; }
+.ferdig-undertittel { margin: 0.75rem 0 0.25rem; font-size: 0.9375rem; }
+.ferdig-avvik { margin: 0; padding-left: 1.25rem; color: var(--varsel-tekst); }
+
 .sokerad { display: flex; gap: 0.625rem; align-items: flex-end; }
 .sok-felt { flex: 1 1 auto; }
 .init-felt { flex: 0 0 5.5rem; }
