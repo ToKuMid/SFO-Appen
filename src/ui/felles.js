@@ -75,7 +75,22 @@ export function pilVenstre() {
 
 /** Sorterer elever på trinn, etternavn og fornavn. */
 export function sorterElever(elever) {
-  return [...elever].sort((a, b) => a.trinn - b.trinn
+  // Alfabetisk på fornavn, så etternavn og trinn (ønske fra piloten).
+  return [...elever].sort((a, b) => a.fornavn.localeCompare(b.fornavn, 'nb')
     || a.etternavn.localeCompare(b.etternavn, 'nb')
-    || a.fornavn.localeCompare(b.fornavn, 'nb'));
+    || a.trinn - b.trinn);
+}
+
+/** Søkefelt med rødt kryss til høyre som tømmer søket. Krysset vises bare når det står noe i feltet. */
+export function sokMedKryss(input) {
+  const kryss = h('button', {
+    type: 'button', class: 'sok-kryss', 'aria-label': 'Tøm søket', hidden: !input.value,
+    onclick: () => {
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    },
+  }, '×');
+  input.addEventListener('input', () => { kryss.hidden = !input.value; });
+  return h('div', { class: 'sok-boks' }, input, kryss);
 }

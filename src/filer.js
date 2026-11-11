@@ -15,7 +15,11 @@ export function skrivUt() {
  * Lagrer en fil.
  * 1. Delingsarket (iPhone: «Arkiver i Filer» → OneDrive. Android: OneDrive-appen) hvis støttet.
  * 2. Ellers vanlig nedlasting (Android: Nedlastinger-mappen).
- * innhold: tekst eller Uint8Array. Returnerer 'delt', 'lastet-ned' eller 'avbrutt'.
+ * innhold: tekst eller Uint8Array. Returnerer 'delt', 'lastet-ned', 'avbrutt' eller 'trenger-trykk'.
+ * 'trenger-trykk': nettleseren avviste delingsarket fordi det ikke kom rett etter et trykk
+ * (Safari på iPhone er streng på dette). Da må brukeren trykke én gang til.
+ * NB: Delingsarket åpnes før første await her. Kall derfor lagreFil direkte fra et trykk,
+ * med innholdet ferdig laget på forhånd.
  */
 export async function lagreFil(innhold, navn, type = 'application/json') {
   const fil = new File([innhold], navn, { type });
@@ -26,6 +30,7 @@ export async function lagreFil(innhold, navn, type = 'application/json') {
       return 'delt';
     } catch (e) {
       if (e.name === 'AbortError') return 'avbrutt';
+      if (e.name === 'NotAllowedError') return 'trenger-trykk';
       // Deling feilet av annen grunn: prøv nedlasting i stedet.
     }
   }

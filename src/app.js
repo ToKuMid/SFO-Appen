@@ -12,6 +12,7 @@ import { visElevrapport } from './ui/elevrapport.js';
 import { visAvviksrapport } from './ui/avviksrapport.js';
 import { avsluttAdmin, startTilgang } from './ui/las.js';
 import { erAdmin } from './tilgang.js';
+import { kjorAutomatiskSletting } from './sletting.js';
 
 const oppfrisk = () => visFane(aktivFane, aktivParam, { behold: true });
 
@@ -86,7 +87,7 @@ async function visFane(fane, param = null, { behold = false } = {}) {
 // Det skjer ikke mens noen skriver i et felt eller har en dialog åpen.
 function oppdaterTid() {
   if (lokalDato() !== visningsdato) {
-    oppfrisk();
+    slettGammelHistorikk().then(oppfrisk);
     return;
   }
   const klokke = document.getElementById('klokke');
@@ -139,6 +140,15 @@ function registrerServiceWorker() {
   });
 }
 
+// K-63: gammel historikk slettes automatisk, høyst én gang per dag. Feil her stopper ikke appen.
+async function slettGammelHistorikk() {
+  try {
+    await kjorAutomatiskSletting();
+  } catch (e) {
+    console.warn('Automatisk sletting feilet:', e);
+  }
+}
+
 async function start() {
   for (const knapp of document.querySelectorAll('.fane')) {
     knapp.addEventListener('click', () => naviger(knapp.dataset.fane));
@@ -164,6 +174,7 @@ async function start() {
     await apneDb();
     if ((await hentInnstilling('dataversjon')) === undefined) await lagreInnstilling('dataversjon', DATAVERSJON);
     await beOmVedvarendeLagring();
+    await slettGammelHistorikk();
   } catch (e) {
     visMelding(`Databasen kunne ikke åpnes: ${e.message}`, 'feil');
   }

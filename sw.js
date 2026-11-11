@@ -4,7 +4,7 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.9.3';
+const APP_VERSJON = '0.12.2';
 const CACHE = `sfo-appen-${APP_VERSJON}`;
 
 // Alle filer appen trenger. En test sjekker at listen stemmer med filene i repoet.
@@ -26,6 +26,7 @@ const FILER = [
   './src/dato.js',
   './src/dom.js',
   './src/kode.js',
+  './src/kryptering.js',
   './src/tilgang.js',
   './src/ui/las.js',
   './src/plattform.js',
@@ -36,12 +37,16 @@ const FILER = [
   './src/ui/elevkort.js',
   './src/ui/telling.js',
   './src/ui/handlinger.js',
+  './src/ui/sikkerhetskopi.js',
   './src/model/status.js',
   './src/model/rapport.js',
   './src/ui/rapport.js',
+  './src/ui/rapportfelles.js',
   './src/ui/elevrapport.js',
   './src/ui/avviksrapport.js',
   './src/dag.js',
+  './src/sletting.js',
+  './src/model/sletting.js',
   './src/ui/import.js',
   './src/model/elev.js',
   './src/import/xlsx.js',

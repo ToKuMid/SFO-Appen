@@ -5,7 +5,7 @@ import { hent, hentAlle, nyId, utforEndringer } from '../db.js';
 import {
   ALLE_SKOLEGRUPPER, MAKS_MERKNAD, SKOLEGRUPPER, UKEDAGER, avtaleFra, kontrollerElev, navnNokkel,
 } from '../model/elev.js';
-import { elevRad, pilVenstre, skjermTopp, sorterElever } from './felles.js';
+import { elevRad, pilVenstre, skjermTopp, sokMedKryss, sorterElever } from './felles.js';
 import { krevAdmin } from './las.js';
 import { hentInitialer } from '../dag.js';
 import { erAdmin } from '../tilgang.js';
@@ -41,7 +41,7 @@ export async function visEleverListe() {
       h('a', { class: 'knapp knapp-primar knapp-stor knapp-lenkeknapp', href: '#elever/ny', id: 'ny-elev' }, 'Legg til elev')),
     aktive.length > 0 ? h('div', { class: 'felt' },
       h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter elev'),
-      sok) : null,
+      sokMedKryss(sok)) : null,
     aktive.length === 0
       ? h('section', { class: 'kort' }, h('p', { class: 'dempet' }, 'Ingen elever ennå. Legg til elever her, eller importer elevlista fra Excel under Mer.'))
       : [h('p', { class: 'seksjonstittel' }, `Aktive (${aktive.length})`), liste, ingenTreff],

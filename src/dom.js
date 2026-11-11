@@ -36,7 +36,9 @@ function leggTil(el, barn) {
 
 /**
  * Viser en modal dialog og venter på valg.
- * knapper: [{ tekst, verdi, type: 'primar' | 'fare' | undefined }]
+ * knapper: [{ tekst, verdi, type: 'primar' | 'fare' | undefined, vedTrykk, id }]
+ * vedTrykk kjøres med en gang i trykket, før dialogen lukkes. Brukes til delingsarket, som må
+ * åpnes direkte fra et trykk.
  * Returnerer verdien til knappen som ble trykket, eller null ved Esc.
  */
 export async function visDialog({ tittel, innhold = [], knapper = [{ tekst: 'OK', verdi: true, type: 'primar' }] }) {
@@ -51,7 +53,8 @@ export async function visDialog({ tittel, innhold = [], knapper = [{ tekst: 'OK'
         type: 'button',
         class: `knapp ${k.type === 'primar' ? 'knapp-primar' : ''} ${k.type === 'fare' ? 'knapp-fare' : ''}`,
         'data-verdi': String(k.verdi),
-        onclick: () => dialog.close(String(k.verdi)),
+        id: k.id,
+        onclick: () => { k.vedTrykk?.(); dialog.close(String(k.verdi)); },
       }, k.tekst))),
   );
   return new Promise((resolve) => {

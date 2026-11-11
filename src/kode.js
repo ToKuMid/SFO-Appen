@@ -10,7 +10,7 @@ export const ITERASJONER = 100000;
 
 // Innstillinger som hører til tilgang og til denne telefonen. De tas ikke med i sikkerhetskopien,
 // og beholdes ved gjenoppretting, testdata og «slett alle data».
-export const KODE_NOKLER = ['kode-ansatt', 'kode-admin', 'kode-feil-ansatt', 'kode-feil-admin', 'sisteInitialer'];
+export const KODE_NOKLER = ['kode-ansatt', 'kode-admin', 'kode-feil-ansatt', 'kode-feil-admin', 'sisteInitialer', 'kopi-nokkel'];
 export const erKodeNokkel = (nokkel) => KODE_NOKLER.includes(nokkel);
 
 const tilBase64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes)));

@@ -1,11 +1,14 @@
 // Fanen «Mer»: sikkerhetskopi (K-60–K-62), elevliste, innstillinger, teknisk test og utviklerverktøy.
 import { h, visDialog, visMelding } from '../dom.js';
 import {
-  DATAVERSJON, erstattAltInnhold, hentAlle, hentAltInnhold, hentInnstilling, lagreInnstilling, slettAltInnhold, tell,
+  DATAVERSJON, erstattAltInnhold, hentAlle, hentInnstilling, lagreInnstilling, slettAltInnhold, tell,
 } from '../db.js';
-import { byggSikkerhetskopi, filnavn, kontroller, lesTekst, oppsummer } from '../backup.js';
-import { lagreFil, velgFil } from '../filer.js';
-import { dagerMellom, klokkeslett, kortDato, tidspunktTekst } from '../dato.js';
+import { kontroller, lesTekst, oppsummer } from '../backup.js';
+import { byttPassord, dekrypterKopi, erKryptert, kontrollerPassord, lagNokkel, MIN_PASSORD } from '../kryptering.js';
+import { velgFil } from '../filer.js';
+import { dagerMellom, klokkeslett, kortDato, langDato, lokalDato, tidspunktTekst } from '../dato.js';
+import { slettegrense } from '../model/sletting.js';
+import { lagSlettePlan, utforSletting } from '../sletting.js';
 import { sjekkPlattform, testSkjermlas } from '../plattform.js';
 import { lagTestdata } from '../dev/testdata.js';
 import { APP_VERSJON } from '../versjon.js';
@@ -14,6 +17,7 @@ import { hentMal, importerElevliste } from './import.js';
 import { avsluttAdmin, byttKode, krevAdmin, laas } from './las.js';
 import { erAdmin } from '../tilgang.js';
 import { skrivUt } from '../filer.js';
+import { kopiKnapp } from './sikkerhetskopi.js';
 
 // Husker om «Teknisk test og utviklerverktøy» er åpen når skjermen tegnes på nytt.
 let tekniskApen = false;
@@ -22,15 +26,15 @@ let tekniskApen = false;
 const VARSELTIDER = ['14:50', '14:55', '15:00', '15:05', '15:10', '15:15', '15:20', '15:25', '15:30'];
 
 export async function visMer(oppfrisk) {
-  const [elever, siste, testdata, varsel, sisteImport] = await Promise.all([
+  const [elever, siste, testdata, varsel, sisteImport, lagringSkoleaar, sisteSletting, kopiNokkel] = await Promise.all([
     hentAlle('elever'), hentInnstilling('sisteSikkerhetskopi'), hentInnstilling('testdata'), hentInnstilling('varseltidspunkt'),
-    hentInnstilling('sisteImport'),
+    hentInnstilling('sisteImport'), hentInnstilling('lagringSkoleaar'), hentInnstilling('sisteSletting'), hentInnstilling('kopi-nokkel'),
   ]);
   const aktive = elever.filter((e) => e.aktiv !== false).length;
 
   return h('div', { class: 'skjerm' },
     skjermTopp({ tittel: 'Mer', visDato: false }),
-    seksjonSikkerhetskopi(siste, oppfrisk),
+    seksjonSikkerhetskopi(siste, !!kopiNokkel, oppfrisk),
     h('section', { class: 'kort' },
       h('h2', {}, 'Elevliste'),
       h('p', {}, [`${aktive} aktive elever`, testdata ? 'fiktive testdata' : null, sisteImport ? `sist importert ${kortDato(sisteImport)}` : null].filter(Boolean).join(' · ')),
@@ -49,8 +53,9 @@ export async function visMer(oppfrisk) {
             visMelding(`Varselet kommer kl. ${klokkeslett(e.target.value)}.`, 'ok');
           },
         }, VARSELTIDER.map((t) => h('option', { value: t, selected: t === varsel }, klokkeslett(t))))),
+      historikkInnstilling(lagringSkoleaar, sisteSletting, oppfrisk),
     ),
-    seksjonTilgang(oppfrisk),
+    seksjonTilgang(!!kopiNokkel, oppfrisk),
     h('section', { class: 'kort' },
       h('h2', {}, 'Rapporter'),
       h('a', { class: 'knapp knapp-omriss knapp-lenkeknapp', href: '#rapport/gruppe', id: 'apne-grupperapport' }, 'Grupperapport'),
@@ -63,9 +68,48 @@ export async function visMer(oppfrisk) {
   );
 }
 
+// ---------- Historikk (K-63) ----------
+
+const SKOLEAAR_TEKST = { 2: 'Inneværende og forrige skoleår', 1: 'Bare inneværende skoleår' };
+
+function historikkInnstilling(lagringSkoleaar, sisteSletting, oppfrisk) {
+  const grense = slettegrense(lokalDato(), lagringSkoleaar);
+  const antall = sisteSletting?.antall;
+  const slettetSist = antall ? (antall.hendelser + antall.tellinger + antall.unntak + antall.elever) : 0;
+  const velger = h('select', {
+    id: 'lagring',
+    onchange: async (e) => {
+      const ny = Number(e.target.value);
+      if (!(await krevAdmin('Endring av lagringstid krever administratorkode.'))) { e.target.value = String(lagringSkoleaar); return; }
+      const plan = await lagSlettePlan(slettegrense(lokalDato(), ny));
+      if (!plan.tom) {
+        const a = plan.antall;
+        const svar = await visDialog({
+          tittel: 'Slette eldre historikk nå?',
+          innhold: [
+            h('p', {}, `Alt som er eldre enn ${langDato(plan.grense)} slettes: ${a.hendelser} hendelser, ${a.tellinger} tellinger, ${a.unntak} unntak og ${a.elever} deaktiverte elever.`),
+            h('p', { class: 'advarsel' }, 'Dette kan ikke angres. Ta sikkerhetskopi først hvis du er usikker.'),
+          ],
+          knapper: [{ tekst: 'Avbryt', verdi: 'nei' }, { tekst: 'Slett og lagre', verdi: 'ja', type: 'fare' }],
+        });
+        if (svar !== 'ja') { e.target.value = String(lagringSkoleaar); return; }
+      }
+      await lagreInnstilling('lagringSkoleaar', ny);
+      await utforSletting(plan);
+      visMelding(plan.tom ? 'Lagringstiden er endret.' : 'Lagringstiden er endret, og eldre historikk er slettet.', 'ok');
+      oppfrisk();
+    },
+  }, [2, 1].map((n) => h('option', { value: n, selected: n === lagringSkoleaar }, SKOLEAAR_TEKST[n])));
+  return h('div', { class: 'felt', id: 'historikk-innstilling' },
+    h('div', { class: 'felt-rad' }, h('label', { for: 'lagring' }, 'Historikk beholdes'), velger),
+    h('p', { class: 'dempet liten', id: 'slettegrense' },
+      `Hendelser, tellinger og unntak eldre enn ${langDato(grense)} slettes automatisk, og deaktiverte elever som ikke har nyere registreringer og ble deaktivert før det. Et skoleår starter 1. august.`,
+      sisteSletting?.tid ? ` Sist sjekket ${kortDato(sisteSletting.tid)}${slettetSist ? `: ${slettetSist} slettet` : ''}.` : ''));
+}
+
 // ---------- Tilgang (K-71–K-73) ----------
 
-function seksjonTilgang(oppfrisk) {
+function seksjonTilgang(kryptert, oppfrisk) {
   const admin = erAdmin();
   return h('section', { class: 'kort', id: 'tilgang' },
     h('h2', {}, 'Tilgang'),
@@ -76,7 +120,9 @@ function seksjonTilgang(oppfrisk) {
       h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'las-naa', onclick: () => laas() }, 'Lås appen nå'),
       admin ? h('button', { type: 'button', class: 'knapp knapp-omriss', id: 'avslutt-admin', onclick: () => { avsluttAdmin(); oppfrisk(); } }, 'Avslutt administratormodus') : null,
       h('button', { type: 'button', class: 'knapp', id: 'bytt-ansattkode', onclick: async () => { await byttKode('ansatt'); oppfrisk(); } }, 'Bytt kode for ansatte'),
-      h('button', { type: 'button', class: 'knapp', id: 'bytt-adminkode', onclick: async () => { await byttKode('admin'); oppfrisk(); } }, 'Bytt administratorkode')),
+      h('button', { type: 'button', class: 'knapp', id: 'bytt-adminkode', onclick: async () => { await byttKode('admin'); oppfrisk(); } }, 'Bytt administratorkode'),
+      h('button', { type: 'button', class: 'knapp', id: 'kopi-passord', onclick: async () => { if (await settKopiPassord()) oppfrisk(); } },
+        kryptert ? 'Bytt passord for sikkerhetskopier' : 'Sett passord for sikkerhetskopier')),
     h('p', { class: 'dempet liten' }, 'Import av elevliste, endring av elever og gjenoppretting krever administratorkode. Faste avtaler og merknader kan alle ansatte endre.'));
 }
 
@@ -90,35 +136,18 @@ function sistTekst(siste) {
   return { tekst: `Siste sikkerhetskopi: ${dager} dager siden`, varsel: dager > 7 };
 }
 
-function seksjonSikkerhetskopi(siste, oppfrisk) {
+function seksjonSikkerhetskopi(siste, kryptert, oppfrisk) {
   const s = sistTekst(siste);
   return h('section', { class: `kort ${s.varsel ? 'kort-varsel' : ''}` },
     h('h2', {}, 'Sikkerhetskopi'),
     h('p', { class: `statuslinje ${s.varsel ? 'varsel' : ''}`, id: 'siste-sikkerhetskopi' }, s.tekst),
+    kryptert
+      ? h('p', { class: 'ok-linje', id: 'kopi-kryptert' }, 'Sikkerhetskopiene krypteres med passord.')
+      : h('p', { class: 'advarsel', id: 'kopi-kryptert' }, 'Sikkerhetskopiene er ikke kryptert. Administrator setter passord under Tilgang.'),
     h('div', { class: 'knappestabel' },
-      h('button', { type: 'button', class: 'knapp knapp-primar knapp-stor', id: 'eksporter', onclick: () => eksporter(oppfrisk) }, 'Ta sikkerhetskopi nå'),
+      kopiKnapp({ etter: oppfrisk }),
       h('button', { type: 'button', class: 'knapp', id: 'gjenopprett', onclick: async () => { if (await krevAdmin('Gjenoppretting fra sikkerhetskopi krever administratorkode.')) gjenopprett(oppfrisk); } }, 'Gjenopprett fra fil')),
     h('p', { class: 'dempet liten' }, 'Lagres via delingsarket i SFO-mappen på OneDrive. Ta kopi ved dagsavslutning, eller minst én gang i uka.'));
-}
-
-export async function eksporter(oppfrisk) {
-  try {
-    const naa = new Date();
-    const kopi = byggSikkerhetskopi(await hentAltInnhold(), { appversjon: APP_VERSJON, naa });
-    const navn = filnavn(naa);
-    const resultat = await lagreFil(JSON.stringify(kopi), navn);
-    if (resultat === 'avbrutt') {
-      visMelding('Sikkerhetskopien ble ikke lagret.', 'advarsel');
-      return;
-    }
-    await lagreInnstilling('sisteSikkerhetskopi', naa.toISOString());
-    visMelding(resultat === 'delt'
-      ? `${navn} er sendt til valgt sted. Sjekk at den ligger i OneDrive-mappen.`
-      : `${navn} er lastet ned. Flytt den til SFO-mappen i OneDrive.`, 'ok');
-    oppfrisk();
-  } catch (e) {
-    visMelding(`Sikkerhetskopi feilet: ${e.message}`, 'feil');
-  }
 }
 
 async function gjenopprett(oppfrisk) {
@@ -126,8 +155,16 @@ async function gjenopprett(oppfrisk) {
   if (!fil) return;
 
   let resultat;
+  let filNokkel = null;
   try {
-    resultat = kontroller(lesTekst(fil.tekst));
+    let obj = lesTekst(fil.tekst);
+    if (erKryptert(obj)) {
+      const apnet = await apneKryptert(obj, fil.navn);
+      if (!apnet) return;
+      obj = apnet.kopi;
+      filNokkel = apnet.nokkel;
+    }
+    resultat = kontroller(obj);
   } catch (e) {
     resultat = { ok: false, feil: [e.message] };
   }
@@ -171,6 +208,8 @@ async function gjenopprett(oppfrisk) {
   try {
     await erstattAltInnhold(resultat.kopi.data);
     if (ny.eksportert) await lagreInnstilling('sisteSikkerhetskopi', ny.eksportert);
+    // Ny telefon uten passord for sikkerhetskopier: samme passord brukes videre.
+    if (filNokkel && !(await hentInnstilling('kopi-nokkel'))) await lagreInnstilling('kopi-nokkel', filNokkel);
     visMelding(`Gjenopprettet ${ny.elever} elever og ${ny.hendelser} hendelser.`, 'ok');
     oppfrisk();
   } catch (e) {
@@ -178,9 +217,76 @@ async function gjenopprett(oppfrisk) {
   }
 }
 
+// ---------- Kryptering av sikkerhetskopier (DPIA T15) ----------
+
+/** Ber om passordet og åpner en kryptert sikkerhetskopi. Returnerer { kopi, nokkel } eller null. */
+async function apneKryptert(obj, navn) {
+  let feil = '';
+  for (;;) {
+    const felt = h('input', { id: 'kopi-passord-felt', type: 'password', autocomplete: 'off' });
+    const svar = await visDialog({
+      tittel: 'Kryptert sikkerhetskopi',
+      innhold: [
+        h('p', {}, `«${navn}» er kryptert. Skriv passordet for sikkerhetskopier.`),
+        h('div', { class: 'felt' }, h('label', { for: 'kopi-passord-felt', class: 'feltnavn' }, 'Passord'), felt),
+        feil ? h('p', { class: 'feilboks', role: 'alert' }, feil) : null,
+      ],
+      knapper: [{ tekst: 'Avbryt', verdi: 'avbryt' }, { tekst: 'Åpne', verdi: 'apne', type: 'primar', id: 'kopi-apne' }],
+    });
+    if (svar !== 'apne') return null;
+    try {
+      return await dekrypterKopi(obj, felt.value);
+    } catch (e) {
+      feil = e.message;
+    }
+  }
+}
+
+/** Setter eller bytter passord for sikkerhetskopier (krever administratorkode). */
+async function settKopiPassord() {
+  if (!(await krevAdmin('Passord for sikkerhetskopier krever administratorkode.'))) return false;
+  const finnes = await hentInnstilling('kopi-nokkel');
+  let feil = '';
+  for (;;) {
+    const p1 = h('input', { id: 'nytt-kopi-passord', type: 'password', autocomplete: 'off', minlength: MIN_PASSORD });
+    const p2 = h('input', { id: 'gjenta-kopi-passord', type: 'password', autocomplete: 'off', minlength: MIN_PASSORD });
+    const svar = await visDialog({
+      tittel: finnes ? 'Bytt passord for sikkerhetskopier' : 'Passord for sikkerhetskopier',
+      innhold: [
+        h('p', {}, `Sikkerhetskopiene krypteres, så ingen kan lese dem uten passordet. Bruk minst ${MIN_PASSORD} tegn, gjerne en setning.`),
+        h('p', { class: 'advarsel' }, 'Skriv passordet ned og oppbevar det sammen med administratorkoden. Glemmes passordet, kan sikkerhetskopiene ikke åpnes.'),
+        finnes ? h('p', { class: 'dempet liten' }, 'Nye kopier bruker det nye passordet. Eldre kopier åpnes fortsatt med det gamle.') : null,
+        h('div', { class: 'felt' }, h('label', { for: 'nytt-kopi-passord', class: 'feltnavn' }, 'Nytt passord'), p1),
+        h('div', { class: 'felt' }, h('label', { for: 'gjenta-kopi-passord', class: 'feltnavn' }, 'Gjenta passordet'), p2),
+        feil ? h('p', { class: 'feilboks', role: 'alert' }, feil) : null,
+      ],
+      knapper: [{ tekst: 'Avbryt', verdi: 'avbryt' }, { tekst: 'Lagre passord', verdi: 'lagre', type: 'primar', id: 'lagre-kopi-passord' }],
+    });
+    if (svar !== 'lagre') return false;
+    feil = kontrollerPassord(p1.value, p2.value) ?? '';
+    if (feil) continue;
+    await lagreInnstilling('kopi-nokkel', finnes ? await byttPassord(finnes, p1.value) : await lagNokkel(p1.value));
+    visMelding(finnes ? 'Passordet for sikkerhetskopier er byttet.' : 'Sikkerhetskopiene krypteres fra nå av. Ta en ny sikkerhetskopi.', 'ok');
+    return true;
+  }
+}
+
 // ---------- Teknisk test og utviklerverktøy (sammenfoldet) ----------
 
 function seksjonTeknisk(oppfrisk) {
+  // Hele delen krever administratorkode (appen er i bruk med ekte elevdata). Uten administratormodus
+  // vises bare en knapp, og teknisk test kjøres ikke.
+  if (!erAdmin()) {
+    return h('section', { class: 'kort', id: 'teknisk-last' },
+      h('h2', {}, 'Teknisk test og utviklerverktøy'),
+      h('p', { class: 'dempet liten' }, 'Krever administratorkode.'),
+      h('button', {
+        type: 'button', class: 'knapp', id: 'teknisk-las-opp',
+        onclick: async () => {
+          if (await krevAdmin('Teknisk test og utviklerverktøy krever administratorkode.')) { tekniskApen = true; oppfrisk(); }
+        },
+      }, 'Åpne med administratorkode'));
+  }
   const tall = h('dl', { class: 'tall' }, h('div', {}, h('dt', {}, 'Laster …')));
   Promise.all([tell('elever'), tell('hendelser'), tell('tellinger')]).then(([e, hd, t]) => {
     tall.replaceChildren(

@@ -18,6 +18,44 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Teknisk test og utviklerverktøy bak administratorkode (versjon 0.12.2).**
+
+- Hele delen «Teknisk test og utviklerverktøy» under Mer er skjult uten administratormodus. Der står bare knappen **Åpne med administratorkode**. Teknisk test kjøres heller ikke før delen er åpnet.
+- Når administratormodus avsluttes (banneret, Mer → Tilgang eller låsing), skjules delen igjen.
+
+**Etter første pilotdag (versjon 0.12.1).**
+
+- Alle lister (I dag, Ikke inne, Telling, Elever og elevvalget i elevrapporten) er sortert alfabetisk på fornavn, så etternavn og trinn. Norsk alfabetisk rekkefølge, så «Aa» sorteres som «Å».
+- Søkefeltene har et rødt kryss til høyre som tømmer søket. Krysset vises bare når det står noe i feltet.
+- Søsken er vurdert og utsatt til etter piloten.
+
+**Krypterte sikkerhetskopier (versjon 0.12.0, K-64, DPIA T15).**
+
+- Administrator setter et **passord for sikkerhetskopier** (minst 12 tegn, gjerne en setning) under **Mer → Tilgang**. Fra da av krypteres alle sikkerhetskopier. Uten passord tas kopien som før, men Mer viser at den ikke er kryptert.
+- De ansatte merker ingen forskjell: de trenger ikke passordet for å ta kopi. Telefonen har en egen datanøkkel som krypterer fila, og nøkkelen ligger i fila, låst med passordet.
+- **Gjenoppretting** av en kryptert kopi krever passordet, også på en ny telefon. På en ny telefon brukes det samme passordet videre etter gjenopprettingen. Feil passord avvises.
+- Innholdet komprimeres før kryptering, så fila blir mye mindre. Bare format, appversjon og tidspunkt står i klartekst.
+- Teknisk: AES-GCM 256 for innholdet, nøkkelen låst med PBKDF2-SHA256 (600 000 runder, eget salt), alt med nettleserens innebygde Web Crypto (`src/kryptering.js`).
+- **Glemt passord betyr at kopiene ikke kan åpnes.** Passordet skrives ned og oppbevares sammen med administratorkoden. Ved bytte av passord bruker nye kopier det nye passordet, mens eldre kopier fortsatt åpnes med det gamle.
+- Ukrypterte kopier fra tidligere versjoner kan fortsatt gjenopprettes.
+
+**Sikkerhetskopi ved dagsavslutning (versjon 0.11.0, K-20, K-60).**
+
+- **Avslutt dagen** har nå hovedknappen **Ta sikkerhetskopi og avslutt**. Den åpner delingsarket med en gang: velg «Arkiver i Filer» og SFO-mappen i OneDrive. Er kopien allerede tatt i dag, står det «✓ Sikkerhetskopi er tatt i dag kl. …».
+- **Avslutt uten kopi** finnes fortsatt. Er det mer enn en uke siden siste kopi, eller er det aldri tatt kopi, må det bekreftes.
+- Sikkerhetskopien lages før knappen trykkes, både i «Avslutt dagen» og under Mer. Da godtar Safari på iPhone at delingsarket åpnes. Avviser nettleseren det likevel, kommer knappen «Lagre», som prøver igjen. Det samme gjelder «Hent tom Excel-mal».
+- Appen kan ikke lagre i OneDrive helt automatisk. Nettleseren krever et trykk og at brukeren velger hvor fila skal.
+
+**Automatisk sletting, raskere rapporter og ESLint (versjon 0.10.0, K-63).**
+
+- **Sletting av gammel historikk (K-63):** Hendelser, tellinger og unntak fra inneværende og forrige skoleår beholdes. Det som er eldre, slettes automatisk ved oppstart og når datoen skifter, høyst én gang per dag. Et skoleår starter 1. august. Deaktiverte elever slettes når de ikke har nyere registreringer og ble deaktivert før grensen.
+- Under **Mer → Innstillinger → Historikk beholdes** kan administrator velge «Bare inneværende skoleår». Da vises hva som slettes før det skjer. Der står også når det sist ble sjekket.
+- Sikkerhetskopier og PDF-er i OneDrive slettes ikke av appen. Det må gjøres etter rutinen.
+- **Raskere rapporter:** Hendelsene sorteres etter dato én gang, avviksrapporten gjenbruker utregningen fra grupperapporten, og bare tellingslinjene for perioden leses. Med to skoleår med data og en bremset telefon gikk avviksrapporten for et år fra 1,7 s til 0,6 s, og elevrapporten fra 0,5 s til 0,3 s.
+- Rapportskjermene bruker nå felles kode for periodevalg, tabeller, topp og bunntekst (`src/ui/rapportfelles.js`).
+- **ESLint og Playwright** står i `package.json`. Kjør `npm install` én gang. `npm run lint` sjekker koden, og `npm run sjekk` kjører både lint og tester. Git-hooken kjører ESLint før hver commit når det er installert.
+- Nettlesertestene: `npm run e2e:installer` én gang (laster ned Chromium), deretter `npm run serve` og `npm run e2e`.
+
 **Vakt mot overføring av persondata (versjon 0.9.2).**
 
 - Alle skrivefelt har stavekontroll, autokorrektur og autofyll slått av som standard (`src/dom.js`). Da sender ikke nettleserens stavekontroll navn og merknader til en skytjeneste. Tastaturappen på telefonen styres av telefonens egne innstillinger.
@@ -127,10 +165,13 @@ src/backup.js         – sikkerhetskopi: bygge, kontrollere, oppgradere
 src/model/elev.js     – regler for elever: trinn, skolegrupper, ukedager, klokkeslett
 src/model/status.js   – dagens status regnet ut fra hendelsene
 src/model/rapport.js  – grupperapporten, elevrapporten og avviksrapporten
+src/model/sletting.js – regelen for automatisk sletting av gammel historikk
+src/sletting.js       – kjører slettingen mot databasen
 src/import/xlsx.js    – leser og skriver Excel-filer (.xlsx)
 src/import/elevliste.js – import av elevlista: kontroll, kobling og endringsliste
 src/filer.js          – lagre og åpne filer (delingsark eller nedlasting), utskrift
 src/kode.js           – koder: hash, kontroll av nye koder, ventetid etter feil
+src/kryptering.js     – kryptering og komprimering av sikkerhetskopier
 src/tilgang.js        – låst/opplåst og administratormodus
 src/plattform.js      – teknisk test av telefonen
 src/dato.js, dom.js   – hjelpere
@@ -146,21 +187,23 @@ testdata/             – fiktiv sikkerhetskopi og fiktive elevlister i Excel
 
 ## Kjøre på PC-en
 
-Krever Node.js 20 eller nyere. Ingen pakker må installeres.
+Krever Node.js 20.19 eller nyere. Appen selv har ingen avhengigheter. Utviklerverktøyene (ESLint og Playwright) installeres én gang:
 
 ```
-npm test          # automatiske tester
+npm install       # ESLint og Playwright (bare på PC-en, aldri i appen)
+npm test          # automatiske tester (virker også uten npm install)
+npm run lint      # ESLint
+npm run sjekk     # lint + tester, det samme som GitHub kjører
 npm run serve     # appen på http://localhost:8080
 npm run testdata  # lager de fiktive testfilene i testdata/ på nytt
 ```
 
-Valgfri nettlesertest (installerer Playwright midlertidig):
+Nettlesertester:
 
 ```
-npm install --no-save playwright
-npx playwright install chromium
-npm run serve     # i ett vindu
-npm run e2e       # i et annet: sikkerhetskopi, import og elevregister
+npm run e2e:installer    # én gang: laster ned Chromium for Playwright
+npm run serve            # i ett vindu
+npm run e2e              # i et annet: kode, sikkerhetskopi, import, elevregister, sletting
 npm run e2e:ettermiddag  # en hel fiktiv ettermiddag fra 14.45 til stengetid
 ```
 
@@ -189,8 +232,24 @@ Service worker krever https, så telefonen må hente appen fra GitHub Pages (ikk
 2. Meny (⋮) → **Installer app** eller **Legg til på startsiden**.
 3. Åpne appen fra ikonet på hjemskjermen. Velg kode for ansatte og administratorkode (bruk testkoder på testtelefonen).
 4. Gå til **Mer → Teknisk test** og noter resultatet.
-5. **Mer → Utviklerverktøy → Last inn fiktive testdata** (krever administratorkode).
+5. **Mer → Teknisk test og utviklerverktøy → Åpne med administratorkode → Last inn fiktive testdata**.
 6. Test fase 1-kriteriet (under). Bruk bare fiktive data på testtelefonen (IF-10).
+
+## Installere på SFO-telefonen (iPhone)
+
+Gjøres av Cooper eller IT før telefonen tas i bruk. **Rekkefølgen er viktig.**
+
+1. Åpne adressen fra steg 4 i **Safari**.
+2. Trykk **Del** (firkanten med pil opp) og velg **Legg til på Hjem-skjerm**.
+3. Lukk Safari, og åpne appen **fra ikonet på hjemskjermen**.
+4. Velg kode for ansatte og administratorkode, og skriv initialene dine.
+5. Importer elevlista (Mer → Importer fra Excel), eller gjenopprett fra sikkerhetskopi.
+
+> **Ikke registrer noe i Safari-fanen.** På iPhone har appen på hjemskjermen sin egen lagring, adskilt fra Safari. Det som registreres i Safari-fanen, blir ikke med inn i appen. Koder og elevliste settes derfor først når appen er åpnet fra hjemskjermen.
+
+Appens ikon må aldri fjernes fra hjemskjermen, fordi det sletter alle data i appen. Ta sikkerhetskopi først hvis appen må installeres på nytt.
+
+Sjekk også at innstillingene IT har ansvar for er på plass (kodelås, iCloud-sikkerhetskopi, tastatur, OneDrive-appen og Finn min). Se DPIA-en, tiltak T2, T7, T8 og T12.
 
 ## Ferdig-kriterium for fase 1
 

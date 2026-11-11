@@ -3,7 +3,8 @@ import { h, visDialog, visMelding } from '../dom.js';
 import { hentAlle, hentInnstilling, nyId, utforEndringer } from '../db.js';
 import { lesXlsx, skrivXlsx, XLSX_TYPE } from '../import/xlsx.js';
 import { elevNavn, lagEndringer, lesElevliste, malForklaring, malRader, planleggImport } from '../import/elevliste.js';
-import { lagreFil, velgFil } from '../filer.js';
+import { velgFil } from '../filer.js';
+import { lagreFilMedTrykk } from './sikkerhetskopi.js';
 import { dagerMellom } from '../dato.js';
 import { hentInitialer } from '../dag.js';
 
@@ -15,7 +16,7 @@ export async function hentMal() {
     { navn: 'Elever', rader: malRader(), frysForsteRad: true, bredder: [14, 16, 7, 16, 6, 6, 6, 6, 6, 18, 14, 40] },
     { navn: 'Forklaring', rader: malForklaring(), bredder: [22, 9, 70, 30] },
   ]);
-  const resultat = await lagreFil(bytes, MAL_FILNAVN, XLSX_TYPE);
+  const resultat = await lagreFilMedTrykk(bytes, MAL_FILNAVN, XLSX_TYPE);
   if (resultat === 'lastet-ned') visMelding(`${MAL_FILNAVN} er lastet ned. Fyll den ut i Excel og lagre den i SFO-mappen i OneDrive.`, 'ok');
   else if (resultat === 'delt') visMelding(`${MAL_FILNAVN} er sendt til valgt sted.`, 'ok');
 }

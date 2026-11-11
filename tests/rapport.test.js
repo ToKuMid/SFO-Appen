@@ -158,11 +158,15 @@ test('elevrapport: ekstra SFO-dag og deaktivert elev', async () => {
 
 test('bunnteksten i rapportene har bare utskriftstid, app og versjon', async () => {
   const { readFile } = await import('node:fs/promises');
+  const les = (f) => readFile(new URL(f, import.meta.url), 'utf8');
+  const felles = await les('../src/ui/rapportfelles.js');
+  const bunn = felles.slice(felles.indexOf('export const rapportBunn'));
+  assert.match(bunn, /`Skrevet ut \$\{utskrevet\} · SFO-appen \$\{APP_VERSJON\}`/);
+  assert.doesNotMatch(bunn.split('\n')[0], /personopplysninger|OneDrive|lagringstid/);
   for (const fil of ['../src/ui/rapport.js', '../src/ui/elevrapport.js', '../src/ui/avviksrapport.js']) {
-    const kilde = await readFile(new URL(fil, import.meta.url), 'utf8');
-    const bunn = kilde.slice(kilde.indexOf("'rapport-bunn'"));
-    assert.match(bunn, /`Skrevet ut \$\{utskrevet\} · SFO-appen \$\{APP_VERSJON\}`/);
-    assert.doesNotMatch(bunn, /personopplysninger|OneDrive|lagringstid/);
+    const kilde = await les(fil);
+    assert.match(kilde, /rapportBunn\(utskrevet\)/, `${fil} bruker felles bunntekst`);
+    assert.doesNotMatch(kilde, /rapport-bunn|personopplysninger om barn|lagringstid/, `${fil} har ingen egen bunntekst`);
   }
 });
 

@@ -60,9 +60,17 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.screenshot({ path: `${SP}/las.png` });
   await kode.lasOpp(page);
 
-  const apneTeknisk = async () => { await page.waitForSelector('#teknisk'); if (!(await page.$eval('#teknisk', (d) => d.open))) await page.click('#teknisk summary'); };
+  // Teknisk test og utviklerverktøy krever administratorkode. Uten administratormodus vises bare en knapp.
+  const apneTeknisk = async () => {
+    await page.waitForSelector('#teknisk, #teknisk-las-opp');
+    if (await page.$('#teknisk-las-opp')) { await page.click('#teknisk-las-opp'); await kode.admin(page); await page.waitForSelector('#teknisk'); }
+    if (!(await page.$eval('#teknisk', (d) => d.open))) await page.click('#teknisk summary');
+  };
   await page.click('[data-fane=mer]');
+  await page.waitForSelector('#teknisk-las-opp');
+  ok(!(await page.$('#teknisk')), 'teknisk test og utviklerverktøy er skjult uten administratorkode');
   await apneTeknisk();
+  ok(true, 'teknisk test og utviklerverktøy åpnes med administratorkode (K-72)');
   await page.waitForSelector('.sjekk');
   await page.waitForFunction(() => [...document.querySelectorAll('.sjekk')].some(li => li.textContent.includes('IF-02')));
   const sjekker = await page.$$eval('.sjekk', ls => ls.map(l => l.className + ' | ' + l.textContent));
@@ -73,8 +81,6 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   // testdata
   await apneTeknisk();
   await page.click('#last-testdata');
-  await kode.admin(page);
-  ok(true, 'utviklerverktøy krever administratorkode (K-72)');
   await page.click('#dialog button:text-is("Last inn testdata")');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
   ok(true, '32 fiktive elever lastet');
@@ -115,6 +121,47 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
   const hendEtter = await page.$$eval('.tall dd', d => d.map(x => x.textContent));
   ok(JSON.stringify(hendFoer) === JSON.stringify(hendEtter), `gjenopprettet likt: ${hendEtter}`);
+
+  // ---------- Kryptert sikkerhetskopi (DPIA T15) ----------
+  await page.waitForSelector('#kopi-kryptert.advarsel');
+  ok(true, 'Mer viser at sikkerhetskopiene ikke er kryptert før passord er satt');
+  await page.click('#kopi-passord');
+  await page.fill('#nytt-kopi-passord', 'kort');
+  await page.fill('#gjenta-kopi-passord', 'kort');
+  await page.click('#lagre-kopi-passord');
+  await page.waitForFunction(() => /minst 12 tegn/.test(document.querySelector('#dialog[open] .feilboks')?.textContent ?? ''));
+  ok(true, 'for kort passord avvises');
+  const PASSORD = 'Fiktivt testpassord 2026';
+  await page.fill('#nytt-kopi-passord', PASSORD);
+  await page.fill('#gjenta-kopi-passord', PASSORD);
+  await page.click('#lagre-kopi-passord');
+  await page.waitForSelector('#kopi-kryptert.ok-linje');
+  await page.waitForTimeout(500); // sikkerhetskopien lages på nytt i bakgrunnen
+  const [kdl] = await Promise.all([page.waitForEvent('download'), page.click('#eksporter')]);
+  const ksti = `${SP}/kryptert-${kdl.suggestedFilename()}`;
+  await kdl.saveAs(ksti);
+  const ktekst = fs.readFileSync(ksti, 'utf8');
+  const kobj = JSON.parse(ktekst);
+  const navnIKopi = kopi.data.elever.map((e) => e.etternavn);
+  ok(kobj.format === 'sfo-appen-sikkerhetskopi-kryptert' && !navnIKopi.some((n) => ktekst.includes(n)), 'kryptert sikkerhetskopi: ingen elevnavn i klartekst');
+  ok(ktekst.length < fs.readFileSync(sti, 'utf8').length, `kryptert kopi er mindre (komprimert): ${ktekst.length} mot ${fs.readFileSync(sti, 'utf8').length} tegn`);
+  await apneTeknisk();
+  await page.click('#slett-alt');
+  await page.click('#dialog button:text-is("Slett alt")');
+  await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '0');
+  [fc] = await Promise.all([page.waitForEvent('filechooser'), page.click('#gjenopprett')]);
+  await fc.setFiles(ksti);
+  await page.waitForSelector('#kopi-passord-felt');
+  await page.fill('#kopi-passord-felt', 'Feil passord her');
+  await page.click('#kopi-apne');
+  await page.waitForFunction(() => /Feil passord/.test(document.querySelector('#dialog[open] .feilboks')?.textContent ?? ''));
+  ok(true, 'feil passord avvises ved gjenoppretting');
+  await page.fill('#kopi-passord-felt', PASSORD);
+  await page.click('#kopi-apne');
+  await page.waitForSelector('#dialog[open] >> text=Gjenopprette fra sikkerhetskopi?');
+  await page.click('#dialog button:text-is("Erstatt alle data")');
+  await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
+  ok(true, 'kryptert sikkerhetskopi gjenopprettes med riktig passord');
 
   // ---------- Fase 2a: Excel-mal og import ----------
   await page.click('[data-fane=mer]');
@@ -167,6 +214,10 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   ok((await page.textContent('details.teknisk summary')).includes('Deaktiverte elever (1)'), 'én deaktivert elev vises for seg');
   await page.fill('#sok', 'nyhilde');
   ok((await page.$$('#elevliste > li:not([hidden])')).length === 1, 'søk finner elev');
+  await page.click('.sok-kryss');
+  ok((await page.inputValue('#sok')) === '' && (await page.$$('#elevliste > li:not([hidden])')).length === 32 && await page.isHidden('.sok-kryss'), 'det røde krysset tømmer søket');
+  const navnIListe = await page.$$eval('#elevliste .navn', (l) => l.map((x) => x.textContent));
+  ok(JSON.stringify(navnIListe) === JSON.stringify([...navnIListe].sort((a, b) => a.localeCompare(b, 'nb'))), 'elevlista er sortert på fornavn');
 
   await page.click('#ny-elev');
   await page.waitForSelector('#lagre-elev');
@@ -238,11 +289,41 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.click('[data-fane=elever]');
   await page.waitForSelector('#elevliste');
 
+  // Delingsark som avvises (Safari krever at det åpnes rett etter et trykk): appen ber om ett trykk til
+  await page.click('[data-fane=mer]');
+  await page.waitForSelector('#eksporter');
+  await page.evaluate(() => {
+    window.__delinger = 0;
+    navigator.canShare = () => true;
+    navigator.share = () => { window.__delinger += 1; return window.__delinger === 1 ? Promise.reject(new DOMException('ikke trykk', 'NotAllowedError')) : Promise.resolve(); };
+  });
+  await page.click('#eksporter');
+  await page.waitForSelector('#lagre-igjen');
+  ok(true, 'avvist delingsark gir knappen «Lagre» i stedet for feil');
+  await page.click('#lagre-igjen');
+  await page.waitForFunction(() => /✓ Sikkerhetskopi kl\./.test(document.querySelector('#melding')?.textContent ?? ''));
+  ok(await page.evaluate(() => window.__delinger) === 2, 'andre trykk deler sikkerhetskopien');
+  await page.click('[data-fane=elever]');
+  await page.waitForSelector('#elevliste');
+
+  // Automatisk sletting av gammel historikk (K-63): legg inn en gammel hendelse og en deaktivert elev uten data
+  await page.evaluate(async () => {
+    const db = await import('/src/db.js');
+    await db.utforEndringer({ lagre: {
+      hendelser: [{ id: 'gammel-1', elevId: 'x', dato: '2023-03-01', tid: '2023-03-01T14:00:00.000Z', type: 'inn' }],
+      elever: [{ id: 'slutta-1', fornavn: 'Gammel', etternavn: 'Elevsen', trinn: 4, skolegruppe: 'Gruppe 2 oppe', ukedager: [1], aktiv: false }],
+    }, slett: { innstillinger: ['sisteSletting'] } });
+  });
   // flymodus
   await ctx.setOffline(true);
   await page.reload();
   await kode.lasOpp(page);
   await page.waitForSelector('#elevliste');
+  const igjen = await page.evaluate(async () => {
+    const db = await import('/src/db.js');
+    return { h: await db.hent('hendelser', 'gammel-1'), e: await db.hent('elever', 'slutta-1'), s: await db.hentInnstilling('sisteSletting') };
+  });
+  ok(!igjen.h && !igjen.e && igjen.s?.antall?.hendelser === 1, 'gammel historikk og deaktivert elev uten data slettes automatisk ved oppstart (K-63)');
   ok((await page.$$('#elevliste > li')).length === 32, 'virker i flymodus etter omlasting, data består');
   await page.click('[data-fane=mer]');
   await apneTeknisk();

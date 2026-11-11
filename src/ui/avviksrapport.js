@@ -1,12 +1,12 @@
 // Avviksrapport (K-54): bare det som skal følges opp, med linje for gjennomgang og signatur.
 // Samme periodevalg, logo, forkortede navn og utskrift som de andre rapportene.
 import { h } from '../dom.js';
-import { hentAlle, hentIntervall } from '../db.js';
-import { kortDatoMedDag, klokkeFra, langDato, lokalDato, tidspunktTekst } from '../dato.js';
+import { kortDatoMedDag, klokkeFra, lokalDato } from '../dato.js';
 import { avviksrapport } from '../model/rapport.js';
-import { APP_VERSJON } from '../versjon.js';
 import { pilVenstre } from './felles.js';
-import { periodeKontroller, valgtPeriode } from './rapport.js';
+import {
+  avTekst, hentRapportdata, periodeKontroller, periodeTekst, rapportBunn, rapportTopp, tabell, tall, utskrevetNaa, valgtPeriode,
+} from './rapportfelles.js';
 
 export async function visAvviksrapport(oppfrisk) {
   const idag = lokalDato();
@@ -21,22 +21,10 @@ export async function visAvviksrapport(oppfrisk) {
 }
 
 async function lagRapport(fra, til, idag) {
-  const [elever, hendelser, unntak, tellinger, tellingslinjer] = await Promise.all([
-    hentAlle('elever'),
-    hentIntervall('hendelser', 'dato', fra, til),
-    hentIntervall('unntak', 'dato', fra, til),
-    hentIntervall('tellinger', 'dato', fra, til),
-    hentAlle('tellingslinjer'),
-  ]);
-  const r = avviksrapport({ elever, hendelser, unntak, tellinger, tellingslinjer, fra, til, idag });
+  const r = avviksrapport({ ...await hentRapportdata(fra, til), fra, til, idag });
   const s = r.sammendrag;
-  const utskrevet = tidspunktTekst(new Date().toISOString());
-  const periodeTekst = r.fra === r.til ? langDato(r.fra) : `${langDato(r.fra)} – ${langDato(r.til)}`;
-
-  const tall = (etikett, verdi) => h('div', { class: `rapport-tall ${verdi > 0 ? 'varsel' : ''}` }, h('dt', {}, etikett), h('dd', {}, verdi));
-  const tabell = (kolonner, rader) => h('table', { class: 'rapport-tabell' },
-    h('thead', {}, h('tr', {}, kolonner.map((k) => h('th', { scope: 'col' }, k)))),
-    h('tbody', {}, rader.map((rad) => h('tr', {}, rad.map((c) => h('td', {}, c))))));
+  const utskrevet = utskrevetNaa();
+  const varsel = { varsel: true };
   const del = (id, tittel, antall, innhold, tomTekst) => h('section', { class: 'rapport-del', id },
     h('h3', {}, `${tittel} (${antall})`),
     antall ? innhold() : h('p', {}, tomTekst));
@@ -49,11 +37,7 @@ async function lagRapport(fra, til, idag) {
   ].filter(Boolean).join(', ');
 
   return h('article', { class: 'rapport', id: 'rapport' },
-    h('header', { class: 'rapport-topp' },
-      h('img', { class: 'rapport-logo', src: 'icons/skolelogo.png', alt: 'Bærum Montessoriskole' }),
-      h('p', { class: 'rapport-type' }, 'Avviksrapport · SFO'),
-      h('h2', { class: 'rapport-tittel' }, periodeTekst),
-      h('p', { class: 'rapport-utskrift' }, `Skrevet ut ${utskrevet}`)),
+    rapportTopp({ type: 'Avviksrapport', tittel: periodeTekst(r), utskrevet }),
 
     h('section', { class: 'rapport-del' },
       h('h3', {}, 'Sammendrag'),
@@ -62,17 +46,17 @@ async function lagRapport(fra, til, idag) {
         : h('div', {},
           r.ingenAvvik ? h('p', { class: 'rapport-ok', id: 'ingen-avvik' }, 'Ingen avvik i perioden.') : null,
           h('dl', { class: 'rapport-sammendrag', id: 'rapport-sammendrag' },
-            tall('Tellinger med avvik', s.tellingerMedAvvik),
-            tall('Barn som manglet ved telling', s.barnSomManglet),
-            tall('Ikke møtt', s.ikkeMott),
-            tall('Aldri registrert', s.aldriRegistrert),
-            tall('Ikke sjekket ut', s.ikkeUtsjekket),
-            tall('Dager uten telling', s.dagerUtenTelling),
-            s.dagerUtenRegistreringer ? tall('Dager uten registreringer', s.dagerUtenRegistreringer) : null))),
+            tall('Tellinger med avvik', s.tellingerMedAvvik, varsel),
+            tall('Barn som manglet ved telling', s.barnSomManglet, varsel),
+            tall('Ikke møtt', s.ikkeMott, varsel),
+            tall('Aldri registrert', s.aldriRegistrert, varsel),
+            tall('Ikke sjekket ut', s.ikkeUtsjekket, varsel),
+            tall('Dager uten telling', s.dagerUtenTelling, varsel),
+            s.dagerUtenRegistreringer ? tall('Dager uten registreringer', s.dagerUtenRegistreringer, varsel) : null))),
 
     del('avvik-telling', 'Avvik ved telling', r.tellingAvvik.length,
       () => tabell(['Dato', 'Kl.', 'Talt', 'Manglet', 'Init.', 'Kommentar'],
-        r.tellingAvvik.map((t) => [kortDatoMedDag(t.dato), klokkeFra(t.tid), `${t.antallTalt} av ${t.antallForventet}`, t.mangler.join(', '), t.initialer ?? '', t.kommentar])),
+        r.tellingAvvik.map((t) => [kortDatoMedDag(t.dato), klokkeFra(t.tid), avTekst(t), t.mangler.join(', '), t.initialer ?? '', t.kommentar])),
       'Ingen avvik ved telling.'),
 
     del('avvik-ikke-mott', 'Ikke møtt', r.ikkeMott.length,
@@ -109,5 +93,5 @@ async function lagRapport(fra, til, idag) {
         h('div', { class: 'signatur-felt' }, h('span', {}, 'Dato'))),
       h('div', { class: 'signatur-felt signatur-bred' }, h('span', {}, 'Oppfølging og tiltak'))),
 
-    h('footer', { class: 'rapport-bunn' }, `Skrevet ut ${utskrevet} · SFO-appen ${APP_VERSJON}`));
+    rapportBunn(utskrevet));
 }

@@ -23,10 +23,10 @@ const tall = (s) => Number(String(s).trim());
 
   // Fiktive testdata
   await kode.velgKoder(page);
-  await page.waitForSelector('#teknisk');
-  await page.click('#teknisk summary');
-  await page.click('#last-testdata');
+  await page.click('#teknisk-las-opp');
   await kode.admin(page);
+  await page.waitForSelector('#teknisk[open]');
+  await page.click('#last-testdata');
   await knapp('Last inn testdata');
   await page.waitForFunction(() => document.querySelector('.tall dd')?.textContent === '32');
 
@@ -137,12 +137,28 @@ const tall = (s) => Number(String(s).trim());
   }
   ok(tall(await page.textContent('#antall-inne')) === 0, 'alle sjekket ut ved stengetid');
   await page.click('#avslutt-dagen');
+  await page.waitForSelector('#dialog[open] #kopi-status');
   const avslutt = await page.textContent('#dialog[open]');
   ok(/Ingen barn står som inne/.test(avslutt) && /1 forventet ble aldri registrert/.test(avslutt) && /sikkerhetskopi/i.test(avslutt), 'dagsavslutning: ingen inne, 1 uregistrert, påminnelse om sikkerhetskopi (K-20)');
   await page.screenshot({ path: `${SP}/7-avslutt.png` });
 
+  // Avslutt uten kopi: aldri tatt sikkerhetskopi gir ekstra bekreftelse
+  await page.click('#avslutt-uten-kopi');
+  await page.waitForFunction(() => /aldri tatt sikkerhetskopi/.test(document.querySelector('#dialog[open]')?.textContent ?? ''));
+  ok(true, '«Avslutt uten kopi» ber om bekreftelse når det aldri er tatt kopi');
+  await knapp('Tilbake');
+  // Ta sikkerhetskopi og avslutt: fila er laget på forhånd og lagres i samme trykk
+  await page.click('#avslutt-dagen');
+  await page.waitForSelector('#kopi-og-avslutt');
+  const [kopiFil] = await Promise.all([page.waitForEvent('download'), page.click('#kopi-og-avslutt')]);
+  ok(/^SFO-backup-2026-11-09\.json$/.test(kopiFil.suggestedFilename()), 'sikkerhetskopi lagres fra «Avslutt dagen»');
+  await page.waitForFunction(() => /Dagen er avsluttet/.test(document.querySelector('#melding')?.textContent ?? ''));
+  await page.click('#avslutt-dagen');
+  await page.waitForSelector('#dialog[open] #kopi-status');
+  ok(/✓ Sikkerhetskopi er tatt i dag kl\./.test(await page.textContent('#kopi-status')), 'avslutningen viser at kopien er tatt i dag');
+  await knapp('Tilbake');
+
   // Fra elevkortet: «Ikke SFO i dag» og fravær sender tilbake til I dag
-  await knapp('Lukk');
   await page.click('[data-fane=andre]');
   await page.click('#forventet li:first-child a.rad-lenke');
   await page.click('#kort-ikke-sfo');

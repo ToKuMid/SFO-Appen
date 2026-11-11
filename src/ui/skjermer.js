@@ -1,13 +1,13 @@
 // Skjermene «I dag» og «Ikke inne» (adresse #andre) (K-12, K-13, K-16, K-20). Utseende og flyt som i mockupen.
-import { h, visDialog } from '../dom.js';
+import { h, visDialog, visMelding } from '../dom.js';
 import { hentDag } from '../dag.js';
 import { aktiveInitialer, byttInitialer } from './las.js';
 import { hentInnstilling } from '../db.js';
 import { dagerMellom, klokkeFra, klokkeslett } from '../dato.js';
 import { STATUS } from '../model/status.js';
-import { elevRad, kortGruppe, skjermTopp, sorterElever } from './felles.js';
+import { elevRad, kortGruppe, skjermTopp, sokMedKryss, sorterElever } from './felles.js';
 import { kanAngres, knappAngre, knappFravaer, knappSjekkInn, knappSjekkUt } from './handlinger.js';
-import { eksporter } from './mer.js';
+import { delKopi, lagKopi } from './sikkerhetskopi.js';
 
 // Søketeksten huskes når skjermen tegnes på nytt etter en inn- eller utsjekk.
 let sokTekst = '';
@@ -97,7 +97,7 @@ export async function visIdag() {
       h('span', { class: 'infolinje-handling' }, 'Sjekk inn under Ikke inne')) : null,
 
     h('div', { class: 'sokerad' },
-      h('div', { class: 'felt sok-felt' }, h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter barn'), sok),
+      h('div', { class: 'felt sok-felt' }, h('label', { for: 'sok', class: 'feltnavn' }, 'Søk etter barn'), sokMedKryss(sok)),
       h('div', { class: 'felt init-felt' },
         h('span', { class: 'feltnavn' }, 'Initialer'),
         h('button', {
@@ -165,28 +165,59 @@ export async function visAndre() {
 // ---------- Dagsavslutning (K-20) ----------
 
 async function dagsavslutning() {
-  const d = await hentDag();
+  // Sikkerhetskopien lages før dialogen vises, så delingsarket åpnes med en gang det trykkes.
+  const [d, siste, kopi] = await Promise.all([hentDag(), hentInnstilling('sisteSikkerhetskopi'), lagKopi()]);
   const inne = sorter(d.etterStatus[STATUS.INNE]);
   const uregistrert = sorter(d.etterStatus[STATUS.FORVENTET]);
-  const siste = await hentInnstilling('sisteSikkerhetskopi');
   const kopiIDag = siste && dagerMellom(siste) === 0;
+  const dagerSiden = siste ? dagerMellom(siste) : null;
   const navneliste = (rader) => h('ul', { class: 'importliste' }, rader.map((r) => h('li', {}, `${r.elev.fornavn} ${r.elev.etternavn}`)));
+  let deling = null;
+  const delMedTrykk = () => { deling = delKopi(kopi, { forTekst: 'Dagen er avsluttet. ' }); };
 
   const svar = await visDialog({
     tittel: 'Avslutte dagen',
     innhold: [
       inne.length
-        ? [h('p', { class: 'advarsel' }, `${inne.length} ${inne.length === 1 ? 'barn står' : 'barn står'} fortsatt som inne. Sjekk ut eller rett før du går.`), navneliste(inne)]
+        ? [h('p', { class: 'advarsel' }, `${inne.length} barn står fortsatt som inne. Sjekk ut eller rett før du går.`), navneliste(inne)]
         : h('p', {}, 'Ingen barn står som inne.'),
       uregistrert.length
         ? [h('p', {}, `${uregistrert.length} forventet ble aldri registrert. Marker fravær eller sjekk inn under Ikke inne.`), navneliste(uregistrert)]
         : null,
-      h('p', { class: kopiIDag ? '' : 'advarsel' }, kopiIDag ? 'Sikkerhetskopi er tatt i dag.' : 'Husk sikkerhetskopi før du går.'),
+      kopiIDag
+        ? h('p', { class: 'ok-linje', id: 'kopi-status' }, `✓ Sikkerhetskopi er tatt i dag kl. ${klokkeFra(siste)}.`)
+        : h('p', { class: 'advarsel', id: 'kopi-status' }, 'Sikkerhetskopi er ikke tatt i dag. Velg «Arkiver i Filer» og SFO-mappen i OneDrive.'),
     ],
-    knapper: [
-      { tekst: 'Lukk', verdi: 'lukk' },
-      kopiIDag ? null : { tekst: 'Ta sikkerhetskopi nå', verdi: 'kopi', type: 'primar' },
-    ].filter(Boolean),
+    knapper: kopiIDag
+      ? [
+        { tekst: 'Tilbake', verdi: 'lukk' },
+        { tekst: 'Ta ny kopi', verdi: 'kopi', id: 'ny-kopi', vedTrykk: delMedTrykk },
+        { tekst: 'Avslutt dagen', verdi: 'avslutt', type: 'primar', id: 'avslutt-ok' },
+      ]
+      : [
+        { tekst: 'Tilbake', verdi: 'lukk' },
+        { tekst: 'Avslutt uten kopi', verdi: 'uten', id: 'avslutt-uten-kopi' },
+        { tekst: 'Ta sikkerhetskopi og avslutt', verdi: 'kopi', type: 'primar', id: 'kopi-og-avslutt', vedTrykk: delMedTrykk },
+      ],
   });
-  if (svar === 'kopi') await eksporter(() => {});
+
+  if (svar === 'kopi' && deling) {
+    await deling;
+  } else if (svar === 'avslutt') {
+    visMelding('Dagen er avsluttet.', 'ok');
+  } else if (svar === 'uten') {
+    // Mer enn en uke uten sikkerhetskopi: be om en ekstra bekreftelse.
+    if (dagerSiden === null || dagerSiden > 7) {
+      const bekreft = await visDialog({
+        tittel: 'Avslutte uten sikkerhetskopi?',
+        innhold: [h('p', { class: 'advarsel' }, dagerSiden === null
+          ? 'Det er aldri tatt sikkerhetskopi. Blir telefonen borte, er alle data tapt.'
+          : `Det er ${dagerSiden} dager siden siste sikkerhetskopi. Blir telefonen borte, er alt siden da tapt.`)],
+        knapper: [{ tekst: 'Tilbake', verdi: 'nei' }, { tekst: 'Avslutt uten kopi', verdi: 'ja', type: 'fare' }],
+      });
+      if (bekreft !== 'ja') return;
+    }
+    visMelding('Dagen er avsluttet uten sikkerhetskopi.', 'advarsel');
+  }
+  window.dispatchEvent(new Event('sfo:endret'));
 }

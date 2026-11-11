@@ -25,4 +25,13 @@ if command -v node >/dev/null 2>&1; then
   fi
 fi
 
+# ESLint, hvis det er installert (npm install). Stopper commit ved feil i koden.
+if [ -x node_modules/.bin/eslint ]; then
+  if ! node_modules/.bin/eslint . >/dev/null 2>&1; then
+    echo ""
+    echo "STOPP: ESLint fant feil. Se hva med:  npm run lint"
+    exit 1
+  fi
+fi
+
 exit 0

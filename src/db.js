@@ -39,6 +39,7 @@ export const TABELLNAVN = Object.keys(TABELLER);
 
 export const STANDARD_INNSTILLINGER = {
   varseltidspunkt: '15:00',
+  lagringSkoleaar: 2,
 };
 
 // Ett steg per databaseversjon. Steg N kjøres når databasen oppgraderes fra versjon N-1 til N.
@@ -109,6 +110,24 @@ export async function hentEtterIndeks(tabell, indeks, verdi) {
 export async function hentIntervall(tabell, indeks, fra, til) {
   const db = await apneDb();
   return somLofte(db.transaction(tabell).objectStore(tabell).index(indeks).getAll(IDBKeyRange.bound(fra, til)));
+}
+
+/**
+ * Alle rader for flere verdier av en indeks, i én transaksjon. Brukes for eksempel til å hente
+ * tellingslinjene for bare tellingene i en periode, i stedet for alle linjer i historikken.
+ */
+export async function hentForVerdier(tabell, indeks, verdier) {
+  if (verdier.length === 0) return [];
+  const db = await apneDb();
+  const ix = db.transaction(tabell).objectStore(tabell).index(indeks);
+  const deler = await Promise.all(verdier.map((v) => somLofte(ix.getAll(v))));
+  return deler.flat();
+}
+
+/** Antall rader der en indeks ligger mellom fra og til (begge med). */
+export async function tellIntervall(tabell, indeks, fra, til) {
+  const db = await apneDb();
+  return somLofte(db.transaction(tabell).objectStore(tabell).index(indeks).count(IDBKeyRange.bound(fra, til)));
 }
 
 export async function lagre(tabell, rad) {

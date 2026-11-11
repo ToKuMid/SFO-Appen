@@ -86,8 +86,27 @@ export function kortNavnFor(elever) {
  * Inndata: alle elever, og hendelser, unntak, tellinger og tellingslinjer i perioden.
  * Dager med SFO er hverdager der noen var forventet, og alle dager med registreringer.
  */
-export function grupperapport({ elever, hendelser, unntak = [], tellinger, tellingslinjer, fra, til, idag = lokalDato() }) {
+/** Grupperer rader etter dato én gang, så hver dag ikke må lete gjennom hele perioden. */
+function perDato(rader) {
+  const m = new Map();
+  for (const r of rader) {
+    if (!m.has(r.dato)) m.set(r.dato, []);
+    m.get(r.dato).push(r);
+  }
+  return m;
+}
+
+export function grupperapport(arg) {
+  return beregnGruppe(arg).rapport;
+}
+
+// Regner ut grupperapporten og beholder status per dag og tellingslinjer, så avviksrapporten
+// kan bruke det samme uten å regne alt på nytt.
+function beregnGruppe({ elever, hendelser, unntak = [], tellinger, tellingslinjer, fra, til, idag = lokalDato() }) {
   const sisteDag = til > idag ? idag : til;
+  const hendelserFor = perDato(hendelser);
+  const unntakFor = perDato(unntak);
+  const statusPerDag = new Map();
   const elevFor = new Map(elever.map((e) => [e.id, e]));
   const kort = kortNavnFor(elever);
   const navn = (e) => kort.get(e.id);
@@ -117,14 +136,15 @@ export function grupperapport({ elever, hendelser, unntak = [], tellinger, telli
 
   const dager = [];
   for (const dato of datoerMellom(fra, sisteDag)) {
-    const iDag = hendelser.filter((h) => h.dato === dato);
-    const unntakIDag = unntak.filter((u) => u.dato === dato);
+    const iDag = hendelserFor.get(dato) ?? [];
+    const unntakIDag = unntakFor.get(dato) ?? [];
     const medHendelser = new Set(iDag.map((h) => h.elevId));
     // Deaktiverte elever tas med de dagene de har registreringer.
     const aktuelle = elever.filter((e) => medHendelser.has(e.id) || erForventet(e, dato, unntakIDag));
     if (aktuelle.length === 0) continue;
 
     const status = aktuelle.map((e) => elevStatus(e, dato, iDag, unntakIDag));
+    statusPerDag.set(dato, status);
     const mott = status.filter((s) => s.hendelser.some((h) => h.type === 'inn'));
     const etter = (st) => status.filter((s) => s.status === st).map((s) => s.elev);
     const tellingerIDag = alleTellinger.filter((t) => t.dato === dato);
@@ -147,7 +167,7 @@ export function grupperapport({ elever, hendelser, unntak = [], tellinger, telli
   }
 
   const sum = (f) => dager.reduce((s, d) => s + f(d), 0);
-  return {
+  const rapport = {
     fra,
     til: sisteDag,
     dager,
@@ -165,6 +185,7 @@ export function grupperapport({ elever, hendelser, unntak = [], tellinger, telli
       dagerUtenTelling: dager.filter((d) => !d.ingenRegistreringer && d.tellinger === 0).length,
     },
   };
+  return { rapport, statusPerDag, linjerFor };
 }
 
 // ---------- Elevrapport (K-51) ----------
@@ -237,7 +258,7 @@ export function elevrapport({ elev, elever, hendelser, unntak = [], tellinger, t
  * Meldt fravær er ikke et avvik og er ikke med. Rettelser og angre er heller ikke med (DPIA R9).
  */
 export function avviksrapport({ elever, hendelser, unntak = [], tellinger, tellingslinjer, fra, til, idag = lokalDato() }) {
-  const g = grupperapport({ elever, hendelser, unntak, tellinger, tellingslinjer, fra, til, idag });
+  const { rapport: g, statusPerDag, linjerFor } = beregnGruppe({ elever, hendelser, unntak, tellinger, tellingslinjer, fra, til, idag });
   const kort = kortNavnFor(elever);
   const elevFor = new Map(elever.map((e) => [e.id, e]));
   const sorter = (a, b) => a.dato.localeCompare(b.dato) || a.navn.localeCompare(b.navn, 'nb');
@@ -257,11 +278,8 @@ export function avviksrapport({ elever, hendelser, unntak = [], tellinger, telli
       if (dato !== idag) dagerUtenRegistreringer.push({ dato, forventet: dag.forventet });
       continue;
     }
-    const iDag = hendelser.filter((h) => h.dato === dato);
-    const unntakIDag = unntak.filter((u) => u.dato === dato);
-    const medHendelser = new Set(iDag.map((h) => h.elevId));
-    for (const e of elever.filter((x) => medHendelser.has(x.id) || erForventet(x, dato, unntakIDag))) {
-      const s = elevStatus(e, dato, iDag, unntakIDag);
+    for (const s of statusPerDag.get(dato) ?? []) {
+      const e = s.elev;
       const navn = kort.get(e.id);
       if (s.status === STATUS.IKKE_MOTT) {
         ikkeMott.push({ dato, navn, tid: s.siste?.tid ?? null, initialer: s.siste?.initialer ?? null });
@@ -276,7 +294,7 @@ export function avviksrapport({ elever, hendelser, unntak = [], tellinger, telli
     }
   }
   for (const t of tellinger.filter((x) => x.dato >= g.fra && x.dato <= g.til)) {
-    for (const l of tellingslinjer.filter((x) => x.tellingId === t.id && !x.talt && elevFor.has(x.elevId))) tell(l.elevId, 'manglet');
+    for (const l of linjerFor.get(t.id) ?? []) if (!l.talt && elevFor.has(l.elevId)) tell(l.elevId, 'manglet');
   }
 
   const flereAvvik = [...perElev.values()]

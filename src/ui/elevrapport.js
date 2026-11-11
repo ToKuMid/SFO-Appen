@@ -2,13 +2,14 @@
 // barnet manglet, og skriv ut eller lagre som PDF. Navnet i selve rapporten forkortes som i
 // grupperapporten. Fullt navn vises bare i valget på skjermen, ikke på utskriften.
 import { h } from '../dom.js';
-import { hent, hentAlle, hentIntervall } from '../db.js';
-import { kortDatoMedDag, klokkeFra, langDato, lokalDato, tidspunktTekst } from '../dato.js';
+import { hent, hentAlle } from '../db.js';
+import { kortDatoMedDag, klokkeFra, lokalDato } from '../dato.js';
 import { elevrapport } from '../model/rapport.js';
 import { STATUS } from '../model/status.js';
-import { APP_VERSJON } from '../versjon.js';
-import { elevRad, kortGruppe, pilVenstre, sorterElever } from './felles.js';
-import { periodeKontroller, valgtPeriode } from './rapport.js';
+import { elevRad, kortGruppe, pilVenstre, sokMedKryss, sorterElever } from './felles.js';
+import {
+  avTekst, hentRapportdata, periodeKontroller, periodeTekst, rapportBunn, rapportTopp, tabell, tall, utskrevetNaa, valgtPeriode,
+} from './rapportfelles.js';
 
 export async function visElevrapport(elevId, oppfrisk) {
   const topp = [
@@ -72,7 +73,7 @@ async function elevvalg(ukjentId) {
     ukjentId ? h('p', { class: 'feilboks', role: 'alert' }, 'Fant ikke eleven. Velg på nytt.') : null,
     h('div', { class: 'felt' },
       h('label', { for: 'rapport-sok', class: 'feltnavn' }, 'Søk etter elev'),
-      sok),
+      sokMedKryss(sok)),
     aktivListe,
     deaktivTittel,
     deaktivListe,
@@ -80,29 +81,15 @@ async function elevvalg(ukjentId) {
 }
 
 async function lagRapport(elev, fra, til, idag) {
-  const [elever, hendelser, unntak, tellinger, tellingslinjer] = await Promise.all([
-    hentAlle('elever'),
-    hentIntervall('hendelser', 'dato', fra, til),
-    hentIntervall('unntak', 'dato', fra, til),
-    hentIntervall('tellinger', 'dato', fra, til),
-    hentAlle('tellingslinjer'),
-  ]);
-  const r = elevrapport({ elev, elever, hendelser, unntak, tellinger, tellingslinjer, fra, til, idag });
+  const r = elevrapport({ elev, ...await hentRapportdata(fra, til), fra, til, idag });
   const s = r.sammendrag;
-  const utskrevet = tidspunktTekst(new Date().toISOString());
-  const periodeTekst = r.fra === r.til ? langDato(r.fra) : `${langDato(r.fra)} – ${langDato(r.til)}`;
-
-  const tall = (etikett, verdi, { varsel = false } = {}) => h('div', { class: `rapport-tall ${varsel && verdi > 0 ? 'varsel' : ''}` },
-    h('dt', {}, etikett), h('dd', {}, verdi));
-  const tabell = (kolonner, rader, klasse = '') => h('table', { class: `rapport-tabell ${klasse}` },
-    h('thead', {}, h('tr', {}, kolonner.map((k) => h('th', { scope: 'col' }, k)))),
-    h('tbody', {}, rader.map((rad) => h('tr', {}, rad.map((c) => h('td', {}, c))))));
+  const utskrevet = utskrevetNaa();
 
   // Flere inn/ut samme dag vises på hver sin linje. * = tidspunktet er rettet i appen.
   const tider = (liste, medInitialer) => (liste.length === 0 ? '–'
     : liste.map((x, i) => [
       i > 0 ? h('br') : null,
-      `${klokkeFra(x.tid)}${x.rettet ? '*' : ''}${medInitialer && x.initialer ? ` (${x.initialer})` : ''}`,
+      `${klokkeFra(x.tid)}${x.rettet ? '*' : ''}${medInitialer && x.initialer ? `\u00a0(${x.initialer})` : ''}`,
     ]).flat().filter(Boolean));
 
   const merknad = (d) => [
@@ -113,16 +100,11 @@ async function lagRapport(elev, fra, til, idag) {
     d.ikkeUtsjekket ? 'Ikke sjekket ut' : null,
     d.dato === idag && d.status === STATUS.INNE ? 'Inne nå' : null,
     d.dato === idag && d.status === STATUS.FORVENTET ? 'Ikke kommet ennå' : null,
-    ...d.mangletVedTelling.map((t) => `Manglet ved telling kl. ${klokkeFra(t.tid)}`),
+    ...d.mangletVedTelling.map((t) => `Manglet ved telling kl.\u00a0${klokkeFra(t.tid)}`),
   ].filter(Boolean).join('. ');
 
   return h('article', { class: 'rapport', id: 'rapport' },
-    h('header', { class: 'rapport-topp' },
-      h('img', { class: 'rapport-logo', src: 'icons/skolelogo.png', alt: 'Bærum Montessoriskole' }),
-      h('p', { class: 'rapport-type' }, 'Elevrapport · SFO'),
-      h('h2', { class: 'rapport-tittel', id: 'rapport-navn' }, r.navn),
-      h('p', { class: 'rapport-periode' }, periodeTekst),
-      h('p', { class: 'rapport-utskrift' }, `Skrevet ut ${utskrevet}`)),
+    rapportTopp({ type: 'Elevrapport', tittel: r.navn, tittelId: 'rapport-navn', undertittel: periodeTekst(r), utskrevet }),
 
     h('section', { class: 'rapport-del' },
       h('h3', {}, 'Sammendrag'),
@@ -148,9 +130,8 @@ async function lagRapport(elev, fra, til, idag) {
       h('h3', {}, `Tellinger der eleven manglet (${r.manglet.length})`),
       r.manglet.length
         ? tabell(['Dato', 'Kl.', 'Talt', 'Init.', 'Kommentar'],
-          r.manglet.map((t) => [kortDatoMedDag(t.dato), klokkeFra(t.tid), `${t.antallTalt} av ${t.antallForventet}`, t.initialer ?? '', t.kommentar]))
+          r.manglet.map((t) => [kortDatoMedDag(t.dato), klokkeFra(t.tid), avTekst(t), t.initialer ?? '', t.kommentar]))
         : h('p', {}, 'Eleven manglet ikke ved noen telling i perioden.')),
 
-    h('footer', { class: 'rapport-bunn' },
-      `Skrevet ut ${utskrevet} · SFO-appen ${APP_VERSJON}`));
+    rapportBunn(utskrevet));
 }
