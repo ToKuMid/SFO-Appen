@@ -5,6 +5,7 @@
 const { chromium, devices } = require('playwright');
 const fs = require('fs');
 const path = require('path');
+const { pathToFileURL } = require('url');
 const TESTDATA = path.join(__dirname, '..', 'testdata');
 const SP = require('fs').mkdtempSync(require('path').join(require('os').tmpdir(), 'sfo-e2e-'));
 const URL_APP = process.env.SFO_URL || 'http://localhost:8080/';
@@ -173,7 +174,7 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   const [mal] = await Promise.all([page.waitForEvent('download'), page.click('#hent-mal')]);
   const malSti = `${SP}/${mal.suggestedFilename()}`;
   await mal.saveAs(malSti);
-  const { lesXlsx } = await import(path.join(__dirname, '..', 'src', 'import', 'xlsx.js'));
+  const { lesXlsx } = await import(pathToFileURL(path.join(__dirname, '..', 'src', 'import', 'xlsx.js')).href);
   const malBytes = fs.readFileSync(malSti);
   const malArk = await lesXlsx(malBytes.buffer.slice(malBytes.byteOffset, malBytes.byteOffset + malBytes.length));
   ok(mal.suggestedFilename() === 'SFO-elevliste-mal.xlsx' && malArk.ark[0].rader[0].celler[0] === 'Fornavn', 'tom Excel-mal kan lastes ned og leses');
