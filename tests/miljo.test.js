@@ -32,4 +32,8 @@ test('testmiljøet har egen database, eget hurtigbuffer og eget navn på hjemskj
   assert.ok(manifest.icons.length >= 3 && manifest.icons.every((i) => i.src.startsWith('icons/test-')));
   const app = readFileSync(new URL('../src/app.js', import.meta.url), 'utf8');
   assert.match(app, /icons\/test-apple-touch\.png/);
+  // Manifestet velges av koden, ikke i index.html, så Chrome aldri leser feil manifest først.
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(html, /<link[^>]+rel="manifest"/);
+  assert.match(app, /manifest\.href = ER_TEST \? 'manifest-test\.webmanifest' : 'manifest\.webmanifest'/);
 });

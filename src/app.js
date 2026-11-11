@@ -150,12 +150,18 @@ async function slettGammelHistorikk() {
   }
 }
 
+// Manifestet legges inn her og ikke i index.html. Står det i index.html, kan Chrome lese SFO-appens
+// manifest før koden rekker å bytte det, og test-appen får da samme app-ID som SFO-appen.
+const manifest = document.createElement('link');
+manifest.rel = 'manifest';
+manifest.href = ER_TEST ? 'manifest-test.webmanifest' : 'manifest.webmanifest';
+document.head.append(manifest);
+
 // Testmiljø: gult banner, eget navn og ikon med gul TEST-stripe i fanen og på hjemskjermen.
 function visTestmiljo() {
   if (!ER_TEST) return;
   document.getElementById('test-banner').hidden = false;
   document.title = 'SFO TEST';
-  document.querySelector('link[rel="manifest"]')?.setAttribute('href', 'manifest-test.webmanifest');
   document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', 'SFO TEST');
   document.querySelector('link[rel="apple-touch-icon"]')?.setAttribute('href', 'icons/test-apple-touch.png');
   document.querySelector('link[rel="icon"]')?.setAttribute('href', 'icons/test-192.png');
