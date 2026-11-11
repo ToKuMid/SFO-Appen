@@ -1,6 +1,7 @@
 // Låseskjerm og koder (K-71–K-73): ansattkode (4 siffer) hver gang appen åpnes, og
 // administratorkode (6 siffer) for import, elevendringer, gjenoppretting og bytte av kode.
 // Appen låses hver gang den blir skjult: bytte av app, hjem-knappen eller skjermen av.
+import { ER_TEST } from '../miljo.js';
 import { h, visMelding } from '../dom.js';
 import { hentInnstilling, lagreInnstilling } from '../db.js';
 import {
@@ -19,7 +20,8 @@ let oppsettPagaar = false;
 
 function sikreDialog() {
   if (dialog) return dialog;
-  dialog = h('dialog', { id: 'las', class: 'las', 'aria-label': 'Kode' });
+  // I testmiljøet står TEST også på låseskjermen, som ligger over banneret.
+  dialog = h('dialog', { id: 'las', class: ER_TEST ? 'las las-test' : 'las', 'aria-label': 'Kode' });
   // Esc og tilbake-knappen på Android lukker ikke låseskjermen. Den åpnes igjen hvis den lukkes likevel.
   dialog.addEventListener('cancel', (e) => {
     e.preventDefault();

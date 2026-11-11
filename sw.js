@@ -4,14 +4,19 @@
 //
 // Ved ny versjon: øk APP_VERSJON her OG i src/versjon.js (en test sjekker at de er like).
 
-const APP_VERSJON = '0.12.2';
-const CACHE = `sfo-appen-${APP_VERSJON}`;
+const APP_VERSJON = '0.12.3';
+// Testmiljøet (…/SFO-Appen-test/) ligger på samme domene, og har derfor eget navn på hurtigbufferet.
+const PREFIKS = /\/sfo-appen-test\//i.test(self.location.pathname) ? 'sfo-appen-test-' : 'sfo-appen-';
+const CACHE = `${PREFIKS}${APP_VERSJON}`;
+// Gamle versjoner av DETTE miljøet (prefiks fulgt av versjonsnummer), aldri det andre miljøets.
+const egenGammel = (n) => n.startsWith(PREFIKS) && /^\d/.test(n.slice(PREFIKS.length)) && n !== CACHE;
 
 // Alle filer appen trenger. En test sjekker at listen stemmer med filene i repoet.
 const FILER = [
   './',
   './index.html',
   './manifest.webmanifest',
+  './manifest-test.webmanifest',
   './icons/app-192.png',
   './icons/app-512.png',
   './icons/app-maskable-512.png',
@@ -20,6 +25,7 @@ const FILER = [
   './src/style.css',
   './src/app.js',
   './src/versjon.js',
+  './src/miljo.js',
   './src/db.js',
   './src/backup.js',
   './src/filer.js',
@@ -68,7 +74,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((navn) => Promise.all(navn.filter((n) => n.startsWith('sfo-appen-') && n !== CACHE).map((n) => caches.delete(n))))
+      .then((navn) => Promise.all(navn.filter(egenGammel).map((n) => caches.delete(n))))
       .then(() => self.clients.claim())
   );
 });

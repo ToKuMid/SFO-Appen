@@ -1,4 +1,5 @@
 // Oppstart, faner og oppdatering av appen.
+import { ER_TEST } from './miljo.js';
 import { apneDb, beOmVedvarendeLagring, DATAVERSJON, hentInnstilling, lagreInnstilling } from './db.js';
 import { klokkeTekst, lokalDato } from './dato.js';
 import { visMelding } from './dom.js';
@@ -149,7 +150,17 @@ async function slettGammelHistorikk() {
   }
 }
 
+// Testmiljø: gult banner, eget navn i fanen og på hjemskjermen.
+function visTestmiljo() {
+  if (!ER_TEST) return;
+  document.getElementById('test-banner').hidden = false;
+  document.title = 'SFO TEST';
+  document.querySelector('link[rel="manifest"]')?.setAttribute('href', 'manifest-test.webmanifest');
+  document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', 'SFO TEST');
+}
+
 async function start() {
+  visTestmiljo();
   for (const knapp of document.querySelectorAll('.fane')) {
     knapp.addEventListener('click', () => naviger(knapp.dataset.fane));
   }

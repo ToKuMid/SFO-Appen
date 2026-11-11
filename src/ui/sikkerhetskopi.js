@@ -6,7 +6,7 @@ import { h, visDialog, visMelding } from '../dom.js';
 import { hentAltInnhold, hentInnstilling, lagreInnstilling } from '../db.js';
 import { krypterKopi } from '../kryptering.js';
 import { byggSikkerhetskopi, filnavn } from '../backup.js';
-import { lagreFil } from '../filer.js';
+import { lagreFil, lastNed, sisteDelingsfeil } from '../filer.js';
 import { klokkeFra } from '../dato.js';
 import { APP_VERSJON } from '../versjon.js';
 
@@ -22,7 +22,7 @@ export async function lagKopi(naa = new Date()) {
 
 /**
  * Lagrer en ferdig laget fil. Må kalles direkte fra et trykk. Avviser nettleseren delingsarket,
- * vises en dialog med en knapp som prøver igjen i et nytt trykk.
+ * vises en dialog med en knapp som prøver igjen i et nytt trykk. Avvises det også da, lastes fila ned.
  * Returnerer 'delt', 'lastet-ned' eller 'avbrutt'.
  */
 export function lagreFilMedTrykk(innhold, navn, type) {
@@ -34,10 +34,9 @@ export function lagreFilMedTrykk(innhold, navn, type) {
       innhold: [h('p', {}, `Trykk «Lagre» for å lagre ${navn}.`)],
       knapper: [
         { tekst: 'Avbryt', verdi: 'avbryt' },
-        { tekst: 'Lagre', verdi: 'lagre', type: 'primar', id: 'lagre-igjen', vedTrykk: () => { nyttForsok = lagreFil(innhold, navn, type); } },
+        { tekst: 'Lagre', verdi: 'lagre', type: 'primar', id: 'lagre-igjen', vedTrykk: () => { nyttForsok = lagreFil(innhold, navn, type).then((r) => (r === 'trenger-trykk' ? lastNed(innhold, navn, type) : r)); } },
       ],
-    }).then((svar) => (svar === 'lagre' && nyttForsok ? nyttForsok : 'avbrutt'))
-      .then((r) => (r === 'trenger-trykk' ? 'avbrutt' : r));
+    }).then((svar) => (svar === 'lagre' && nyttForsok ? nyttForsok : 'avbrutt'));
   });
 }
 
@@ -54,7 +53,7 @@ export function delKopi(kopi, { forTekst = '' } = {}) {
     await lagreInnstilling('sisteSikkerhetskopi', kopi.naa.toISOString());
     visMelding(forTekst + (resultat === 'delt'
       ? `✓ Sikkerhetskopi kl. ${klokkeFra(kopi.naa.toISOString())}: ${kopi.navn}. Sjekk at den ligger i SFO-mappen i OneDrive.`
-      : `✓ ${kopi.navn} er lastet ned. Flytt den til SFO-mappen i OneDrive.`), 'ok');
+      : `✓ ${kopi.navn} er lastet ned til Nedlastinger. Flytt den til SFO-mappen i OneDrive.${sisteDelingsfeil() ? ` (Delingsarket ble avvist: ${sisteDelingsfeil()}.)` : ''}`), 'ok');
     return true;
   }).catch((e) => {
     visMelding(`Sikkerhetskopi feilet: ${e.message}`, 'feil');

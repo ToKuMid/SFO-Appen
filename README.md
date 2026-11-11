@@ -18,6 +18,12 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 | K-61 | Gjenopprette med forhåndsvisning | Bygget |
 | K-62 | Dager siden siste sikkerhetskopi | Bygget (lagt inn tidlig, egentlig fase 2c) |
 
+**Testmiljø og retting av sikkerhetskopi på Android (versjon 0.12.3).**
+
+- Testmiljø på egen adresse (`…/SFO-Appen-test/`) med gult TEST-banner, eget navn på hjemskjermen («SFO TEST»), egen database og eget hurtigbuffer. Se «Testmiljø» under.
+- Nekter nettleseren å dele `.json` rett etter et trykk (Samsung Internet og Chrome på Android), lastes sikkerhetskopien ned til Nedlastinger i stedet for å feile. Meldingen sier hva nettleseren svarte.
+- «Lagre» i dialogen lukker dialogen før delingsarket åpnes, så iPhone ikke avbryter delingen.
+
 **Teknisk test og utviklerverktøy bak administratorkode (versjon 0.12.2).**
 
 - Hele delen «Teknisk test og utviklerverktøy» under Mer er skjult uten administratormodus. Der står bare knappen **Åpne med administratorkode**. Teknisk test kjøres heller ikke før delen er åpnet.
@@ -226,9 +232,39 @@ Service worker krever https, så telefonen må hente appen fra GitHub Pages (ikk
 4. Etter et minutt ligger appen på `https://<brukernavn>.github.io/sfo-appen/`.
 5. Anbefalt: **Settings → Branches → Add rule** for `main` med «Require a pull request before merging», slik at ingen endrer koden uten at det synes (kravspesifikasjonen kap. 15).
 
+## Testmiljø
+
+Nye versjoner testes på testtelefonen før de når SFO-telefonen. Samme kode publiseres på to adresser:
+
+| | SFO | Test |
+| --- | --- | --- |
+| Repo | `tokumid/SFO-Appen` | `tokumid/SFO-Appen-test` |
+| Adresse | `https://tokumid.github.io/SFO-Appen/` | `https://tokumid.github.io/SFO-Appen-test/` |
+| Telefon | SFO-telefonen (iPhone) | testtelefonen (Android) |
+| Data | ekte elever | **bare fiktive testdata** |
+
+Appen kjenner igjen test-adressen selv (`src/miljo.js`). Der viser den et gult TEST-banner, også på låseskjermen, heter «SFO TEST» på hjemskjermen, og bruker egen database og eget hurtigbuffer. Test og SFO deler derfor aldri data, selv om begge ligger på samme domene og åpnes på samme telefon.
+
+**Oppsett (én gang):**
+
+1. Lag et tomt, offentlig repo `SFO-Appen-test` på GitHub (uten README).
+2. Legg det til som ekstra remote i det lokale repoet:
+   ```
+   git remote add test https://github.com/tokumid/SFO-Appen-test.git
+   git push test main
+   ```
+3. I `SFO-Appen-test` på GitHub: **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
+4. Åpne `https://tokumid.github.io/SFO-Appen-test/` på testtelefonen og installer den på hjemskjermen. Bruk testkoder og fiktive testdata.
+
+**For hver ny versjon:**
+
+1. `npm run sjekk`, commit.
+2. `git push test main` og test på testtelefonen (appen viser «Oppdater»).
+3. Når alt virker: `git push origin main`. SFO-telefonen viser «Oppdater» neste gang appen åpnes.
+
 ## Installere på testtelefonen (Android)
 
-1. Åpne adressen fra steg 4 i Chrome.
+1. Åpne test-adressen (se «Testmiljø») i Chrome.
 2. Meny (⋮) → **Installer app** eller **Legg til på startsiden**.
 3. Åpne appen fra ikonet på hjemskjermen. Velg kode for ansatte og administratorkode (bruk testkoder på testtelefonen).
 4. Gå til **Mer → Teknisk test** og noter resultatet.
@@ -268,7 +304,7 @@ Det som gjelder spesielt for iPhone, testes på SFO-telefonen før fase 3 (kravs
 
 1. Øk versjonen i **både** `sw.js` og `src/versjon.js` (testene sjekker at de er like).
 2. Nye filer i `src/` må føres opp i `FILER` i `sw.js` (testene sjekker dette også).
-3. Kjør `npm test`, commit og push. Telefonen viser «Ny versjon av appen er klar» neste gang appen åpnes.
+3. Kjør `npm run sjekk` og commit. Push først til testmiljøet (`git push test main`), og til SFO (`git push origin main`) når den er testet. Telefonen viser «Ny versjon av appen er klar» neste gang appen åpnes.
 
 Endres datamodellen: øk `DATAVERSJON` og `DB_VERSJON` i `src/db.js`, legg til et oppgraderingssteg der, og en migrering for sikkerhetskopier i `src/backup.js`. Et oppgraderingssteg skal aldri slette data.
 

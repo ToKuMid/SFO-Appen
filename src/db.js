@@ -8,9 +8,11 @@
 //   2. legg til et steg i OPPGRADERINGER under (endrer aldri eller sletter eksisterende data, IF-09)
 //   3. legg til tilsvarende migrering for sikkerhetskopier i backup.js
 
+import { ER_TEST } from './miljo.js';
 import { erKodeNokkel } from './kode.js';
 
-export const DB_NAVN = 'sfo-appen';
+// Testmiljøet har egen database (se miljo.js).
+export const DB_NAVN = ER_TEST ? 'sfo-appen-test' : 'sfo-appen';
 export const DB_VERSJON = 1;
 export const DATAVERSJON = 1;
 

@@ -296,6 +296,8 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.evaluate(() => {
     window.__delinger = 0;
     navigator.canShare = () => true;
+    // Første forsøk: trykket regnes som for gammelt (som i Safari), og delingen avvises.
+    Object.defineProperty(navigator, 'userActivation', { configurable: true, get: () => ({ isActive: window.__delinger > 0 }) });
     navigator.share = () => { window.__delinger += 1; return window.__delinger === 1 ? Promise.reject(new DOMException('ikke trykk', 'NotAllowedError')) : Promise.resolve(); };
   });
   await page.click('#eksporter');
@@ -304,6 +306,23 @@ const ok = (c, m) => { if (!c) { console.log('FEIL:', m); process.exitCode = 1; 
   await page.click('#lagre-igjen');
   await page.waitForFunction(() => /✓ Sikkerhetskopi kl\./.test(document.querySelector('#melding')?.textContent ?? ''));
   ok(await page.evaluate(() => window.__delinger) === 2, 'andre trykk deler sikkerhetskopien');
+
+  // Android (Samsung Internet/Chrome) nekter å dele .json selv rett etter et trykk: fila lastes ned i stedet.
+  await page.click('[data-fane=elever]');
+  await page.waitForSelector('#elevliste');
+  await page.click('[data-fane=mer]');
+  await page.waitForSelector('#eksporter');
+  await page.waitForTimeout(500);
+  await page.evaluate(() => {
+    window.__delinger = 0;
+    delete navigator.userActivation;
+    navigator.share = () => { window.__delinger += 1; return Promise.reject(new DOMException('filtype', 'NotAllowedError')); };
+  });
+  const [nedlasting] = await Promise.all([page.waitForEvent('download'), page.click('#eksporter')]);
+  ok(/^SFO-backup-\d{4}-\d{2}-\d{2}\.json$/.test(nedlasting.suggestedFilename()) && !(await page.$('#dialog[open]')),
+    'avvist deling av .json rett etter trykk: fila lastes ned uten ekstra dialog');
+  await page.waitForFunction(() => /lastet ned til Nedlastinger.*NotAllowedError/.test(document.querySelector('#melding')?.textContent ?? ''));
+  ok(true, 'meldingen sier at fila er lastet ned, og hva nettleseren svarte');
   await page.click('[data-fane=elever]');
   await page.waitForSelector('#elevliste');
 

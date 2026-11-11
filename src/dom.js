@@ -54,7 +54,9 @@ export async function visDialog({ tittel, innhold = [], knapper = [{ tekst: 'OK'
         class: `knapp ${k.type === 'primar' ? 'knapp-primar' : ''} ${k.type === 'fare' ? 'knapp-fare' : ''}`,
         'data-verdi': String(k.verdi),
         id: k.id,
-        onclick: () => { k.vedTrykk?.(); dialog.close(String(k.verdi)); },
+        // Dialogen lukkes FØR vedTrykk: åpner vedTrykk delingsarket, kan iPhone avbryte det hvis
+        // dialogen lukkes etterpå. Trykket gjelder fortsatt, siden alt skjer i samme klikk.
+        onclick: () => { dialog.close(String(k.verdi)); k.vedTrykk?.(); },
       }, k.tekst))),
   );
   return new Promise((resolve) => {
