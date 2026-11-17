@@ -1,12 +1,13 @@
 // Automatisk sletting av gammel historikk (K-63, DPIA kapittel 5).
-// Regel: hendelser, unntak og tellinger fra inneværende og forrige skoleår beholdes (standard).
+// Regel (lagringstid fastsatt av skolen, nov 2026): opplysningene lagres i 2 år etter skoleårets slutt.
+// Hendelser, unntak og tellinger fra inneværende og de to forrige skoleårene beholdes (standard).
 // Det som er eldre, slettes. Et skoleår starter 1. august. Deaktiverte elever slettes når de ikke
 // lenger har noen registreringer igjen, og ble deaktivert før grensen.
 // Ren logikk uten database, slik at regelen kan testes.
 
 export const SKOLEAAR_START = '08-01';
-export const STANDARD_SKOLEAAR = 2;
-export const SKOLEAAR_VALG = [1, 2];
+export const STANDARD_SKOLEAAR = 3;
+export const SKOLEAAR_VALG = [1, 2, 3];
 
 /** Første dag i skoleåret som datoen hører til, for eksempel 2026-11-10 → 2026-08-01. */
 export function skoleaarStart(dato) {
@@ -15,8 +16,9 @@ export function skoleaarStart(dato) {
 }
 
 /**
- * Datoen alt eldre enn slettes. Med 2 skoleår: starten av forrige skoleår.
- * 2026-11-10 → 2025-08-01. 2026-07-31 → 2024-08-01.
+ * Datoen alt eldre enn slettes. Med 3 skoleår (standard): starten av skoleåret for to år siden,
+ * altså 2 år etter at det eldste skoleåret som slettes, sluttet.
+ * 2026-11-10 → 2024-08-01. 2026-07-31 → 2023-08-01.
  */
 export function slettegrense(idag, antallSkoleaar = STANDARD_SKOLEAAR) {
   const n = SKOLEAAR_VALG.includes(antallSkoleaar) ? antallSkoleaar : STANDARD_SKOLEAAR;

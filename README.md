@@ -6,6 +6,10 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 
 ## Status
 
+**Versjon 1.0.0 er i drift på SFO-telefonen (17. november 2026).** Piloten er avsluttet, og DPIA og kravspesifikasjon er godkjent av skolen. Alle endringer per versjon står i [CHANGELOG.md](CHANGELOG.md). Seksjonene under beskriver hva som ble bygget i hver fase og versjon.
+
+**Lagringstid (versjon 1.0.0, K-63).** Skolen har fastsatt at opplysningene lagres i 2 år etter skoleårets slutt. Appen beholder derfor inneværende og de to forrige skoleårene, og sletter det som er eldre automatisk.
+
 **Fase 1 (grunnmur) er bygget:** PWA-skall, lokal database med datamodell og versjon, sikkerhetsregel som blokkerer nettverk, og sikkerhetskopi med eksport og gjenoppretting.
 
 | Krav | Hva | Status |
@@ -75,7 +79,7 @@ Krav og plan står i dokumentet «SFO-appen – kravspesifikasjon og fremdriftsp
 
 **Automatisk sletting, raskere rapporter og ESLint (versjon 0.10.0, K-63).**
 
-- **Sletting av gammel historikk (K-63):** Hendelser, tellinger og unntak fra inneværende og forrige skoleår beholdes. Det som er eldre, slettes automatisk ved oppstart og når datoen skifter, høyst én gang per dag. Et skoleår starter 1. august. Deaktiverte elever slettes når de ikke har nyere registreringer og ble deaktivert før grensen.
+- **Sletting av gammel historikk (K-63):** Hendelser, tellinger og unntak fra inneværende og forrige skoleår beholdes (fra 1.0.0: inneværende og de to forrige, se Status). Det som er eldre, slettes automatisk ved oppstart og når datoen skifter, høyst én gang per dag. Et skoleår starter 1. august. Deaktiverte elever slettes når de ikke har nyere registreringer og ble deaktivert før grensen.
 - Under **Mer → Innstillinger → Historikk beholdes** kan administrator velge «Bare inneværende skoleår». Da vises hva som slettes før det skjer. Der står også når det sist ble sjekket.
 - Sikkerhetskopier og PDF-er i OneDrive slettes ikke av appen. Det må gjøres etter rutinen.
 - **Raskere rapporter:** Hendelsene sorteres etter dato én gang, avviksrapporten gjenbruker utregningen fra grupperapporten, og bare tellingslinjene for perioden leses. Med to skoleår med data og en bremset telefon gikk avviksrapporten for et år fra 1,7 s til 0,6 s, og elevrapporten fra 0,5 s til 0,3 s.

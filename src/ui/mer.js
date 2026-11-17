@@ -70,7 +70,7 @@ export async function visMer(oppfrisk) {
 
 // ---------- Historikk (K-63) ----------
 
-const SKOLEAAR_TEKST = { 2: 'Inneværende og forrige skoleår', 1: 'Bare inneværende skoleår' };
+const SKOLEAAR_TEKST = { 3: '2 år etter skoleårets slutt', 2: 'Inneværende og forrige skoleår', 1: 'Bare inneværende skoleår' };
 
 function historikkInnstilling(lagringSkoleaar, sisteSletting, oppfrisk) {
   const grense = slettegrense(lokalDato(), lagringSkoleaar);
@@ -99,7 +99,7 @@ function historikkInnstilling(lagringSkoleaar, sisteSletting, oppfrisk) {
       visMelding(plan.tom ? 'Lagringstiden er endret.' : 'Lagringstiden er endret, og eldre historikk er slettet.', 'ok');
       oppfrisk();
     },
-  }, [2, 1].map((n) => h('option', { value: n, selected: n === lagringSkoleaar }, SKOLEAAR_TEKST[n])));
+  }, [3, 2, 1].map((n) => h('option', { value: n, selected: n === lagringSkoleaar }, SKOLEAAR_TEKST[n])));
   return h('div', { class: 'felt', id: 'historikk-innstilling' },
     h('div', { class: 'felt-rad' }, h('label', { for: 'lagring' }, 'Historikk beholdes'), velger),
     h('p', { class: 'dempet liten', id: 'slettegrense' },

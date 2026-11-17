@@ -8,12 +8,14 @@ test('skoleåret starter 1. august', () => {
   assert.equal(skoleaarStart('2026-07-31'), '2025-08-01');
 });
 
-test('slettegrense: inneværende og forrige skoleår beholdes (K-63)', () => {
-  assert.equal(slettegrense('2026-11-10'), '2025-08-01');
-  assert.equal(slettegrense('2026-07-31'), '2024-08-01', 'sommeren hører til skoleåret som slutter');
-  assert.equal(slettegrense('2026-08-01'), '2025-08-01', 'nytt skoleår flytter grensen');
+test('slettegrense: opplysninger lagres i 2 år etter skoleårets slutt (K-63)', () => {
+  // Skoleåret 2023/24 slutter 31.07.2024 og slettes 01.08.2026, altså etter 2 år.
+  assert.equal(slettegrense('2026-07-31'), '2023-08-01', '2023/24 er fortsatt med');
+  assert.equal(slettegrense('2026-08-01'), '2024-08-01', '2 år etter slutt: 2023/24 slettes');
+  assert.equal(slettegrense('2026-11-10'), '2024-08-01');
+  assert.equal(slettegrense('2026-11-10', 2), '2025-08-01', 'inneværende og forrige skoleår');
   assert.equal(slettegrense('2026-11-10', 1), '2026-08-01', 'bare inneværende skoleår');
-  assert.equal(slettegrense('2026-11-10', 7), '2025-08-01', 'ugyldig valg gir standard');
+  assert.equal(slettegrense('2026-11-10', 7), '2024-08-01', 'ugyldig valg gir standard');
   assert.equal(dagenFor('2025-08-01'), '2025-07-31');
   assert.equal(dagenFor('2026-03-01'), '2026-02-28');
 });

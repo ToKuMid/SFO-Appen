@@ -41,7 +41,7 @@ export const TABELLNAVN = Object.keys(TABELLER);
 
 export const STANDARD_INNSTILLINGER = {
   varseltidspunkt: '15:00',
-  lagringSkoleaar: 2,
+  lagringSkoleaar: 3, // 2 år etter skoleårets slutt (K-63)
 };
 
 // Ett steg per databaseversjon. Steg N kjøres når databasen oppgraderes fra versjon N-1 til N.
